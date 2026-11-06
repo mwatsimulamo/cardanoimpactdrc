@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { AdminTeamDetail } from "@/components/AdminWorkspace";
 import { getDictionary } from "@/content/get-dictionary";
 import { isLocale } from "@/lib/locales";
-import { pageMetadata } from "@/lib/metadata";
+import { privateMetadata } from "@/lib/metadata";
 import { getPreviewTeam, previewTeams } from "@/lib/preview-workspace";
 
 export async function generateStaticParams() {
@@ -20,7 +20,7 @@ export async function generateMetadata({
 
   const dictionary = getDictionary(locale);
   const team = previewTeams.find((item) => item.id === teamId);
-  return pageMetadata(team?.name ?? dictionary.workspace.adminTitle, dictionary.meta.siteName);
+  return privateMetadata(team?.name ?? dictionary.workspace.adminTitle, dictionary.meta.siteName);
 }
 
 export default async function AdminTeamPage({

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { AdminLoginForm } from "@/components/admin/AdminFrame";
 import { getDictionary } from "@/content/get-dictionary";
 import { isLocale } from "@/lib/locales";
-import { pageMetadata } from "@/lib/metadata";
+import { privateMetadata } from "@/lib/metadata";
 
 export async function generateMetadata({
   params,
@@ -13,7 +13,7 @@ export async function generateMetadata({
   }
 
   const dictionary = getDictionary("fr");
-  return pageMetadata(dictionary.adminUi.loginTitle, dictionary.meta.siteName);
+  return privateMetadata(dictionary.adminUi.loginTitle, dictionary.meta.siteName);
 }
 
 export default async function AdminLoginPage({ params }: PageProps<"/[locale]/admin/login">) {

@@ -5,7 +5,7 @@ import { PageFrame } from "@/components/PageHeader";
 import { getDictionary } from "@/content/get-dictionary";
 import { getPublicActivity } from "@/lib/documented-activities";
 import { isLocale } from "@/lib/locales";
-import { pageMetadata } from "@/lib/metadata";
+import { pageMetadata, privateMetadata } from "@/lib/metadata";
 
 export const instant = false;
 
@@ -20,10 +20,10 @@ export async function generateMetadata({
   const dictionary = getDictionary(locale);
   const activity = await getPublicActivity(slug, locale);
   if (!activity) {
-    return pageMetadata(dictionary.notFound.title, dictionary.meta.siteName);
+    return privateMetadata(dictionary.notFound.title, dictionary.meta.siteName);
   }
 
-  return pageMetadata(activity.title, dictionary.meta.siteName);
+  return pageMetadata(activity.title, dictionary.meta.siteName, locale, `activites/${slug}`);
 }
 
 export default async function ActivityPage({

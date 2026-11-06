@@ -24,7 +24,7 @@ export async function generateMetadata({
   }
 
   const dictionary = getDictionary(locale);
-  return pageMetadata(dictionary.meta.homeTitle, dictionary.meta.siteName);
+  return pageMetadata(dictionary.meta.homeTitle, dictionary.meta.siteName, locale);
 }
 
 export default async function HomePage({ params }: PageProps<"/[locale]">) {

@@ -15,7 +15,7 @@ export async function generateMetadata({
   }
 
   const dictionary = getDictionary(locale);
-  return pageMetadata(dictionary.faq.title, dictionary.meta.siteName);
+  return pageMetadata(dictionary.faq.title, dictionary.meta.siteName, locale, "faq");
 }
 
 export default async function FaqPage({ params }: PageProps<"/[locale]/faq">) {

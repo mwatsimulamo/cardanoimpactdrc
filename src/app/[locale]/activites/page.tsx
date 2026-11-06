@@ -23,7 +23,7 @@ export async function generateMetadata({
   }
 
   const dictionary = getDictionary(locale);
-  return pageMetadata(dictionary.activities.title, dictionary.meta.siteName);
+  return pageMetadata(dictionary.activities.title, dictionary.meta.siteName, locale, "activites");
 }
 
 export default async function ActivitiesPage({ params }: PageProps<"/[locale]/activites">) {

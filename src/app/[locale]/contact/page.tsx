@@ -13,7 +13,7 @@ export async function generateMetadata({
   }
 
   const dictionary = getDictionary(locale);
-  return pageMetadata(dictionary.contact.title, dictionary.meta.siteName);
+  return pageMetadata(dictionary.contact.title, dictionary.meta.siteName, locale, "contact");
 }
 
 export default async function ContactPage({ params }: PageProps<"/[locale]/contact">) {

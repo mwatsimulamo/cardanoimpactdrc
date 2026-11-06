@@ -1,11 +1,19 @@
+import type { Metadata } from "next";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-
-export const instant = false;
 import { AdminFrame } from "@/components/admin/AdminFrame";
 import { getDictionary } from "@/content/get-dictionary";
 import { readAdminSession } from "@/lib/admin-session";
 import { isLocale } from "@/lib/locales";
+
+export const metadata: Metadata = {
+  robots: {
+    index: false,
+    follow: false,
+  },
+};
+
+export const instant = false;
 
 export default async function AdminLayout({
   children,

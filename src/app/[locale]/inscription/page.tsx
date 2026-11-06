@@ -14,7 +14,7 @@ export async function generateMetadata({
   }
 
   const dictionary = getDictionary(locale);
-  return pageMetadata(dictionary.registration.title, dictionary.meta.siteName);
+  return pageMetadata(dictionary.registration.title, dictionary.meta.siteName, locale, "inscription");
 }
 
 export default async function RegistrationPage({

@@ -49,7 +49,7 @@ export async function proxy(request: NextRequest) {
 
   const url = request.nextUrl.clone();
   url.pathname = pathname === "/" ? "/fr" : `/fr${pathname}`;
-  return applySupabaseSession(request, NextResponse.redirect(url));
+  return applySupabaseSession(request, NextResponse.redirect(url, 308));
 }
 
 function continueWithPath(request: NextRequest) {

@@ -5,7 +5,7 @@ import { Suspense } from "react";
 import { ConstellationBackground } from "@/components/ConstellationBackground";
 import { SiteFooter, SiteHeader } from "@/components/SiteChrome";
 import { getDictionary } from "@/content/get-dictionary";
-import { pageMetadata } from "@/lib/metadata";
+import { canonicalOrigin } from "@/lib/metadata";
 import { isLocale, localePath, type Locale } from "@/lib/locales";
 import { getWhatsappInvitationUrl, organizerEmail, organizerXUrl } from "@/lib/public-contact";
 import "../globals.css";
@@ -31,7 +31,10 @@ export async function generateMetadata({
 
   const dictionary = getDictionary(locale);
   return {
-    ...pageMetadata(dictionary.meta.homeTitle, dictionary.meta.siteName),
+    metadataBase: new URL(canonicalOrigin),
+    title: {
+      absolute: `${dictionary.meta.homeTitle} — ${dictionary.meta.siteName}`,
+    },
     description: dictionary.meta.description,
   };
 }

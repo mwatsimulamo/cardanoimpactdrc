@@ -13,7 +13,7 @@ export async function generateMetadata({
   }
 
   const dictionary = getDictionary(locale);
-  return pageMetadata(dictionary.evaluation.title, dictionary.meta.siteName);
+  return pageMetadata(dictionary.evaluation.title, dictionary.meta.siteName, locale, "evaluations");
 }
 
 export default async function EvaluationPage({ params }: PageProps<"/[locale]/evaluations">) {

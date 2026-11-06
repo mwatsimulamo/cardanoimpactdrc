@@ -13,7 +13,7 @@ export async function generateMetadata({
   }
 
   const dictionary = getDictionary(locale);
-  return pageMetadata(dictionary.participatingTeams.title, dictionary.meta.siteName);
+  return pageMetadata(dictionary.participatingTeams.title, dictionary.meta.siteName, locale, "equipes");
 }
 
 export default async function ParticipatingTeamsPage({

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { AdminTeamsScreen } from "@/components/admin/AdminLive";
 import { getDictionary } from "@/content/get-dictionary";
 import { isLocale } from "@/lib/locales";
-import { pageMetadata } from "@/lib/metadata";
+import { privateMetadata } from "@/lib/metadata";
 
 export async function generateMetadata({
   params,
@@ -13,7 +13,7 @@ export async function generateMetadata({
   }
 
   const dictionary = getDictionary(locale);
-  return pageMetadata(dictionary.adminUi.navTeams, dictionary.meta.siteName);
+  return privateMetadata(dictionary.adminUi.navTeams, dictionary.meta.siteName);
 }
 
 export default async function AdminTeamsPage({ params }: PageProps<"/[locale]/admin/equipes">) {

@@ -4,8 +4,8 @@ import { notFound } from "next/navigation";
 import { justifiedText, supportText, textLink } from "@/components/classes";
 import { PageFrame, PageHeader } from "@/components/PageHeader";
 import { getDictionary } from "@/content/get-dictionary";
-import { isLocale, localePath, type Locale } from "@/lib/locales";
-import { pageMetadata } from "@/lib/metadata";
+import { isLocale, localePath, locales, type Locale } from "@/lib/locales";
+import { pageMetadata, privateMetadata } from "@/lib/metadata";
 import { readPublishedAnnouncements } from "@/lib/published-records";
 
 export const instant = false;
@@ -20,11 +20,24 @@ export async function generateMetadata({
 
   const dictionary = getDictionary(locale);
   const announcement = await publishedAnnouncement(slug);
-  if (!announcement || announcement.title[locale].trim().length === 0) {
-    return pageMetadata(dictionary.notFound.title, dictionary.meta.siteName);
+  if (
+    !announcement ||
+    announcement.title[locale].trim().length === 0 ||
+    announcement.body[locale].trim().length === 0
+  ) {
+    return privateMetadata(dictionary.notFound.title, dictionary.meta.siteName);
   }
 
-  return pageMetadata(announcement.title[locale], dictionary.meta.siteName);
+  const available = locales.filter(
+    (item) => announcement.title[item].trim().length > 0 && announcement.body[item].trim().length > 0,
+  );
+  return pageMetadata(
+    announcement.title[locale],
+    dictionary.meta.siteName,
+    locale,
+    `annonces/${slug}`,
+    available,
+  );
 }
 
 export default async function AnnouncementPage({

@@ -17,7 +17,7 @@ export async function generateMetadata({
   }
 
   const dictionary = getDictionary(locale);
-  return pageMetadata(dictionary.schedule.title, dictionary.meta.siteName);
+  return pageMetadata(dictionary.schedule.title, dictionary.meta.siteName, locale, "calendrier");
 }
 
 export default async function SchedulePage({ params }: PageProps<"/[locale]/calendrier">) {

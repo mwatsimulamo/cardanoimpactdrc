@@ -8,7 +8,7 @@ import type { Dictionary } from "@/content/types";
 import { getDictionary } from "@/content/get-dictionary";
 import { loadLeaderTeam } from "@/lib/leader-workspace";
 import { isLocale, type Locale } from "@/lib/locales";
-import { pageMetadata } from "@/lib/metadata";
+import { privateMetadata } from "@/lib/metadata";
 
 export async function generateMetadata({
   params,
@@ -19,7 +19,7 @@ export async function generateMetadata({
   }
 
   const dictionary = getDictionary(locale);
-  return pageMetadata(dictionary.workspace.accessTitle, dictionary.meta.siteName);
+  return privateMetadata(dictionary.workspace.accessTitle, dictionary.meta.siteName);
 }
 
 export default async function LeaderPage({ params }: PageProps<"/[locale]/equipe">) {

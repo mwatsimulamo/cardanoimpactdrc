@@ -13,7 +13,7 @@ export async function generateMetadata({
   }
 
   const dictionary = getDictionary(locale);
-  return pageMetadata(dictionary.program.title, dictionary.meta.siteName);
+  return pageMetadata(dictionary.program.title, dictionary.meta.siteName, locale, "programme");
 }
 
 export default async function ProgramPage({ params }: PageProps<"/[locale]/programme">) {

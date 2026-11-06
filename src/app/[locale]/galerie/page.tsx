@@ -17,7 +17,7 @@ export async function generateMetadata({
   }
 
   const dictionary = getDictionary(locale);
-  return pageMetadata(dictionary.gallery.title, dictionary.meta.siteName);
+  return pageMetadata(dictionary.gallery.title, dictionary.meta.siteName, locale, "galerie");
 }
 
 export default async function GalleryPage({ params }: PageProps<"/[locale]/galerie">) {

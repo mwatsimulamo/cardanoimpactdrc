@@ -2,6 +2,8 @@
 
 import { revalidatePath } from "next/cache";
 import { readAdminSession } from "@/lib/admin-session";
+import { sendAdminCampaign } from "@/lib/email/service";
+import { cleanText, isPublicMailPath, parseAudiences } from "@/lib/email/rules";
 import {
   isEditorialId,
   removeGalleryItem,
@@ -51,16 +53,19 @@ export async function saveAnnouncementAction(
     return { status: "forbidden" };
   }
 
-  const status = await saveAnnouncement({
+  const announcementId = String(formData.get("id") ?? "");
+  const saved = await saveAnnouncement({
+    id: announcementId,
     title: String(formData.get("title") ?? ""),
     body: String(formData.get("body") ?? ""),
     publish: formData.get("intent") === "publish",
   });
-  if (status === "ok") {
+  if (saved.status === "ok") {
     refreshPublic();
+    return finishPublication(saved.publicPath, formData, cleanText(String(formData.get("title") ?? ""), 180));
   }
 
-  return { status };
+  return { status: saved.status };
 }
 
 export async function removeAnnouncementAction(
@@ -87,18 +92,19 @@ export async function saveResultAction(
     return { status: "forbidden" };
   }
 
-  const status = await saveResult({
+  const saved = await saveResult({
     statement: String(formData.get("statement") ?? ""),
     place1: String(formData.get("place1") ?? ""),
     place2: String(formData.get("place2") ?? ""),
     place3: String(formData.get("place3") ?? ""),
     publish: formData.get("intent") === "publish",
   });
-  if (status === "ok") {
+  if (saved.status === "ok") {
     refreshPublic();
+    return finishPublication(saved.publicPath, formData, "Résultat publié");
   }
 
-  return { status };
+  return { status: saved.status };
 }
 
 export async function saveActivityAction(
@@ -116,7 +122,8 @@ export async function saveActivityAction(
 
   const occurredOn = String(formData.get("occurredOn") ?? "");
   const publish = formData.get("intent") === "publish";
-  const status = await saveDocumentedActivity({
+  const saved = await saveDocumentedActivity({
+    id: String(formData.get("id") ?? ""),
     category: String(formData.get("category") ?? ""),
     title: String(formData.get("title") ?? ""),
     description: String(formData.get("description") ?? ""),
@@ -124,14 +131,15 @@ export async function saveActivityAction(
     publish,
     image,
   });
-  if (status === "invalid" && publish && /^\d{4}-\d{2}-\d{2}$/.test(occurredOn) && occurredOn > todayInGoma()) {
-    return { status, detail: "Pour publier, indiquez une date déjà passée. Une activité prévue n'est pas présentée comme tenue." };
+  if (saved.status === "invalid" && publish && /^\d{4}-\d{2}-\d{2}$/.test(occurredOn) && occurredOn > todayInGoma()) {
+    return { status: saved.status, detail: "Pour publier, indiquez une date déjà passée. Une activité prévue n'est pas présentée comme tenue." };
   }
-  if (status === "ok") {
+  if (saved.status === "ok") {
     refreshPublic();
+    return finishPublication(saved.publicPath, formData, cleanText(String(formData.get("title") ?? ""), 180));
   }
 
-  return { status };
+  return { status: saved.status };
 }
 
 export async function removeActivityAction(
@@ -269,7 +277,52 @@ function todayInGoma(): string {
   }).format(new Date());
 }
 
+function publicationSubject(publicPath: string, title: string): string {
+  const label = publicPath.includes("/activites")
+    ? "Une nouvelle activité est publiée"
+    : publicPath.includes("/resultats")
+      ? "Les résultats sont publiés"
+      : "Une nouvelle annonce est publiée";
+  const cleanTitle = title.trim();
+  if (cleanTitle.length === 0) {
+    return label;
+  }
+
+  return `${label} — ${cleanTitle}`.slice(0, 180);
+}
+
 function refreshPublic() {
   revalidatePath("/fr", "layout");
   revalidatePath("/en", "layout");
+}
+
+async function finishPublication(publicPath: string | null, formData: FormData, title: string): Promise<AdminActionState> {
+  const audiences = parseAudiences(formData.getAll("audience").map(String));
+  if (!publicPath || !isPublicMailPath(publicPath) || audiences.length === 0) {
+    return { status: "ok" };
+  }
+
+  try {
+    const batch = await sendAdminCampaign({
+      subject: publicationSubject(publicPath, title),
+      body: cleanText(String(formData.get("mailNote") ?? ""), 4000) || title || "CIPot-DR Congo",
+      publicPath,
+      audiences,
+      locale: "fr",
+      kind: "publication",
+    });
+    if (batch.availability !== "ok" || batch.failed > 0 || batch.remaining > 0) {
+      return {
+        status: "ok",
+        detail: "La publication est enregistrée. L'envoi des courriels est incomplet : reprenez-le dans Communications.",
+      };
+    }
+  } catch {
+    return {
+      status: "ok",
+      detail: "La publication est enregistrée. L'envoi des courriels a échoué : reprenez-le dans Communications.",
+    };
+  }
+
+  return { status: "ok" };
 }

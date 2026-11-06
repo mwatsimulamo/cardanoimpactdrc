@@ -613,7 +613,7 @@ create index activity_resources_activity_idx
 
 `occurred_on` est une date civile, pas un `timestamptz`. Elle ne reçoit pas minuit pour représenter une journée ou une période (A-09). L'application refuse `published` lorsque `occurred_on` est postérieure à la date du jour à Goma (`Africa/Lubumbashi`, A-10). Pour `jury_evaluation`, la réponse publique omet les intervenants, même si une association existe. Cette limite prolonge D-30 : les noms des jurés et les notes ne sont pas publiés.
 
-Le courriel, le profil X et l'URL WhatsApp de D-32 restent dans le contenu versionné. L'URL WhatsApp n'a pas de table. Les fiches d'équipe de D-33 restent aussi dans le contenu versionné, dans `src/lib/organizer-team.ts`, tant qu'aucune liste n'est fournie. Tant que Supabase n'est pas branché, `src/lib/participating-teams.ts` reste vide : aucune équipe n'est inventée. Après migration, la page lit `public_teams`. Aucune table de lettre d'information n'est ajoutée.
+Le courriel, le profil X et l'URL WhatsApp de D-32 restent dans le contenu versionné. L'URL WhatsApp n'a pas de table. Les fiches d'équipe de D-33 restent aussi dans le contenu versionné, dans `src/lib/organizer-team.ts`, tant qu'aucune liste n'est fournie. Tant que Supabase n'est pas branché, `src/lib/participating-teams.ts` reste vide : aucune équipe n'est inventée. Après migration, la page lit `public_teams`. La lettre et le journal d'envoi suivent D-41, dans `supabase/migrations/20261106221000_email_communications.sql`.
 
 `updated_at` est tenu par l'application lors de chaque mise à jour. Un déclencheur pourra remplacer ce choix au moment de la migration si les écritures ne passent plus toutes par le serveur.
 
@@ -641,6 +641,9 @@ Le courriel, le profil X et l'URL WhatsApp de D-32 restent dans le contenu versi
 | `activity_speakers` | Association plusieurs-à-plusieurs. Le nom n'est public que si `name_publication_consent` est vrai. Proposition, non créée. |
 | `activity_media` | Photographies d'une activité documentée. L'original est conservé. Proposition, non créée. |
 | `activity_resources` | Liens de supports, d'enregistrements, d'articles de forum ou d'autres ressources vérifiées. Proposition, non créée. |
+| `newsletter_subscribers` | Abonné de la lettre (D-41). Courriel unique en minuscules, nom facultatif, langue, consentement, dates d'inscription et de désinscription. Seule l'empreinte du jeton est conservée. |
+| `email_campaigns` | Envoi : enregistrement, confirmation de lettre, campagne ou publication. Le code d'accès n'y est pas copié. |
+| `email_deliveries` | Destinataire, groupe, clé d'idempotence, état `pending`, `sent` ou `failed`, erreur courte et identifiant fournisseur. |
 
 Les dates prévues de D-30 restent dans le contenu versionné du calendrier (D-11). Elles ne sont pas des colonnes de `program_phases`. À la migration, six lignes seront insérées, une par clé, toutes en `upcoming`, sans date réelle. Tant que cette migration n'est pas demandée, aucune ligne n'existe et le site laisse les six phases à venir. Aucune ligne n'est insérée pour fabriquer des séances. Créer une activité pour le 23 novembre, le 24 novembre ou le 18 décembre 2026 ne doit pas inventer minuit pour remplir `starts_at`. Une période de plusieurs jours, du 9 au 21 novembre, du 25 au 29 novembre, du 30 novembre au 13 décembre ou du 14 au 17 décembre, n'est pas non plus un horodatage unique. Le type `publication` ne sert pas à publier automatiquement les résultats.
 
@@ -758,7 +761,7 @@ create policy program_phases_public_read
   using (true);
 ```
 
-Lecture publique supplémentaire : `public_teams` ; `program_phases` ; `competition_results` lorsque `status = 'published'` ; `team_rankings` pour un résultat publié et une place entre 1 et 3 ; `documented_activities` lorsque `status = 'published'` ; médias, ressources et intervenants selon D-31. Aucune politique publique ne montre un membre, un courriel, un profil forum, un défi d'accès, un journal, une présence ou une note.
+Lecture publique supplémentaire : `public_teams` ; `program_phases` ; `competition_results` lorsque `status = 'published'` ; `team_rankings` pour un résultat publié et une place entre 1 et 3 ; `documented_activities` lorsque `status = 'published'` ; médias, ressources et intervenants selon D-31. Aucune politique publique ne montre un membre, un courriel, un profil forum, un défi d'accès, un journal, une présence ou une note. `newsletter_subscribers`, `email_campaigns` et `email_deliveries` ont le RLS activé, sans politique de lecture, et les droits `public`, `anon` et `authenticated` leur sont retirés. Seule la clé de service les écrit.
 
 `announcements` a donc deux politiques de lecture : la lecture publique des lignes publiées, et la lecture complète par un administrateur. Les brouillons ne satisfont pas la première.
 

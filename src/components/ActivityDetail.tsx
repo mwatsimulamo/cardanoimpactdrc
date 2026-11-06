@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ArticleBody } from "@/components/ArticleBody";
 import { ActivityGallery } from "@/components/ActivityGallery";
 import { ActivitySpeakers } from "@/components/ActivitySpeakers";
 import { justifiedText, sectionTitle, supportText, textLink } from "@/components/classes";
@@ -39,7 +40,9 @@ export function ActivityDetail({
       <p className={`mt-4 ${supportText}`}>{facts.join(" · ")}</p>
       {activity.summary ? <p className={`mt-8 ${justifiedText}`}>{activity.summary}</p> : null}
       {activity.description ? (
-        <div className={`mt-6 whitespace-pre-wrap ${justifiedText}`}>{activity.description}</div>
+        <div className="mt-6">
+          <ArticleBody text={activity.description} />
+        </div>
       ) : null}
       {activity.highlights ? (
         <section className="mt-12">

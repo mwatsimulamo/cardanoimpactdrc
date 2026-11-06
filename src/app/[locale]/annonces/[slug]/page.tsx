@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { justifiedText, supportText, textLink } from "@/components/classes";
+import { ArticleBody } from "@/components/ArticleBody";
+import { supportText, textLink } from "@/components/classes";
 import { PageFrame, PageHeader } from "@/components/PageHeader";
 import { getDictionary } from "@/content/get-dictionary";
 import { isLocale, localePath, locales, type Locale } from "@/lib/locales";
@@ -67,7 +68,9 @@ export default async function AnnouncementPage({
           {formatDate(announcement.publishedAt, locale)}
         </time>
       </p>
-      <div className={`mt-8 whitespace-pre-wrap ${justifiedText}`}>{announcement.body[locale]}</div>
+      <div className="mt-8">
+        <ArticleBody text={announcement.body[locale]} />
+      </div>
       <p className="mt-8">
         <Link className={textLink} href={localePath(locale, "annonces")}>
           {dictionary.actions.backToAnnouncements}

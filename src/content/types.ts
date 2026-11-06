@@ -26,6 +26,24 @@ export type Dictionary = {
     followX: string;
     joinWhatsApp: string;
   };
+  newsletter: {
+    title: string;
+    lede: string;
+    email: string;
+    name: string;
+    consent: string;
+    submit: string;
+    saved: string;
+    already: string;
+    invalid: string;
+    missing: string;
+    error: string;
+    unsubscribeTitle: string;
+    unsubscribeLede: string;
+    unsubscribeSubmit: string;
+    unsubscribeDone: string;
+    unsubscribeInvalid: string;
+  };
   nav: {
     home: string;
     program: string;
@@ -587,6 +605,7 @@ export type Dictionary = {
     navPages: string;
     navMedia: string;
     navHistory: string;
+    navCommunications: string;
     statsTeams: string;
     statsParticipants: string;
     statsArticles: string;

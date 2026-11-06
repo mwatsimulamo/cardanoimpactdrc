@@ -277,7 +277,7 @@ Liste les équipes `submitted`, en fiches de même équilibre : nom, nombre de m
 L'accès, les profils Forum et l'article sont construits (A-22, D-21, D-24).
 
 1. Dans Équipes participantes, le sous-onglet « Espace du team leader » / « Team leader space » explique cet accès et porte le bouton « Ouvrir l'espace du team leader » / « Open the team leader space ». Il mène à `/equipe`. Seul le team leader s'en sert.
-2. À l'enregistrement, le code du team leader s'affiche une fois, avec un texte d'attention. L'ouverture demande ensuite ce seul code. Chaque code mène à son équipe. Il se réutilise jusqu'au 31 janvier 2027. Le code est conservé pour les organisateurs. S'il est perdu, le team leader contacte l'équipe. Aucun service d'e-mail. Une session limitée suit la validation. Pas de mot de passe membre. Le formulaire ne demande pas le pays : il est enregistré comme la République démocratique du Congo.
+2. À l'enregistrement, le code du team leader s'affiche une fois, avec un texte d'attention. L'ouverture demande ensuite ce seul code. Chaque code mène à son équipe. Il se réutilise jusqu'au 31 janvier 2027. Le code est conservé pour les organisateurs. S'il est perdu, le team leader contacte l'équipe. Après l'enregistrement réussi, D-41 envoie le code au responsable et un courriel distinct à chaque membre. Une session limitée suit la validation. Pas de mot de passe membre. Le formulaire ne demande pas le pays : il est enregistré comme la République démocratique du Congo.
 3. Une fois identifié, il consulte son équipe, change le nom, corrige les membres, ajoute ou retire dans la limite 3–5, désigne ou remplace l'adjoint, complète les profils forum (ensemble ou vides), voit ce qui manque, soumet ou remplace l'article du 30 novembre au 13 décembre 2026, et lit les statuts d'équipe, de complétude et d'article.
 4. Il ne voit aucune autre équipe. Un transfert de responsabilité est demandé à l'administration, journalisé.
 5. Si le courriel est perdu, seul un administrateur rétablit l'accès, après vérification, et journalise l'acte.
@@ -383,6 +383,17 @@ Publication : `draft` vers `published`, puis `published` vers `unpublished`, pui
 
 L'écran ne propose pas d'importer des présences, des membres ou des notes de jury.
 
+### ADM-11 Communications
+
+Décision D-41. Écran `/fr/admin/communications`, réservé à la session administrateur.
+
+- La lettre du pied de page enregistre le courriel, la langue, le consentement et la date. Le nom n'est pas demandé. Un abonné actif n'est pas créé deux fois. La désinscription se confirme par envoi, pas par la simple ouverture du lien.
+- L'écran liste les abonnés, leur état et leurs dates, puis les équipes soumises avec le rôle et le courriel de chaque membre actif. Ces listes ne sont pas publiques.
+- L'envoi indépendant choisit la langue, les responsables, les membres hors responsables, toutes les équipes, les abonnés, ou plusieurs de ces groupes. Un bouton facultatif porte un libellé et un lien public `/fr` ou `/en`. L'aperçu précède l'envoi, qui demande une confirmation. Le nombre de destinataires exclut les doublons et les désinscrits. Quinze courriels au plus partent par requête. Les échecs et les envois encore en attente se reprennent depuis le journal.
+- La publication d'une annonce, d'une activité ou d'un résultat peut proposer les mêmes groupes. Le sujet indique la catégorie et le titre. Le bouton ouvre la page publiée. La galerie n'envoie rien. La publication reste enregistrée si l'envoi échoue. Une fiche déjà enregistrée se modifie sans changer son adresse. Le brouillon la retire du site public.
+- Le journal montre le sujet, le destinataire, le groupe, l'état, l'erreur courte et l'instant. Il ne montre ni clé d'API, ni code d'accès, ni jeton de désinscription.
+- Chaque courriel part en HTML et en texte. Le logo est celui de A-12. Le bouton ouvre une page du site. La désinscription personnelle reste le lien du courriel de confirmation. Il n'y a pas de courriel supplémentaire après la désinscription : la page le confirme.
+
 ## Critères d'acceptation communs
 
 Une exigence est satisfaite lorsque :
@@ -391,5 +402,5 @@ Une exigence est satisfaite lorsque :
 2. aucun fait absent de `docs/PROJECT_CONTEXT.md` n'a été ajouté ;
 3. les états vide, erreur et succès sont visibles ;
 4. la page se parcourt au clavier et sur les trois largeurs de contrôle ;
-5. une personne non authentifiée ne peut lire ni les membres, ni les courriels, ni les brouillons, ni les présences, ni les messages, ni les activités documentées non publiées, ni les portraits et biographies sans autorisation ;
+5. une personne non authentifiée ne peut lire ni les membres, ni les courriels, ni les brouillons, ni les présences, ni les messages, ni les activités documentées non publiées, ni les portraits et biographies sans autorisation, ni les abonnés, ni le journal d'envoi ;
 6. les hypothèses utilisées sont encore celles du registre, ou le registre a été mis à jour.

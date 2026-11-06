@@ -25,7 +25,7 @@ Ne jamais préfixer la clé `service_role` par `NEXT_PUBLIC_`. Elle ne doit pas 
 2. Y coller les valeurs du projet existant. Ne pas créer un autre projet Supabase.
 3. Redémarrer `npm run dev`. Next.js ne relit `.env.local` qu'au démarrage.
 
-`.env.local` est ignoré par Git. `.env.example` ne contient que les noms des variables. `ADMIN_EMAIL` et `ADMIN_PASSWORD` y figurent vides : ce sont le seul courriel et le seul mot de passe de l'administration (D-39). Le mot de passe compte au moins 8 caractères. Ils ne sont pas commités.
+`.env.local` est ignoré par Git. `.env.example` ne contient que les noms des variables. `ADMIN_EMAIL` et `ADMIN_PASSWORD` y figurent vides : ce sont le seul courriel et le seul mot de passe de l'administration (D-39). `RESEND_API_KEY` y figure vide : elle sert uniquement au serveur pour D-41. Le mot de passe compte au moins 8 caractères. Ils ne sont pas commités.
 
 ## Clients dans le code
 

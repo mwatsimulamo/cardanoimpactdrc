@@ -1,6 +1,7 @@
 import "server-only";
 
 import { requestLeaderAccess } from "@/lib/leader-workspace";
+import { notifyRegisteredTeam } from "@/lib/email/service";
 import { getServiceRoleAuth } from "@/lib/supabase/service-role";
 import {
   hasTeamDraftErrors,
@@ -28,7 +29,7 @@ const validationCodes = {
   emailUnique: "emailUnique",
 } as const;
 
-export async function registerSubmittedTeam(input: unknown): Promise<SubmitTeamResult> {
+export async function registerSubmittedTeam(input: unknown, locale: "fr" | "en" = "fr"): Promise<SubmitTeamResult> {
   const parsed = parseTeamDraft(input);
   if (parsed === null) {
     return {
@@ -44,13 +45,13 @@ export async function registerSubmittedTeam(input: unknown): Promise<SubmitTeamR
   }
 
   try {
-    return await callRegisterFunction(draft);
+    return await callRegisterFunction(draft, locale);
   } catch {
     return { status: "error" };
   }
 }
 
-async function callRegisterFunction(draft: TeamDraft): Promise<SubmitTeamResult> {
+async function callRegisterFunction(draft: TeamDraft, locale: "fr" | "en"): Promise<SubmitTeamResult> {
   const { url, serviceRoleKey } = getServiceRoleAuth();
   const endpoint = new URL("/rest/v1/rpc/register_submitted_team", url);
   const response = await fetch(endpoint, {
@@ -76,7 +77,13 @@ async function callRegisterFunction(draft: TeamDraft): Promise<SubmitTeamResult>
 
   if (response.ok) {
     if (typeof body === "string" && body.length > 0) {
-      return { status: "ok", teamId: body, accessCode: await issueLeaderCode(draft) };
+      const accessCode = await issueLeaderCode(draft);
+      try {
+        await notifyRegisteredTeam({ teamId: body, locale, accessCode });
+      } catch {
+        // L'équipe reste enregistrée même si le courriel échoue.
+      }
+      return { status: "ok", teamId: body, accessCode };
     }
     return { status: "error" };
   }

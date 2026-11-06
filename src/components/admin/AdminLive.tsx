@@ -1,3 +1,5 @@
+import type { ReactNode } from "react";
+import { SearchableList } from "@/components/admin/SearchableList";
 import { OriginalImage } from "@/components/OriginalImage";
 import {
   ActivityForm,
@@ -10,7 +12,8 @@ import { RemoveRecordForm } from "@/components/admin/RemoveRecordForm";
 import { blockTitle, bodyText, pageTitle, supportText } from "@/components/classes";
 import { ExternalLink } from "@/components/ExternalLink";
 import type { Dictionary } from "@/content/types";
-import { activityCategories } from "@/lib/documented-activities";
+import { activityCategories, type ActivityCategory } from "@/lib/documented-activities";
+import { plainExcerpt } from "@/lib/rich-text";
 import { listGalleryItems } from "@/lib/editorial-store";
 import {
   readAdminActivities,
@@ -68,6 +71,12 @@ export async function AdminAnnouncementScreen({ dictionary }: { dictionary: Dict
           title: item.titleFr || item.slug,
           detail: statusLabel(item.status),
           imageSrc: null,
+          editor: (
+            <AnnouncementForm
+              dictionary={dictionary}
+              record={{ id: item.id, title: item.titleFr, body: item.bodyFr }}
+            />
+          ),
         }))}
       />
     </div>
@@ -94,7 +103,20 @@ export async function AdminActivityScreen({ dictionary }: { dictionary: Dictiona
           title: item.title || item.slug,
           detail: `${statusLabel(item.status)}${item.occurredOn ? ` · ${item.occurredOn}` : ""}`,
           imageSrc: item.hasImage ? `/media/activity/${item.id}?v=${encodeURIComponent(item.updatedAt)}` : null,
-          text: item.description,
+          text: plainExcerpt(item.description),
+          editor: activityCategories.includes(item.category as ActivityCategory) ? (
+            <ActivityForm
+              dictionary={dictionary}
+              categories={activityCategories.map((id) => ({ id, label: dictionary.activities.categories[id] }))}
+              record={{
+                id: item.id,
+                category: item.category as ActivityCategory,
+                title: item.title,
+                description: item.description,
+                occurredOn: item.occurredOn,
+              }}
+            />
+          ) : null,
         }))}
       />
     </div>
@@ -156,12 +178,12 @@ export async function AdminTeamsScreen({ dictionary }: { dictionary: Dictionary 
         Même lecture que la page publique, avec en plus le courriel, le profil Cardano Forum et le code d&apos;accès.
       </p>
       {records.availability !== "ready" ? <p className={bodyText}>{dictionary.adminUi.actionFailed}</p> : null}
-      {records.teams.length === 0 ? <p className={bodyText}>{dictionary.adminUi.empty}</p> : null}
-      <ul className="grid gap-4 xl:grid-cols-2">
+      {records.teams.length === 0 ? <p className={bodyText}>{dictionary.adminUi.empty}</p> : (
+      <SearchableList label={dictionary.adminUi.search} empty="Aucune équipe pour cette recherche.">
         {records.teams.map((team) => {
           const hasArticle = Boolean(team.articleTitle || team.articleUrl);
           return (
-            <li key={team.id} className="flex h-full flex-col border border-line bg-canvas">
+            <li key={team.id} data-search={`${team.name} ${team.city} ${team.members.map((member) => member.name).join(" ")}`} className="flex h-full flex-col border border-line bg-canvas">
               <span aria-hidden="true" className="h-1.5 bg-brand" />
               <div className="flex flex-1 flex-col px-5 py-6">
                 <h2 className={blockTitle}>{team.name}</h2>
@@ -214,7 +236,8 @@ export async function AdminTeamsScreen({ dictionary }: { dictionary: Dictionary 
             </li>
           );
         })}
-      </ul>
+      </SearchableList>
+      )}
     </div>
   );
 }
@@ -255,7 +278,14 @@ function EditorialList({
   empty,
   kind,
 }: {
-  items: readonly { id: string; title: string; detail: string; imageSrc: string | null; text?: string }[];
+  items: readonly {
+    id: string;
+    title: string;
+    detail: string;
+    imageSrc: string | null;
+    text?: string;
+    editor?: ReactNode;
+  }[];
   empty: string;
   kind: "announcement" | "activity" | "gallery";
 }) {
@@ -277,6 +307,12 @@ function EditorialList({
             <div className="mt-4">
               <RemoveRecordForm id={item.id} kind={kind} />
             </div>
+            {item.editor ? (
+              <details className="mt-4 border-t border-line pt-4">
+                <summary className="min-h-11 cursor-pointer font-semibold text-ink">Modifier</summary>
+                <div className="mt-4">{item.editor}</div>
+              </details>
+            ) : null}
           </div>
         </li>
       ))}

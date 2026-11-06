@@ -601,7 +601,7 @@ Largeurs de contrôle : 360, 768 et 1280 pixels.
 | Annonces sur l'accueil | Au plus trois annonces publiées, masquées s'il n'y en a aucune, même source que la page Annonces | Proposition non approuvée |
 | En-tête | Rectangle `#0033AD`, 80 pixels, sans rayon | La capsule flottante n'est pas retenue |
 | Police et neutres | Source Sans 3 et palette A-15 | Hypothèses A-11 et A-15 |
-| Nom sans logo | Wordmark texte | Hypothèse A-12 |
+| Logo officiel | À côté du nom « CIPot-DR Congo », sans cadre | A-12, fichier `public/brand/logo.png` |
 | Contact | Canaux D-32 dans le pied de page et sur la page Contact. Formulaire non dessiné | A-08 non approuvée, D-28 conditionnel. L'URL WhatsApp reste A-20 |
 | Activités réalisées | Liste et fiche par slug, administration associée | D-31 approuvée. Les pages ne sont pas construites. Le texte d'autorisation des portraits n'est pas rédigé |
 | Inscriptions réelles | Bouton inactif sans notice | A-13 non rédigée |

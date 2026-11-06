@@ -4,12 +4,15 @@ import { cache } from "react";
 
 import { createServiceRoleSupabaseClient } from "@/lib/supabase/service-role";
 import {
+  isEditorialId,
   listActivities,
   listAnnouncements,
   readPhaseFile,
   readResultFile,
   removeActivity,
   removeAnnouncement,
+  updateActivity,
+  updateAnnouncement,
   writeActivity,
   writeAnnouncement,
   writePhaseFile,
@@ -25,6 +28,7 @@ import {
 } from "@/lib/program-roadmap";
 import type { PublishedAnnouncement, PublishedResult } from "@/lib/public-data";
 import { activityCategories, type ActivityCategory } from "@/lib/documented-activities";
+import { plainExcerpt, sanitizeRichText } from "@/lib/rich-text";
 
 export type RecordAvailability = "ready" | "missing" | "error";
 
@@ -168,25 +172,54 @@ export async function readAdminAnnouncements(): Promise<{
   };
 }
 
+export type SavedRecord = {
+  status: AdminWriteStatus;
+  publicPath: string | null;
+};
+
 export async function saveAnnouncement(input: {
+  id?: string;
   title: string;
   body: string;
   publish: boolean;
-}): Promise<AdminWriteStatus> {
+}): Promise<SavedRecord> {
   const title = input.title.trim();
-  const body = input.body.trim();
-  if (title.length === 0 || title.length > 180 || body.length > 8000) {
-    return "invalid";
-  }
-
-  if (input.publish && body.length === 0) {
-    return "invalid";
+  const body = sanitizeRichText(input.body).trim();
+  if (title.length === 0 || title.length > 180 || body.length > 8000 || (input.publish && plainExcerpt(body, 8000).length === 0)) {
+    return { status: "invalid", publicPath: null };
   }
 
   const now = new Date().toISOString();
+  if (input.id && isEditorialId(input.id)) {
+    const records = await listAnnouncements();
+    if (records === "missing" || records === "error") {
+      return { status: records, publicPath: null };
+    }
+
+    const current = records.find((row) => row.id === input.id);
+    if (!current) {
+      return { status: "error", publicPath: null };
+    }
+
+    const status = input.publish ? "published" : "draft";
+    const saved = await updateAnnouncement({
+      ...current,
+      title,
+      body,
+      status,
+      publishedAt: status === "published" ? current.publishedAt ?? now : null,
+      updatedAt: now,
+    });
+    return {
+      status: saved,
+      publicPath: saved === "ok" && input.publish ? `/fr/annonces/${current.slug}` : null,
+    };
+  }
+
+  const slug = uniqueSlug(title);
   const saved = await writeAnnouncement({
     id: crypto.randomUUID(),
-    slug: uniqueSlug(title),
+    slug,
     title,
     body,
     status: input.publish ? "published" : "draft",
@@ -194,7 +227,10 @@ export async function saveAnnouncement(input: {
     createdAt: now,
     updatedAt: now,
   });
-  return saved;
+  return {
+    status: saved,
+    publicPath: saved === "ok" && input.publish ? `/fr/annonces/${slug}` : null,
+  };
 }
 
 export async function deleteAnnouncement(id: string): Promise<AdminWriteStatus> {
@@ -251,16 +287,16 @@ export async function saveResult(input: {
   place2: string;
   place3: string;
   publish: boolean;
-}): Promise<AdminWriteStatus> {
-  const statement = input.statement.trim();
+}): Promise<SavedRecord> {
+  const statement = sanitizeRichText(input.statement).trim();
   const places = [input.place1, input.place2, input.place3];
-  const complete = statement.length > 0 && places.every((id) => id.length > 0) && new Set(places).size === 3;
+  const complete = plainExcerpt(statement, 8000).length > 0 && places.every((id) => id.length > 0) && new Set(places).size === 3;
   if (input.publish && !complete) {
-    return "invalid";
+    return { status: "invalid", publicPath: null };
   }
 
   const now = new Date().toISOString();
-  return writeResultFile({
+  const status = await writeResultFile({
     statement,
     place1: input.place1,
     place2: input.place2,
@@ -269,6 +305,10 @@ export async function saveResult(input: {
     publishedAt: input.publish ? now : null,
     updatedAt: now,
   });
+  return {
+    status,
+    publicPath: status === "ok" && input.publish ? "/fr/resultats" : null,
+  };
 }
 
 export async function readAdminActivities(): Promise<{
@@ -299,33 +339,68 @@ export async function readAdminActivities(): Promise<{
 }
 
 export async function saveDocumentedActivity(input: {
+  id?: string;
   category: string;
   title: string;
   description: string;
   occurredOn: string;
   publish: boolean;
   image: EditorialImage | null;
-}): Promise<AdminWriteStatus> {
+}): Promise<SavedRecord> {
   if (!activityCategories.includes(input.category as ActivityCategory)) {
-    return "invalid";
+    return { status: "invalid", publicPath: null };
   }
 
   const title = input.title.trim();
-  const description = input.description.trim();
-  if (title.length === 0 || title.length > 180 || description.length > 4000) {
-    return "invalid";
+  const description = sanitizeRichText(input.description).trim();
+  if (title.length === 0 || title.length > 180 || description.length > 8000) {
+    return { status: "invalid", publicPath: null };
   }
 
   const occurredOn = /^\d{4}-\d{2}-\d{2}$/.test(input.occurredOn) ? input.occurredOn : "";
-  if (input.publish && (description.length === 0 || occurredOn.length === 0 || occurredOn > todayInGoma())) {
-    return "invalid";
+  if (input.publish && (plainExcerpt(description, 8000).length === 0 || occurredOn.length === 0 || occurredOn > todayInGoma())) {
+    return { status: "invalid", publicPath: null };
   }
 
   const now = new Date().toISOString();
+  if (input.id && isEditorialId(input.id)) {
+    const records = await listActivities();
+    if (records === "missing" || records === "error") {
+      return { status: records, publicPath: null };
+    }
+
+    const current = records.find((row) => row.id === input.id);
+    if (!current) {
+      return { status: "error", publicPath: null };
+    }
+
+    const status = input.publish ? "published" : "draft";
+    const saved = await updateActivity(
+      {
+        ...current,
+        category: input.category,
+        title,
+        description,
+        occurredOn,
+        status,
+        publishedAt: status === "published" ? current.publishedAt ?? now : null,
+        updatedAt: now,
+        hasImage: input.image ? true : current.hasImage,
+        imageType: input.image?.type ?? current.imageType,
+      },
+      input.image,
+    );
+    return {
+      status: saved,
+      publicPath: saved === "ok" && input.publish ? `/fr/activites/${current.slug}` : null,
+    };
+  }
+
+  const slug = uniqueSlug(title);
   const saved = await writeActivity(
     {
       id: crypto.randomUUID(),
-      slug: uniqueSlug(title),
+      slug,
       category: input.category,
       title,
       description,
@@ -339,7 +414,10 @@ export async function saveDocumentedActivity(input: {
     },
     input.image,
   );
-  return saved;
+  return {
+    status: saved,
+    publicPath: saved === "ok" && input.publish ? `/fr/activites/${slug}` : null,
+  };
 }
 
 export async function deleteActivity(id: string): Promise<AdminWriteStatus> {

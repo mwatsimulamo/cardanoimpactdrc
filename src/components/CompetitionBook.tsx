@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Suspense } from "react";
+import { ArticleBody } from "@/components/ArticleBody";
 import { blockTitle, justifiedText, primaryLink, secondaryLink, sectionTitle, supportText, textLink } from "@/components/classes";
 import { ExternalLink } from "@/components/ExternalLink";
 import { MenuBook, SectionHeading } from "@/components/MenuBook";
@@ -218,7 +219,7 @@ async function PublishedResults({
                 ))}
               </ul>
             ) : null}
-            <p className={`whitespace-pre-wrap ${justifiedText}`}>{result.statement[locale]}</p>
+            <ArticleBody text={result.statement[locale]} />
             <p>
               <Link className={textLink} href={localePath(locale, "annonces")}>
                 {dictionary.nav.announcements}

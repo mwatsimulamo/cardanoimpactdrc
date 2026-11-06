@@ -88,7 +88,7 @@ export function RegistrationForm({
 
     setPending(true);
     try {
-      const result = await submitTeamRegistration(draft);
+      const result = await submitTeamRegistration(draft, locale);
       if (result.status === "ok") {
         setAccessCode(result.accessCode ?? null);
         setAccessCodeCopied(false);

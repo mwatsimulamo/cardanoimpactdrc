@@ -3,7 +3,9 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useId, useRef, useState } from "react";
+import { BrandMark } from "@/components/BrandMark";
 import { ContactChannels } from "@/components/ContactChannels";
+import { NewsletterForm } from "@/components/NewsletterForm";
 import type { Locale } from "@/lib/locales";
 
 export type ChromeLink = {
@@ -31,6 +33,19 @@ type ChromeProps = {
   footerContact: string;
   followX: string;
   joinWhatsApp: string;
+  newsletter: {
+    title: string;
+    lede: string;
+    email: string;
+    name: string;
+    consent: string;
+    submit: string;
+    saved: string;
+    already: string;
+    invalid: string;
+    missing: string;
+    error: string;
+  };
   organizerEmail: string;
   organizerXUrl: string;
   whatsappInvitationUrl: string | null;
@@ -158,9 +173,12 @@ export function SiteHeader(props: ChromeProps) {
     <header ref={headerRef} className="fixed inset-x-0 top-0 z-20">
       <div className="bg-action text-white">
         <div className="flex h-20 w-full items-center justify-between px-5 md:px-8">
-          <Link href={props.homeHref} className="min-w-0 shrink leading-none">
-            <span className="block truncate text-lg font-semibold">{props.wordmark}</span>
-            <span className="mt-0.5 block text-[0.8125rem] leading-[1.3] text-white/80">{props.place}</span>
+          <Link href={props.homeHref} className="inline-flex min-w-0 shrink items-center gap-3 leading-none">
+            <BrandMark />
+            <span className="min-w-0">
+              <span className="block truncate text-lg font-semibold">{props.wordmark}</span>
+              <span className="mt-0.5 block text-[0.8125rem] leading-[1.3] text-white/80">{props.place}</span>
+            </span>
           </Link>
 
           <nav className="hidden min-w-0 flex-1 self-stretch items-center justify-center min-[1120px]:flex" aria-label={props.navigationLabel}>
@@ -347,11 +365,19 @@ export function SiteFooter(props: ChromeProps) {
   );
 
   return (
-    <footer className="mt-auto bg-action text-white">
-      <div className="mx-auto max-w-[72rem] px-5 py-12 md:px-8 md:py-16">
+    <footer className="mt-auto text-white">
+      <div className="relative">
+        <div className="absolute inset-x-0 top-1/2 bottom-0 bg-action" aria-hidden="true" />
+        <div className="relative mx-auto max-w-[46rem] px-5 py-5">
+          <NewsletterForm locale={props.locale} copy={props.newsletter} />
+        </div>
+      </div>
+      <div className="bg-action">
+      <div className="mx-auto max-w-[72rem] px-5 pb-12 pt-4 md:px-8 md:pb-16">
         <div className="grid gap-x-8 gap-y-10 sm:grid-cols-2 xl:grid-cols-4">
           <div>
-            <p className="text-lg font-semibold leading-none">{props.wordmark}</p>
+            <BrandMark className="h-14 w-auto self-start" />
+            <p className="mt-3 text-lg font-semibold leading-none">{props.wordmark}</p>
             <p className="mt-3 text-[0.9375rem] leading-[1.5] text-white/80">{props.place}</p>
           </div>
           <FooterMenu
@@ -402,7 +428,7 @@ export function SiteFooter(props: ChromeProps) {
             />
           </div>
         </div>
-        <div className="mt-12 flex flex-col gap-3 border-t border-white/25 pt-6 text-[0.9375rem] leading-[1.5] sm:flex-row sm:items-center sm:justify-between">
+        <div className="mt-10 flex flex-col gap-3 border-t border-white/25 pt-6 text-[0.9375rem] leading-[1.5] sm:flex-row sm:items-center sm:justify-between">
           <p>cardanoimpactdrc © 2026. {props.footerRights}</p>
           <p>
             {props.footerCredit}{" "}
@@ -417,6 +443,7 @@ export function SiteFooter(props: ChromeProps) {
             </a>
           </p>
         </div>
+      </div>
       </div>
     </footer>
   );

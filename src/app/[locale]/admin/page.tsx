@@ -4,6 +4,8 @@ import { getDictionary } from "@/content/get-dictionary";
 import { isLocale } from "@/lib/locales";
 import { privateMetadata } from "@/lib/metadata";
 
+export const instant = false;
+
 export async function generateMetadata({
   params,
 }: PageProps<"/[locale]/admin">): Promise<Metadata> {

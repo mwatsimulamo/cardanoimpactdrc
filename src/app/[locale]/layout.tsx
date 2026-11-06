@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Source_Sans_3 } from "next/font/google";
 import Link from "next/link";
 import { Suspense } from "react";
+import { BrandMark } from "@/components/BrandMark";
 import { ConstellationBackground } from "@/components/ConstellationBackground";
 import { SiteFooter, SiteHeader } from "@/components/SiteChrome";
 import { getDictionary } from "@/content/get-dictionary";
@@ -84,6 +85,7 @@ export default async function LocaleLayout({
     footerContact: dictionary.chrome.footerContact,
     followX: dictionary.chrome.followX,
     joinWhatsApp: dictionary.chrome.joinWhatsApp,
+    newsletter: dictionary.newsletter,
     organizerEmail,
     organizerXUrl,
     whatsappInvitationUrl: getWhatsappInvitationUrl(),
@@ -122,10 +124,13 @@ function HeaderFallback({ wordmark, place }: { wordmark: string; place: string }
   return (
     <header className="fixed inset-x-0 top-0 z-20 bg-action">
       <div className="flex h-20 w-full items-center px-5 md:px-8">
-        <span className="text-base font-semibold text-white md:text-lg">
-          {wordmark}
-          <span className="mt-1 block text-[0.8125rem] font-normal leading-[1.4] text-white/80">
-            {place}
+        <span className="inline-flex items-center gap-3 text-base font-semibold text-white md:text-lg">
+          <BrandMark />
+          <span>
+            {wordmark}
+            <span className="mt-1 block text-[0.8125rem] font-normal leading-[1.4] text-white/80">
+              {place}
+            </span>
           </span>
         </span>
       </div>

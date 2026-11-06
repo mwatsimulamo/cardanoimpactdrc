@@ -6,12 +6,12 @@ import { registerSubmittedTeam, type SubmitTeamResult } from "@/lib/register-sub
 
 export type { SubmitTeamResult };
 
-export async function submitTeamRegistration(input: unknown): Promise<SubmitTeamResult> {
+export async function submitTeamRegistration(input: unknown, locale: string): Promise<SubmitTeamResult> {
   if (registrationGate() !== "open") {
     return { status: "error" };
   }
 
-  const result = await registerSubmittedTeam(input);
+  const result = await registerSubmittedTeam(input, locale === "en" ? "en" : "fr");
   if (result.status === "ok") {
     revalidatePath("/fr");
     revalidatePath("/en");

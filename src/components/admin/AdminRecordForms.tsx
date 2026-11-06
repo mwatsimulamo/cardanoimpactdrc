@@ -1,7 +1,9 @@
 "use client";
 
 import { useActionState, useEffect, useRef, useState } from "react";
+import { ArticleBody } from "@/components/ArticleBody";
 import { bodyText, fieldControl, fieldLabel, primaryLink, secondaryLink, supportText } from "@/components/classes";
+import { RichTextField } from "@/components/admin/RichTextField";
 import { StatusMessage } from "@/components/StatusMessage";
 import type { Dictionary } from "@/content/types";
 import {
@@ -59,17 +61,50 @@ export function PhaseStatusForm({
   );
 }
 
-export function AnnouncementForm({ dictionary }: { dictionary: Dictionary }) {
+export function AnnouncementForm({
+  dictionary,
+  record,
+}: {
+  dictionary: Dictionary;
+  record?: { id: string; title: string; body: string };
+}) {
   const [state, action, pending] = useActionState(saveAnnouncementAction, null);
+  const [preview, setPreview] = useState("");
   const copy = dictionary.adminUi;
-  const formRef = useResetOnSuccess(state);
+  const formRef = useResetOnSuccess(state, !record);
 
   return (
-    <form ref={formRef} action={action} className="max-w-2xl space-y-4 border border-line bg-canvas px-5 py-5">
-      <h2 className="text-[1.25rem] font-semibold text-ink">{copy.create}</h2>
-      <p className={bodyText}>Le texte est publié tel que vous l&apos;écrivez, sur les pages française et anglaise.</p>
-      <TextField name="title" label="Titre" />
-      <TextArea name="body" label="Texte" />
+    <form ref={formRef} action={action} className="max-w-3xl space-y-4">
+      {record ? <input type="hidden" name="id" value={record.id} /> : null}
+      <h2 className="text-[1.25rem] font-semibold text-ink">{record ? "Modifier l'annonce" : copy.create}</h2>
+      <p className={bodyText}>
+        {record
+          ? "Le brouillon retire l'annonce du site. Publier la remet en ligne, à la même adresse."
+          : "Le texte est publié tel que vous l'écrivez, sur les pages française et anglaise."}
+      </p>
+      <TextField name="title" label="Titre" defaultValue={record?.title ?? ""} required />
+      <RichTextField key={record?.id ?? "new-announcement"} name="body" label="Texte" defaultValue={record?.body ?? ""} />
+      <button
+        type="button"
+        className={secondaryLink}
+        onClick={() => {
+          if (!formRef.current) {
+            return;
+          }
+          setPreview(String(new FormData(formRef.current).get("body") ?? ""));
+        }}
+      >
+        Aperçu
+      </button>
+      {preview ? (
+        <div className="border border-line bg-canvas px-5 py-5">
+          <p className={supportText}>Aperçu du texte, avant publication.</p>
+          <div className="mt-4">
+            <ArticleBody text={preview} />
+          </div>
+        </div>
+      ) : null}
+      <NotifyFields />
       <PublishButtons pending={pending} draft={copy.draft} publish={copy.publish} />
       <ActionNotice state={state} dictionary={dictionary} />
     </form>
@@ -115,7 +150,8 @@ export function ResultForm({
           </select>
         </label>
       ))}
-      <TextArea name="statement" label="Texte du résultat" defaultValue={statement} />
+      <RichTextField name="statement" label="Texte du résultat" defaultValue={statement} />
+      <NotifyFields />
       <PublishButtons pending={pending} draft={copy.draft} publish={copy.publish} />
       <ActionNotice state={state} dictionary={dictionary} />
     </form>
@@ -125,23 +161,28 @@ export function ResultForm({
 export function ActivityForm({
   dictionary,
   categories,
+  record,
 }: {
   dictionary: Dictionary;
   categories: readonly { id: ActivityCategory; label: string }[];
+  record?: { id: string; category: ActivityCategory; title: string; description: string; occurredOn: string };
 }) {
   const [state, action, pending] = useActionState(saveActivityAction, null);
+  const [preview, setPreview] = useState("");
   const copy = dictionary.adminUi;
-  const formRef = useResetOnSuccess(state);
+  const formRef = useResetOnSuccess(state, !record);
 
   return (
-    <form ref={formRef} action={action} className="max-w-2xl space-y-4 border border-line bg-canvas px-5 py-5">
-      <h2 className="text-[1.25rem] font-semibold text-ink">{copy.create}</h2>
+    <form ref={formRef} action={action} className="max-w-3xl space-y-4">
+      {record ? <input type="hidden" name="id" value={record.id} /> : null}
+      <h2 className="text-[1.25rem] font-semibold text-ink">{record ? "Modifier l'activité" : copy.create}</h2>
       <p className={bodyText}>
         Date déjà passée, description et photographie. L&apos;original est conservé. Une activité à venir ne peut pas être publiée comme tenue.
+        {record ? " Le brouillon retire la fiche du site. Sans nouvelle photographie, l'originale est conservée." : ""}
       </p>
       <label className={fieldLabel}>
         Catégorie
-        <select name="category" className={`mt-2 ${fieldControl}`} defaultValue={categories[0]?.id}>
+        <select name="category" className={`mt-2 ${fieldControl}`} defaultValue={record?.category ?? categories[0]?.id}>
           {categories.map((item) => (
             <option key={item.id} value={item.id}>
               {item.label}
@@ -149,13 +190,34 @@ export function ActivityForm({
           ))}
         </select>
       </label>
-      <TextField name="title" label="Titre (ex. Première session)" />
-      <TextArea name="description" label="Description" />
+      <TextField name="title" label="Titre (ex. Première session)" defaultValue={record?.title ?? ""} required />
+      <RichTextField key={record?.id ?? "new-activity"} name="description" label="Description" defaultValue={record?.description ?? ""} />
       <label className={fieldLabel}>
         Date réelle
-        <input name="occurredOn" type="date" className={`mt-2 ${fieldControl}`} />
+        <input name="occurredOn" type="date" defaultValue={record?.occurredOn ?? ""} className={`mt-2 ${fieldControl}`} />
       </label>
-      <ImageField />
+      <ImageField hint={record ? "Laisser vide pour conserver la photographie actuelle." : undefined} />
+      <button
+        type="button"
+        className={secondaryLink}
+        onClick={() => {
+          if (!formRef.current) {
+            return;
+          }
+          setPreview(String(new FormData(formRef.current).get("description") ?? ""));
+        }}
+      >
+        Aperçu
+      </button>
+      {preview ? (
+        <div className="border border-line bg-canvas px-5 py-5">
+          <p className={supportText}>Aperçu de la description, avant publication.</p>
+          <div className="mt-4">
+            <ArticleBody text={preview} />
+          </div>
+        </div>
+      ) : null}
+      <NotifyFields />
       <PublishButtons pending={pending} draft={copy.draft} publish={copy.publish} />
       <ActionNotice state={state} dictionary={dictionary} />
     </form>
@@ -177,6 +239,37 @@ export function GalleryForm({ dictionary }: { dictionary: Dictionary }) {
   );
 }
 
+function NotifyFields() {
+  return (
+    <fieldset className="space-y-2 border border-line px-4 py-4">
+      <legend className={fieldLabel}>Courriel après publication</legend>
+      <p className={supportText}>
+        La publication est enregistrée même si l&apos;envoi échoue. Le sujet indique la catégorie et le titre. Le bouton ouvre la page publiée. Aucun envoi sans case cochée. Les abonnés ne reçoivent que cette nouvelle liée au site.
+      </p>
+      <label className="flex min-h-11 items-center gap-3 text-base text-ink">
+        <input name="audience" type="checkbox" value="teams" />
+        Toutes les équipes
+      </label>
+      <label className="flex min-h-11 items-center gap-3 text-base text-ink">
+        <input name="audience" type="checkbox" value="leaders" />
+        Responsables d&apos;équipe
+      </label>
+      <label className="flex min-h-11 items-center gap-3 text-base text-ink">
+        <input name="audience" type="checkbox" value="members" />
+        Membres, hors responsables
+      </label>
+      <label className="flex min-h-11 items-center gap-3 text-base text-ink">
+        <input name="audience" type="checkbox" value="subscribers" />
+        Abonnés à la lettre
+      </label>
+      <label className={fieldLabel}>
+        Message du courriel
+        <textarea name="mailNote" rows={4} className={fieldControl} />
+      </label>
+    </fieldset>
+  );
+}
+
 function PublishButtons({ pending, draft, publish }: { pending: boolean; draft: string; publish: string }) {
   return (
     <div className="flex flex-col gap-3 sm:flex-row">
@@ -190,11 +283,21 @@ function PublishButtons({ pending, draft, publish }: { pending: boolean; draft: 
   );
 }
 
-function TextField({ name, label }: { name: string; label: string }) {
+function TextField({
+  name,
+  label,
+  defaultValue = "",
+  required = false,
+}: {
+  name: string;
+  label: string;
+  defaultValue?: string;
+  required?: boolean;
+}) {
   return (
     <label className={fieldLabel}>
       {label}
-      <input name={name} className={`mt-2 ${fieldControl}`} />
+      <input name={name} defaultValue={defaultValue} required={required} maxLength={180} className={`mt-2 ${fieldControl}`} />
     </label>
   );
 }
@@ -208,7 +311,7 @@ function TextArea({ name, label, defaultValue = "" }: { name: string; label: str
   );
 }
 
-function ImageField() {
+function ImageField({ hint }: { hint?: string }) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [message, setMessage] = useState("");
@@ -254,6 +357,7 @@ function ImageField() {
           }}
         />
       </label>
+      {hint ? <p className={`mt-2 ${supportText}`}>{hint}</p> : null}
       {message ? <p className={`mt-2 ${supportText}`}>{message}</p> : null}
       {preview ? (
         // Aperçu local de l'original choisi. Le fichier déposé n'est pas recompressé.
@@ -264,14 +368,14 @@ function ImageField() {
   );
 }
 
-function useResetOnSuccess(state: AdminActionState) {
+function useResetOnSuccess(state: AdminActionState, enabled = true) {
   const formRef = useRef<HTMLFormElement>(null);
 
   useEffect(() => {
-    if (state?.status === "ok") {
+    if (enabled && state?.status === "ok") {
       formRef.current?.reset();
     }
-  }, [state]);
+  }, [enabled, state]);
 
   return formRef;
 }

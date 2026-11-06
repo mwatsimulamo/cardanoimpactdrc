@@ -150,6 +150,20 @@ export async function writeAnnouncement(record: StoredAnnouncement): Promise<Sto
   });
 }
 
+export async function updateAnnouncement(record: StoredAnnouncement): Promise<StoreWrite> {
+  if (!isEditorialId(record.id)) {
+    return "error";
+  }
+
+  return updateRow("announcements", record.id, {
+    title_fr: record.title,
+    body_fr: record.body,
+    status: record.status,
+    published_at: record.publishedAt,
+    updated_at: record.updatedAt,
+  });
+}
+
 export async function removeAnnouncement(id: string): Promise<StoreWrite> {
   return removeRow("announcements", id);
 }
@@ -216,6 +230,29 @@ export async function writeActivity(record: StoredActivity, image?: EditorialIma
     created_at: record.createdAt,
     updated_at: record.updatedAt,
   });
+}
+
+export async function updateActivity(record: StoredActivity, image?: EditorialImage | null): Promise<StoreWrite> {
+  if (!isEditorialId(record.id) || (image && !IMAGE_TYPES.has(image.type))) {
+    return "error";
+  }
+
+  const values: Record<string, unknown> = {
+    category: record.category,
+    title_fr: record.title,
+    description_fr: record.description,
+    occurred_on: record.occurredOn || null,
+    status: record.status,
+    published_at: record.publishedAt,
+    updated_at: record.updatedAt,
+  };
+  if (image) {
+    values.has_image = true;
+    values.image_type = image.type;
+    values.image_data = encodeImage(image);
+  }
+
+  return updateRow("documented_activities", record.id, values);
 }
 
 export async function removeActivity(id: string): Promise<StoreWrite> {
@@ -444,6 +481,21 @@ async function selectRows<T>(table: string, columns: string): Promise<T[] | "mis
     }
 
     return (data ?? []) as T[];
+  } catch (error) {
+    unstable_rethrow(error);
+    return "error";
+  }
+}
+
+async function updateRow(table: string, id: string, values: Record<string, unknown>): Promise<StoreWrite> {
+  if (!isEditorialId(id)) {
+    return "error";
+  }
+
+  try {
+    const supabase = createServiceRoleSupabaseClient();
+    const { error } = await supabase.from(table).update(values).eq("id", id);
+    return error ? classify(error) : "ok";
   } catch (error) {
     unstable_rethrow(error);
     return "error";

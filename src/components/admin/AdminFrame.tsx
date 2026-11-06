@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useActionState, useState } from "react";
+import { BrandMark } from "@/components/BrandMark";
 import { bodyText, ghostButton, primaryLink, supportText, textLink } from "@/components/classes";
 import { StatusMessage } from "@/components/StatusMessage";
 import type { Dictionary } from "@/content/types";
@@ -19,6 +20,7 @@ const modules = [
   { href: "/resultats", key: "navResults" },
   { href: "/pages", key: "navPages" },
   { href: "/historique", key: "navHistory" },
+  { href: "/communications", key: "navCommunications" },
 ] as const;
 
 export function AdminFrame({
@@ -69,12 +71,13 @@ function AdminShell({
 
   return (
     <div className="flex min-h-svh flex-col md:flex-row">
-      <aside className="border-b border-line bg-canvas md:w-64 md:shrink-0 md:border-b-0 md:border-r">
+      <aside className="border-b border-line bg-canvas md:sticky md:top-0 md:flex md:h-svh md:w-64 md:shrink-0 md:flex-col md:overflow-y-auto md:border-b-0 md:border-r">
         <div className="px-5 py-6">
-          <p className="text-[0.9375rem] font-semibold text-ink">{copy.loginTitle}</p>
+          <BrandMark alt={dictionary.chrome.wordmark} className="h-12 w-auto self-start" />
+          <p className="mt-3 text-[0.9375rem] font-semibold text-ink">{copy.loginTitle}</p>
           <p className={`mt-2 ${supportText}`}>{dictionary.chrome.wordmark}</p>
         </div>
-        <nav className="flex flex-col px-3 pb-4" aria-label={copy.loginTitle}>
+        <nav className="flex flex-col px-3 pb-4 md:min-h-0 md:flex-1 md:overflow-y-auto" aria-label={copy.loginTitle}>
           {modules.map((item) => {
             const href = localePath(locale, `admin${item.href}`);
             const current = item.href.length === 0 ? pathname === href : pathname === href || pathname.startsWith(`${href}/`);
@@ -82,8 +85,8 @@ function AdminShell({
               <Link
                 key={item.href}
                 href={href}
-                className={`min-h-11 px-3 py-2 text-[0.9375rem] ${
-                  current ? "bg-surface font-semibold text-ink" : "text-muted hover:text-ink"
+                className={`min-h-11 border-l-2 px-3 py-2 text-[0.9375rem] ${
+                  current ? "border-white bg-surface font-semibold text-ink" : "border-transparent text-muted hover:text-ink"
                 }`}
                 aria-current={current ? "page" : undefined}
               >
@@ -116,7 +119,8 @@ export function AdminLoginForm({ dictionary }: { dictionary: Dictionary }) {
 
   return (
     <div className="mx-auto flex min-h-svh max-w-[32rem] flex-col justify-center px-5 py-16">
-      <h1 className="text-[2.25rem] font-semibold text-ink">{copy.loginTitle}</h1>
+      <BrandMark alt={dictionary.chrome.wordmark} className="h-16 w-auto self-start" />
+      <h1 className="mt-6 text-[2.25rem] font-semibold text-ink">{copy.loginTitle}</h1>
       <p className={`mt-4 ${bodyText}`}>{copy.loginLede}</p>
       <form className="mt-8 space-y-4" action={formAction} noValidate>
         <label className="block text-[0.9375rem] font-semibold text-ink" htmlFor="admin-email">

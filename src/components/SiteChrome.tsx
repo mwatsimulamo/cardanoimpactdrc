@@ -23,8 +23,9 @@ type ChromeProps = {
   nav: readonly ChromeLink[];
   programMenu: readonly ChromeLink[];
   register: ChromeLink;
-  footerNote: string;
   footerProgram: string;
+  footerRights: string;
+  footerCredit: string;
   footerInformation: string;
   footerParticipate: string;
   footerContact: string;
@@ -340,7 +341,6 @@ export function SiteFooter(props: ChromeProps) {
     return null;
   }
 
-  const informationPaths = ["annonces", "contact"];
   const participatePaths = ["concours", "resultats"];
   const footerProgram = props.programMenu.filter(
     (item) => !item.href.includes("feuille-de-route") && !item.href.includes("#organizer-contact"),
@@ -348,66 +348,74 @@ export function SiteFooter(props: ChromeProps) {
 
   return (
     <footer className="mt-auto bg-action text-white">
-      <div className="mx-auto grid max-w-[72rem] gap-10 px-5 py-12 md:grid-cols-2 md:px-8 md:py-16 xl:grid-cols-12">
-        <div className="xl:col-span-4">
-          <p className="text-lg font-semibold leading-none">{props.wordmark}</p>
-          <p className="mt-3 text-[0.9375rem] leading-[1.5] text-white/80">{props.place}</p>
-          <p className="mt-4 max-w-sm text-[0.9375rem] leading-[1.6] text-white/80">{props.footerNote}</p>
-        </div>
-        <FooterMenu
-          className="xl:col-span-2"
-          title={props.footerProgram}
-          pathname={pathname}
-          homeHref={props.homeHref}
-          items={footerProgram}
-        />
-        <FooterMenu
-          className="xl:col-span-2"
-          title={props.footerInformation}
-          pathname={pathname}
-          homeHref={props.homeHref}
-          items={pickLinks(props.nav, props.homeHref, informationPaths)}
-        />
-        <div className="xl:col-span-2">
-          <p className="text-[0.9375rem] font-semibold">{props.footerParticipate}</p>
-          <Link
-            href={props.register.href}
-            aria-current={isCurrent(pathname, props.register.href, props.homeHref) ? "page" : undefined}
-            className={`${actionButton} mt-4`}
-          >
-            {props.register.label}
-          </Link>
-          <ul className="mt-4">
-            {pickLinks(props.nav, props.homeHref, participatePaths).map((item) => {
-              const current = isCurrent(pathname, item.href, props.homeHref);
-              return (
-                <li key={item.href}>
-                  <Link
-                    href={item.href}
-                    aria-current={current ? "page" : undefined}
-                    className={`inline-flex min-h-12 items-center text-base text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white ${
-                      current ? "font-semibold underline decoration-white underline-offset-[3px]" : "hover:underline"
-                    }`}
-                  >
-                    {item.label}
-                  </Link>
-                </li>
-              );
-            })}
-          </ul>
-        </div>
-        <div className="xl:col-span-2">
-          <h2 className="text-[0.9375rem] font-semibold">{props.footerContact}</h2>
-          <ContactChannels
-            tone="footer"
-            email={props.organizerEmail}
-            emailHref={`mailto:${props.organizerEmail}`}
-            xLabel={props.followX}
-            xHref={props.organizerXUrl}
-            whatsappLabel={props.joinWhatsApp}
-            whatsappHref={props.whatsappInvitationUrl}
-            newTabLabel={props.opensNewTab}
+      <div className="mx-auto max-w-[72rem] px-5 py-12 md:px-8 md:py-16">
+        <div className="grid gap-x-8 gap-y-10 sm:grid-cols-2 xl:grid-cols-4">
+          <div>
+            <p className="text-lg font-semibold leading-none">{props.wordmark}</p>
+            <p className="mt-3 text-[0.9375rem] leading-[1.5] text-white/80">{props.place}</p>
+          </div>
+          <FooterMenu
+            title={props.footerProgram}
+            pathname={pathname}
+            homeHref={props.homeHref}
+            items={footerProgram}
           />
+          <div>
+            <p className="text-[0.9375rem] font-semibold">{props.footerParticipate}</p>
+            <Link
+              href={props.register.href}
+              aria-current={isCurrent(pathname, props.register.href, props.homeHref) ? "page" : undefined}
+              className={`${actionButton} mt-4`}
+            >
+              {props.register.label}
+            </Link>
+            <ul className="mt-2">
+              {pickLinks(props.nav, props.homeHref, participatePaths).map((item) => {
+                const current = isCurrent(pathname, item.href, props.homeHref);
+                return (
+                  <li key={item.href}>
+                    <Link
+                      href={item.href}
+                      aria-current={current ? "page" : undefined}
+                      className={`inline-flex min-h-11 items-center text-[0.9375rem] text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white ${
+                        current ? "font-semibold underline decoration-white underline-offset-[3px]" : "hover:underline"
+                      }`}
+                    >
+                      {item.label}
+                    </Link>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+          <div>
+            <h2 className="text-[0.9375rem] font-semibold">{props.footerContact}</h2>
+            <ContactChannels
+              tone="footer"
+              email={props.organizerEmail}
+              emailHref={`mailto:${props.organizerEmail}`}
+              xLabel={props.followX}
+              xHref={props.organizerXUrl}
+              whatsappLabel={props.joinWhatsApp}
+              whatsappHref={props.whatsappInvitationUrl}
+              newTabLabel={props.opensNewTab}
+            />
+          </div>
+        </div>
+        <div className="mt-12 flex flex-col gap-3 border-t border-white/25 pt-6 text-[0.9375rem] leading-[1.5] sm:flex-row sm:items-center sm:justify-between">
+          <p>cardanoimpactdrc © 2026. {props.footerRights}</p>
+          <p>
+            {props.footerCredit}{" "}
+            <a
+              className="underline decoration-white/70 underline-offset-[3px] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+              href="https://github.com/mwatsimulamo"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Olivier Mwatsimulamo
+              <span className="sr-only"> ({props.opensNewTab})</span>
+            </a>
+          </p>
         </div>
       </div>
     </footer>
@@ -423,20 +431,18 @@ function pickLinks(nav: readonly ChromeLink[], homeHref: string, paths: readonly
 }
 
 function FooterMenu({
-  className,
   title,
   items,
   pathname,
   homeHref,
 }: {
-  className: string;
   title: string;
   items: readonly ChromeLink[];
   pathname: string;
   homeHref: string;
 }) {
   return (
-    <nav className={className} aria-label={title}>
+    <nav aria-label={title}>
       <p className="text-[0.9375rem] font-semibold">{title}</p>
       <ul className="mt-3">
         {items.map((item) => {

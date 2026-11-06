@@ -6,7 +6,7 @@ import { PageFrame, PageHeader } from "@/components/PageHeader";
 import { getDictionary } from "@/content/get-dictionary";
 import { isLocale, localePath, type Locale } from "@/lib/locales";
 import { pageMetadata } from "@/lib/metadata";
-import { getPublishedAnnouncement } from "@/lib/public-data";
+import { readPublishedAnnouncements } from "@/lib/published-records";
 
 export const instant = false;
 
@@ -19,7 +19,7 @@ export async function generateMetadata({
   }
 
   const dictionary = getDictionary(locale);
-  const announcement = getPublishedAnnouncement(slug);
+  const announcement = await publishedAnnouncement(slug);
   if (!announcement || announcement.title[locale].trim().length === 0) {
     return pageMetadata(dictionary.notFound.title, dictionary.meta.siteName);
   }
@@ -35,7 +35,7 @@ export default async function AnnouncementPage({
     notFound();
   }
 
-  const announcement = getPublishedAnnouncement(slug);
+  const announcement = await publishedAnnouncement(slug);
   if (
     !announcement ||
     announcement.title[locale].trim().length === 0 ||
@@ -62,6 +62,11 @@ export default async function AnnouncementPage({
       </p>
     </PageFrame>
   );
+}
+
+async function publishedAnnouncement(slug: string) {
+  const items = await readPublishedAnnouncements();
+  return items.find((item) => item.slug === slug);
 }
 
 function formatDate(value: string, locale: Locale): string {

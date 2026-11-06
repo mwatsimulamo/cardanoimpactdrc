@@ -17,8 +17,9 @@ export type Dictionary = {
     language: string;
     skip: string;
     navigation: string;
-    footerNote: string;
     footerProgram: string;
+    footerRights: string;
+    footerCredit: string;
     footerInformation: string;
     footerParticipate: string;
     footerContact: string;

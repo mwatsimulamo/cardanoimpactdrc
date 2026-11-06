@@ -20,9 +20,9 @@ export const fr = {
     language: "Langue",
     skip: "Aller au contenu",
     navigation: "Navigation",
-    footerNote:
-      "Les informations affichées sont celles publiées par les organisateurs.",
     footerProgram: "Programme",
+    footerRights: "Tous droits réservés.",
+    footerCredit: "Développé par",
     footerInformation: "Informations",
     footerParticipate: "Participer",
     footerContact: "Contactez-nous",

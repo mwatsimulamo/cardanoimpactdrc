@@ -122,7 +122,7 @@ La connexion n'apparaît pas dans ce menu. Sous 768 pixels, le même principe «
 | --- | --- |
 | Barre publique | Nom en texte, « Goma · 2026 », navigation, langue, action Inscription |
 | En-tête | Barre rectangulaire `#0033AD`, menus Programme, Concours, Activités et Informations, petit menu FAQ avant le choix de langue, interrupteur visible par le code courant. Le menu Programme suit les parties de la page. Le menu Concours contient Concours, Évaluations, Équipes participantes et Résultats. |
-| Pied de page | Fond `#0033AD`, sans langue et sans lettre d'information. Programme sans accueil, sans feuille de route et sans équipe. Pas de colonne Activités. Informations : annonces et contact. Concours et Résultats dans Participer. Équipes participantes et Évaluations n'y figurent pas. Section Contactez-nous selon D-32. |
+| Pied de page | Fond `#0033AD`, sans langue et sans lettre d'information. Programme sans accueil, sans feuille de route et sans équipe. Pas de colonne Activités. Pas de menu Informations. Concours et Résultats dans Participer. Équipes participantes et Évaluations n'y figurent pas. Section Contactez-nous selon D-32. Bas de page : cardanoimpactdrc © 2026, tous droits réservés, et le crédit vers https://github.com/mwatsimulamo. |
 | Bouton principal | Fond `#0033AD`, texte blanc, libellé explicite |
 | Bouton secondaire | Fond blanc, bordure `#D5DCE6` |
 | Champ | Étiquette au-dessus, mot « obligatoire » dans l'étiquette si le champ l'est, erreur reliée par `aria-describedby` |
@@ -412,18 +412,19 @@ L'en-tête et le pied de page partagent le fond `#0033AD`. L'en-tête est une ba
 
 Le pied de page, sur chaque page publique :
 
-- nom du programme et la phrase approuvée sur l'origine des informations ;
+- nom du site et le lieu, sans la phrase sur l'origine des informations ;
 - menu Programme : les parties de la page et le calendrier, sans accueil, sans feuille de route et sans équipe ;
-- menu Informations : annonces et contact ;
+- pas de menu Informations ;
 - menu Participer : inscription, concours et résultats, sans Équipes participantes, sans Évaluations, sans choix de langue et sans lettre d'information ;
-- section « Contactez-nous » / « Contact Us », sous les menus, en texte blanc sur `#0033AD`.
+- section « Contactez-nous » / « Contact Us », dans la même grille, en texte blanc sur `#0033AD` ;
+- sous la grille, à gauche « cardanoimpactdrc © 2026 » puis « Tous droits réservés. » / « All rights reserved. », à droite « Développé par » / « Developed by » Olivier Mwatsimulamo, lien vers https://github.com/mwatsimulamo, nouvel onglet, `noopener` et `noreferrer`.
 
 La section contact, dans les deux langues :
 
 1. Titre de section.
 2. Courriel `mwatsimulamoolivier@gmail.com`, lien `mailto:`, assez grand pour être lu et activé au doigt.
 3. Lien « Suivez-nous sur X » / « Follow us on X », icône X locale à gauche du libellé, vers https://x.com/OlivierMWATSIM1, nouvel onglet, `rel="noopener noreferrer"`.
-4. Lien « Rejoindre notre groupe WhatsApp » / « Join our WhatsApp Group », icône WhatsApp locale à gauche du libellé, vers https://chat.whatsapp.com/BqgI2xN2EDNI34a06TsNTZ, mêmes attributs de lien externe. La colonne Contactez-nous est dans la même grille que Programme, Informations et Participer.
+4. Lien « Rejoindre notre groupe WhatsApp » / « Join our WhatsApp Group », icône WhatsApp locale à gauche du libellé, vers https://chat.whatsapp.com/BqgI2xN2EDNI34a06TsNTZ, mêmes attributs de lien externe. La colonne Contactez-nous est dans la même grille que Programme et Participer.
 
 Les icônes sont des SVG du projet, d'une seule couleur blanche, d'environ 20 pixels, avec le libellé visible. Elles ne sont pas le seul nom accessible du lien. Sur une largeur étroite, les trois canaux passent l'un sous l'autre, sans défilement horizontal. Le reste du pied de page reste en place.
 

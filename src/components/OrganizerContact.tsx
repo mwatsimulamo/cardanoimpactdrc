@@ -1,5 +1,6 @@
 import { existsSync } from "node:fs";
 import path from "node:path";
+import type { ReactNode } from "react";
 import { blockTitle, justifiedText, sectionTitle, supportText, textLink } from "@/components/classes";
 import { OriginalImage } from "@/components/OriginalImage";
 import { ContactChannels } from "@/components/ContactChannels";
@@ -127,36 +128,16 @@ function OrganizerContactLive({
         </div>
       ) : null}
       {portraits.length > 0 ? (
-        <ul className={featureCards ? "mt-8 grid gap-5 sm:grid-cols-2 xl:grid-cols-3" : "mt-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-3"}>
-          {portraits.map((person) =>
-            featureCards ? (
-              <li key={person.id} className="flex h-full flex-col border border-line bg-canvas">
-                {person.imageSrc ? (
-                  <OriginalImage src={person.imageSrc} alt="" className="aspect-[4/3] w-full object-cover" />
-                ) : (
-                  <div className="aspect-[4/3] bg-surface" />
-                )}
-                <div className="flex flex-1 flex-col px-5 py-6 text-center md:px-6">
-                  <h3 className={blockTitle}>{person.name}</h3>
-                  <p className={`mt-2 ${supportText}`}>{person.role[locale]}</p>
-                  <PortraitLinks person={person} dictionary={dictionary} className="mt-auto justify-center pt-6" />
-                </div>
-              </li>
-            ) : (
-              <li key={person.id} className="grid grid-cols-[4.25rem_minmax(0,1fr)] border border-line bg-canvas">
-                {person.imageSrc ? (
-                  <OriginalImage src={person.imageSrc} alt="" className="h-full min-h-24 w-full object-cover" />
-                ) : (
-                  <div className="min-h-24 bg-surface" />
-                )}
-                <div className="px-4 py-3">
-                  <h3 className="text-base font-semibold leading-[1.35] text-ink">{person.name}</h3>
-                  <p className={`mt-1 ${supportText}`}>{person.role[locale]}</p>
-                  <PortraitLinks person={person} dictionary={dictionary} className="mt-3" />
-                </div>
-              </li>
-            ),
-          )}
+        <ul className={featureCards ? "mt-8 grid gap-8 sm:grid-cols-2 xl:grid-cols-3" : "mt-6 grid gap-6 sm:grid-cols-2 xl:grid-cols-3"}>
+          {portraits.map((person) => (
+            <li key={person.id} className="flex h-full flex-col text-center">
+              <PortraitPhoto person={person} dictionary={dictionary} />
+              <div className="mt-4 min-h-24">
+                <h3 className={blockTitle}>{person.name}</h3>
+                <p className={`mt-1 ${supportText}`}>{person.role[locale]}</p>
+              </div>
+            </li>
+          ))}
         </ul>
       ) : null}
     </section>
@@ -172,55 +153,87 @@ function portraitOnDisk(src: string | null): string | null {
   return existsSync(file) ? src : null;
 }
 
-function PortraitLinks({
+function PortraitPhoto({
   person,
   dictionary,
-  className,
 }: {
   person: OrganizerPortrait;
   dictionary: Dictionary;
-  className: string;
 }) {
+  const xHref = organizerProfileUrl(person.xUrl);
+  const linkedInHref = organizerProfileUrl(person.linkedInUrl);
+
   return (
-    <div className={`flex flex-wrap gap-x-5 gap-y-2 ${className}`}>
-      <ProfileLink
-        label="X"
-        href={organizerProfileUrl(person.xUrl)}
-        name={person.name}
-        newTab={dictionary.links.opensNewTab}
-      />
-      <ProfileLink
-        label="LinkedIn"
-        href={organizerProfileUrl(person.linkedInUrl)}
-        name={person.name}
-        newTab={dictionary.links.opensNewTab}
-      />
+    <div className="group relative aspect-square overflow-hidden rounded-[8px] bg-surface">
+      {person.imageSrc ? (
+        <OriginalImage src={person.imageSrc} alt="" className="h-full w-full object-contain" />
+      ) : null}
+      {person.imageSrc ? (
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 flex items-center justify-center gap-3 bg-brand-pressed/80 py-2 opacity-0 transition-opacity duration-150 group-hover:opacity-100 group-focus-within:opacity-100">
+          <ProfileIcon href={xHref} label="X" name={person.name} newTab={dictionary.links.opensNewTab}>
+            <XIcon />
+          </ProfileIcon>
+          <ProfileIcon href={linkedInHref} label="LinkedIn" name={person.name} newTab={dictionary.links.opensNewTab}>
+            <LinkedInIcon />
+          </ProfileIcon>
+        </div>
+      ) : null}
     </div>
   );
 }
 
-function ProfileLink({
-  label,
+function ProfileIcon({
   href,
+  label,
   name,
   newTab,
+  children,
 }: {
-  label: string;
   href: string | null;
+  label: string;
   name: string;
   newTab: string;
+  children: ReactNode;
 }) {
+  const className =
+    "pointer-events-auto inline-flex size-10 items-center justify-center text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white";
+
   if (!href) {
-    return <span className={supportText}>{label}</span>;
+    return (
+      <span className={className} aria-hidden="true">
+        {children}
+      </span>
+    );
   }
 
   return (
-    <a className={textLink} href={href} target="_blank" rel="noopener noreferrer">
-      {label}
+    <a className={className} href={href} target="_blank" rel="noopener noreferrer">
+      {children}
       <span className="sr-only">
-        {" "}
-        {name} ({newTab})
+        {label} {name} ({newTab})
       </span>
     </a>
+  );
+}
+
+function XIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" className="size-6">
+      <path
+        fill="currentColor"
+        d="M14.7 3h3.1l-6.8 7.8L19 21h-5.2l-4.1-6-4.7 6H1.9l7.3-8.3L1.4 3h5.3l3.7 5.5L14.7 3Zm-1.1 16.2h1.7L6.5 4.7H4.7l8.9 14.5Z"
+      />
+    </svg>
+  );
+}
+
+function LinkedInIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" className="size-6">
+      <path
+        fill="currentColor"
+        d="M4.7 3.2A1.8 1.8 0 1 0 4.7 6.8 1.8 1.8 0 0 0 4.7 3.2ZM3.2 8.4h3V20.8h-3V8.4Zm5.1 0h2.9v1.7h.1c.4-.8 1.4-1.6 2.9-1.6 3.1 0 3.7 2 3.7 4.7v7.6h-3v-6.7c0-1.6 0-3.6-2.2-3.6s-2.5 1.7-2.5 3.5v6.8h-3V8.4Z"
+      />
+    </svg>
   );
 }

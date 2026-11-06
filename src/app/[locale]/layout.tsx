@@ -73,8 +73,9 @@ export default async function LocaleLayout({
       href: localePath(locale, "inscription"),
       label: dictionary.nav.register,
     },
-    footerNote: dictionary.chrome.footerNote,
     footerProgram: dictionary.chrome.footerProgram,
+    footerRights: dictionary.chrome.footerRights,
+    footerCredit: dictionary.chrome.footerCredit,
     footerInformation: dictionary.chrome.footerInformation,
     footerParticipate: dictionary.chrome.footerParticipate,
     footerContact: dictionary.chrome.footerContact,
@@ -103,7 +104,7 @@ export default async function LocaleLayout({
         <Suspense
           fallback={
             <footer className="mt-auto bg-action px-5 py-8 text-[0.9375rem] text-white md:px-8">
-              {chrome.footerNote}
+              cardanoimpactdrc © 2026. {chrome.footerRights}
             </footer>
           }
         >

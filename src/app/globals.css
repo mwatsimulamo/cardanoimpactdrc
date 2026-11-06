@@ -1,26 +1,137 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-brand: #b7cdff;
+  --color-brand-hover: #e4edff;
+  --color-brand-pressed: #001c5c;
+  --color-action: #0033ad;
+  --color-action-hover: #2454d6;
+  --color-action-pressed: #002688;
+  --color-canvas: rgb(10 22 52 / 86%);
+  --color-surface: rgb(18 36 74 / 92%);
+  --color-ink: #e8eef8;
+  --color-muted: #c5d0e2;
+  --color-line: rgb(176 204 242 / 42%);
+  --color-danger: #ffc1cb;
+  --color-danger-surface: rgb(72 18 32 / 90%);
+  --color-success: #b6ecd4;
+  --color-success-surface: rgb(10 48 34 / 90%);
+  --color-warning: #f6d48a;
+  --color-warning-surface: rgb(58 38 8 / 90%);
+  --font-sans: var(--font-source-sans), "Source Sans 3", sans-serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+:root {
+  --constellation-bg-outer: #050b1f;
+  --constellation-bg-inner: #0a1a4a;
+  --constellation-node-brand: #0033ad;
+  --constellation-node-teal: #3cc8c8;
+  --constellation-node-blue: #5b8cff;
+  --constellation-node-white: #ffffff;
+  --constellation-line: #3cc8c8;
+  --constellation-pointer: #ffffff;
+}
+
+html {
+  color-scheme: dark;
+  background: transparent;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: transparent;
+  color: #e8eef8;
+}
+
+.skip-link {
+  position: absolute;
+  left: 1.25rem;
+  top: -4rem;
+  z-index: 30;
+  background: #0b1736;
+  color: #e8eef8;
+  border: 1px solid rgb(176 204 242 / 42%);
+  padding: 0.5rem 1rem;
+}
+
+.skip-link:focus {
+  top: 0.75rem;
+}
+
+.reading {
+  background: #ffffff;
+  color: #1b2430;
+  color-scheme: light;
+}
+
+.reading .text-ink {
+  color: #1b2430;
+}
+
+.reading .text-muted {
+  color: #3e4c63;
+}
+
+.reading .text-brand {
+  color: #0033ad;
+}
+
+.reading .decoration-brand {
+  text-decoration-color: #0033ad;
+}
+
+.reading .border-line {
+  border-color: #d5dce6;
+}
+
+.reading .text-line {
+  color: #5c6b82;
+}
+
+.reading .bg-canvas {
+  background-color: #ffffff;
+}
+
+.reading .bg-surface,
+.reading .hover\:bg-surface:hover {
+  background-color: #f4f7fb;
+}
+
+.reading .bg-brand {
+  background-color: #0033ad;
+}
+
+.reading .hover\:text-brand-hover:hover {
+  color: #002688;
+}
+
+.reading .outline-brand {
+  outline-color: #0033ad;
+}
+
+@keyframes path-in {
+  from {
+    opacity: 0;
+    transform: translateY(0.75rem);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.path-reveal {
+  animation: path-in 0.55s ease both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition: none !important;
+  }
+
+  .path-reveal {
+    animation: none !important;
+  }
 }

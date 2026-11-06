@@ -1,0 +1,556 @@
+import "server-only";
+
+import { cache } from "react";
+
+import { createServiceRoleSupabaseClient } from "@/lib/supabase/service-role";
+import {
+  listActivities,
+  listAnnouncements,
+  readPhaseFile,
+  readResultFile,
+  removeActivity,
+  removeAnnouncement,
+  writeActivity,
+  writeAnnouncement,
+  writePhaseFile,
+  writeResultFile,
+  type EditorialImage,
+} from "@/lib/editorial-store";
+import {
+  listPublishedRoadmap,
+  phaseKeys,
+  type PhaseKey,
+  type PublishedRoadmapPhase,
+  type RoadmapStatus,
+} from "@/lib/program-roadmap";
+import type { PublishedAnnouncement, PublishedResult } from "@/lib/public-data";
+import { activityCategories, type ActivityCategory } from "@/lib/documented-activities";
+
+export type RecordAvailability = "ready" | "missing" | "error";
+
+export type AdminWriteStatus = "ok" | "missing" | "invalid" | "error";
+
+export type AdminAnnouncement = {
+  id: string;
+  slug: string;
+  titleFr: string;
+  titleEn: string;
+  bodyFr: string;
+  bodyEn: string;
+  status: string;
+};
+
+export type AdminTeamOption = {
+  id: string;
+  name: string;
+};
+
+export type AdminTeamMember = {
+  name: string;
+  role: string;
+  email: string;
+  forumUsername: string;
+  forumProfileUrl: string;
+};
+
+export type AdminTeamRecord = {
+  id: string;
+  name: string;
+  city: string;
+  status: string;
+  members: readonly AdminTeamMember[];
+  articleTitle: string;
+  articleUrl: string;
+  accessCode: string;
+};
+
+export type AdminResultDraft = {
+  statementFr: string;
+  statementEn: string;
+  place1: string;
+  place2: string;
+  place3: string;
+  status: string;
+};
+
+export type AdminActivityDraft = {
+  id: string;
+  slug: string;
+  category: string;
+  title: string;
+  description: string;
+  occurredOn: string;
+  status: string;
+  hasImage: boolean;
+  updatedAt: string;
+};
+
+export type AdminHistoryRow = {
+  id: string;
+  action: string;
+  summary: string;
+  createdAt: string;
+};
+
+const PHASE_STATUS = new Set<RoadmapStatus>(["upcoming", "current", "done", "postponed"]);
+
+export async function readPublishedRoadmap(): Promise<{
+  availability: RecordAvailability;
+  phases: readonly PublishedRoadmapPhase[];
+}> {
+  const phases = listPublishedRoadmap().map((phase) => ({ ...phase }));
+  const stored = await readPhaseFile();
+  if (stored === "missing" || stored === "error") {
+    return { availability: stored, phases };
+  }
+
+  return {
+    availability: "ready",
+    phases: phases.map((phase) => {
+      const status = stored[phase.key];
+      return PHASE_STATUS.has(status as RoadmapStatus) ? { ...phase, status: status as RoadmapStatus } : phase;
+    }),
+  };
+}
+
+export async function savePhaseStatus(phaseKey: string, status: string): Promise<AdminWriteStatus> {
+  if (!phaseKeys.includes(phaseKey as PhaseKey) || !PHASE_STATUS.has(status as RoadmapStatus)) {
+    return "invalid";
+  }
+
+  const current = await readPhaseFile();
+  if (current === "missing" || current === "error") {
+    return current;
+  }
+
+  return writePhaseFile({ ...current, [phaseKey]: status });
+}
+
+export async function readPublishedAnnouncements(): Promise<readonly PublishedAnnouncement[]> {
+  const records = await listAnnouncements();
+  if (records === "missing" || records === "error") {
+    return [];
+  }
+
+  return records
+    .filter((row) => row.status === "published" && row.publishedAt && row.title.trim().length > 0)
+    .map((row) => ({
+      slug: row.slug,
+      publishedAt: row.publishedAt ?? "",
+      title: { fr: row.title, en: row.title },
+      body: { fr: row.body, en: row.body },
+    }))
+    .sort((left, right) => right.publishedAt.localeCompare(left.publishedAt));
+}
+
+export async function readAdminAnnouncements(): Promise<{
+  availability: RecordAvailability;
+  items: readonly AdminAnnouncement[];
+}> {
+  const records = await listAnnouncements();
+  if (records === "missing" || records === "error") {
+    return { availability: records, items: [] };
+  }
+
+  return {
+    availability: "ready",
+    items: [...records]
+      .sort((left, right) => right.createdAt.localeCompare(left.createdAt))
+      .map((row) => ({
+        id: row.id,
+        slug: row.slug,
+        titleFr: row.title,
+        titleEn: row.title,
+        bodyFr: row.body,
+        bodyEn: row.body,
+        status: row.status,
+      })),
+  };
+}
+
+export async function saveAnnouncement(input: {
+  title: string;
+  body: string;
+  publish: boolean;
+}): Promise<AdminWriteStatus> {
+  const title = input.title.trim();
+  const body = input.body.trim();
+  if (title.length === 0 || title.length > 180 || body.length > 8000) {
+    return "invalid";
+  }
+
+  if (input.publish && body.length === 0) {
+    return "invalid";
+  }
+
+  const now = new Date().toISOString();
+  const saved = await writeAnnouncement({
+    id: crypto.randomUUID(),
+    slug: uniqueSlug(title),
+    title,
+    body,
+    status: input.publish ? "published" : "draft",
+    publishedAt: input.publish ? now : null,
+    createdAt: now,
+    updatedAt: now,
+  });
+  return saved;
+}
+
+export async function deleteAnnouncement(id: string): Promise<AdminWriteStatus> {
+  return removeAnnouncement(id);
+}
+
+export const readPublishedResult = cache(async function readPublishedResult(): Promise<PublishedResult | null> {
+  const draft = await readResultFile();
+  if (draft === "missing" || draft === "error" || draft === null || draft.status !== "published") {
+    return null;
+  }
+
+  const names = await teamNameMap();
+  const places = [draft.place1, draft.place2, draft.place3].map((id) => names.get(id) ?? "");
+  if (places.some((name) => name.length === 0) || draft.statement.trim().length === 0) {
+    return null;
+  }
+
+  return {
+    places: [places[0] ?? "", places[1] ?? "", places[2] ?? ""],
+    articleUrls: [],
+    statement: { fr: draft.statement, en: draft.statement },
+  };
+});
+
+export async function readAdminResult(): Promise<{
+  availability: RecordAvailability;
+  teams: readonly AdminTeamOption[];
+  draft: AdminResultDraft;
+}> {
+  const teams = await readTeamOptions();
+  const row = await readResultFile();
+  if (row === "missing" || row === "error") {
+    return { availability: row, teams: teams.teams, draft: emptyResult() };
+  }
+
+  return {
+    availability: teams.availability,
+    teams: teams.teams,
+    draft: {
+      statementFr: row?.statement ?? "",
+      statementEn: row?.statement ?? "",
+      place1: row?.place1 ?? "",
+      place2: row?.place2 ?? "",
+      place3: row?.place3 ?? "",
+      status: row?.status ?? "draft",
+    },
+  };
+}
+
+export async function saveResult(input: {
+  statement: string;
+  place1: string;
+  place2: string;
+  place3: string;
+  publish: boolean;
+}): Promise<AdminWriteStatus> {
+  const statement = input.statement.trim();
+  const places = [input.place1, input.place2, input.place3];
+  const complete = statement.length > 0 && places.every((id) => id.length > 0) && new Set(places).size === 3;
+  if (input.publish && !complete) {
+    return "invalid";
+  }
+
+  const now = new Date().toISOString();
+  return writeResultFile({
+    statement,
+    place1: input.place1,
+    place2: input.place2,
+    place3: input.place3,
+    status: input.publish ? "published" : "draft",
+    publishedAt: input.publish ? now : null,
+    updatedAt: now,
+  });
+}
+
+export async function readAdminActivities(): Promise<{
+  availability: RecordAvailability;
+  items: readonly AdminActivityDraft[];
+}> {
+  const records = await listActivities();
+  if (records === "missing" || records === "error") {
+    return { availability: records, items: [] };
+  }
+
+  return {
+    availability: "ready",
+    items: records
+      .map((row) => ({
+        id: row.id,
+        slug: row.slug,
+        category: row.category,
+        title: row.title,
+        description: row.description,
+        occurredOn: row.occurredOn,
+        status: row.status,
+        hasImage: row.hasImage,
+        updatedAt: row.updatedAt,
+      }))
+      .sort((left, right) => right.occurredOn.localeCompare(left.occurredOn)),
+  };
+}
+
+export async function saveDocumentedActivity(input: {
+  category: string;
+  title: string;
+  description: string;
+  occurredOn: string;
+  publish: boolean;
+  image: EditorialImage | null;
+}): Promise<AdminWriteStatus> {
+  if (!activityCategories.includes(input.category as ActivityCategory)) {
+    return "invalid";
+  }
+
+  const title = input.title.trim();
+  const description = input.description.trim();
+  if (title.length === 0 || title.length > 180 || description.length > 4000) {
+    return "invalid";
+  }
+
+  const occurredOn = /^\d{4}-\d{2}-\d{2}$/.test(input.occurredOn) ? input.occurredOn : "";
+  if (input.publish && (description.length === 0 || occurredOn.length === 0 || occurredOn > todayInGoma())) {
+    return "invalid";
+  }
+
+  const now = new Date().toISOString();
+  const saved = await writeActivity(
+    {
+      id: crypto.randomUUID(),
+      slug: uniqueSlug(title),
+      category: input.category,
+      title,
+      description,
+      occurredOn,
+      status: input.publish ? "published" : "draft",
+      publishedAt: input.publish ? now : null,
+      createdAt: now,
+      updatedAt: now,
+      hasImage: input.image !== null,
+      imageType: input.image?.type ?? "",
+    },
+    input.image,
+  );
+  return saved;
+}
+
+export async function deleteActivity(id: string): Promise<AdminWriteStatus> {
+  return removeActivity(id);
+}
+
+export async function readAdminTeams(): Promise<{
+  availability: RecordAvailability;
+  teams: readonly AdminTeamRecord[];
+}> {
+  try {
+    const supabase = createServiceRoleSupabaseClient();
+    const { data, error } = await supabase
+      .from("teams")
+      .select(
+        "id,name,city,status,submitted_at,team_members(given_name,family_name,email,member_role,left_at,team_member_forum_profiles(forum_username,forum_profile_url)),team_articles(title,url,is_current)",
+      )
+      .order("submitted_at", { ascending: true });
+    if (error) {
+      return { availability: isMissing(error) ? "missing" : "error", teams: [] };
+    }
+
+    const codes = await readAccessCodes();
+    const teams = (data ?? []).map((row) => toAdminTeam(row, codes));
+    return { availability: "ready", teams };
+  } catch {
+    return { availability: "error", teams: [] };
+  }
+}
+
+export async function readTeamOptions(): Promise<{
+  availability: RecordAvailability;
+  teams: readonly AdminTeamOption[];
+}> {
+  const result = await selectRows<{ id: string; name: string; status: string }>("teams", "id,name,status");
+  if (result.availability !== "ready") {
+    return { availability: result.availability, teams: [] };
+  }
+
+  return {
+    availability: "ready",
+    teams: result.rows
+      .filter((row) => row.status === "submitted")
+      .map((row) => ({ id: row.id, name: row.name })),
+  };
+}
+
+export async function readAdminHistory(): Promise<{
+  availability: RecordAvailability;
+  rows: readonly AdminHistoryRow[];
+}> {
+  try {
+    const supabase = createServiceRoleSupabaseClient();
+    const { data, error } = await supabase
+      .from("team_activity_logs")
+      .select("id,action,summary,created_at")
+      .order("created_at", { ascending: false })
+      .limit(30);
+    if (error) {
+      return { availability: isMissing(error) ? "missing" : "error", rows: [] };
+    }
+
+    return {
+      availability: "ready",
+      rows: (data ?? []).map((row) => ({
+        id: String(row.id),
+        action: String(row.action),
+        summary: String(row.summary),
+        createdAt: String(row.created_at),
+      })),
+    };
+  } catch {
+    return { availability: "error", rows: [] };
+  }
+}
+
+export async function readAdminCounts(): Promise<{
+  teams: string;
+  participants: string;
+  articles: string;
+  results: string;
+}> {
+  const teams = await readAdminTeams();
+  const result = await readResultFile();
+  if (teams.availability !== "ready") {
+    return { teams: "—", participants: "—", articles: "—", results: "—" };
+  }
+
+  const participants = teams.teams.reduce((total, team) => total + team.members.length, 0);
+  const articles = teams.teams.filter((team) => team.articleUrl.length > 0).length;
+  return {
+    teams: String(teams.teams.length),
+    participants: String(participants),
+    articles: String(articles),
+    results: result !== "missing" && result !== "error" && result?.status === "published" ? "1" : "0",
+  };
+}
+
+function emptyResult(): AdminResultDraft {
+  return { statementFr: "", statementEn: "", place1: "", place2: "", place3: "", status: "draft" };
+}
+
+function todayInGoma(): string {
+  return new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Africa/Lubumbashi",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(new Date());
+}
+
+async function teamNameMap(): Promise<Map<string, string>> {
+  const result = await selectRows<{ id: string; name: string }>("teams", "id,name");
+  if (result.availability !== "ready") {
+    return new Map();
+  }
+
+  return new Map(result.rows.map((row) => [row.id, row.name]));
+}
+
+async function readAccessCodes(): Promise<Map<string, string>> {
+  try {
+    const supabase = createServiceRoleSupabaseClient();
+    const { data, error } = await supabase
+      .from("leader_access_challenges")
+      .select("team_id,access_code,used_at,created_at")
+      .is("used_at", null)
+      .order("created_at", { ascending: false });
+    if (error || !data) {
+      return new Map();
+    }
+
+    const codes = new Map<string, string>();
+    for (const row of data) {
+      const teamId = String(row.team_id);
+      const code = typeof row.access_code === "string" ? row.access_code : "";
+      if (!codes.has(teamId) && code.length > 0) {
+        codes.set(teamId, code);
+      }
+    }
+    return codes;
+  } catch {
+    return new Map();
+  }
+}
+
+function toAdminTeam(row: unknown, codes: Map<string, string>): AdminTeamRecord {
+  const record = asRecord(row);
+  const members = Array.isArray(record.team_members) ? record.team_members : [];
+  const active = members.filter((item) => asRecord(item).left_at == null);
+  const articles = Array.isArray(record.team_articles) ? record.team_articles : [];
+  const current = articles.find((item) => asRecord(item).is_current === true) ?? articles[0];
+  const article = asRecord(current);
+  const id = stringValue(record.id);
+  return {
+    id,
+    name: stringValue(record.name),
+    city: stringValue(record.city),
+    status: stringValue(record.status),
+    members: active.map((item) => {
+      const member = asRecord(item);
+      const forum = asRecord(member.team_member_forum_profiles);
+      return {
+        name: `${stringValue(member.given_name)} ${stringValue(member.family_name)}`.trim(),
+        role: stringValue(member.member_role),
+        email: stringValue(member.email),
+        forumUsername: stringValue(forum.forum_username),
+        forumProfileUrl: stringValue(forum.forum_profile_url),
+      };
+    }),
+    articleTitle: stringValue(article.title),
+    articleUrl: stringValue(article.url),
+    accessCode: codes.get(id) ?? "",
+  };
+}
+
+async function selectRows<T>(table: string, columns: string): Promise<{ availability: RecordAvailability; rows: T[] }> {
+  try {
+    const supabase = createServiceRoleSupabaseClient();
+    const { data, error } = await supabase.from(table).select(columns);
+    if (error) {
+      return { availability: isMissing(error) ? "missing" : "error", rows: [] };
+    }
+
+    return { availability: "ready", rows: (data ?? []) as T[] };
+  } catch {
+    return { availability: "error", rows: [] };
+  }
+}
+
+function uniqueSlug(value: string): string {
+  const base = value
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "")
+    .slice(0, 60);
+  const suffix = Date.now().toString(36).slice(-4);
+  return `${base || "fiche"}-${suffix}`;
+}
+
+function isMissing(error: { code?: string; message?: string }): boolean {
+  const message = error.message ?? "";
+  return error.code === "PGRST205" || error.code === "42P01" || /schema cache|does not exist|Could not find the table/i.test(message);
+}
+
+function asRecord(value: unknown): Record<string, unknown> {
+  return typeof value === "object" && value !== null ? (value as Record<string, unknown>) : {};
+}
+
+function stringValue(value: unknown): string {
+  return typeof value === "string" ? value : "";
+}

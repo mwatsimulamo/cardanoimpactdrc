@@ -1,0 +1,2 @@
+-- Remplacé par supabase/migrations/20261106021000_admin_editorial.sql.
+-- Exécuter ce second script dans l'éditeur SQL de Supabase.

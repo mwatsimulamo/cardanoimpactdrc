@@ -1,0 +1,300 @@
+"use client";
+
+import { useActionState, useEffect, useRef, useState } from "react";
+import { bodyText, fieldControl, fieldLabel, primaryLink, secondaryLink, supportText } from "@/components/classes";
+import { StatusMessage } from "@/components/StatusMessage";
+import type { Dictionary } from "@/content/types";
+import {
+  saveActivityAction,
+  saveAnnouncementAction,
+  saveGalleryAction,
+  savePhaseAction,
+  saveResultAction,
+  type AdminActionState,
+} from "@/lib/admin-record-actions";
+import type { ActivityCategory } from "@/lib/documented-activities";
+import type { RoadmapStatus } from "@/lib/program-roadmap";
+import type { AdminTeamOption } from "@/lib/published-records";
+
+const statuses: readonly RoadmapStatus[] = ["upcoming", "current", "done", "postponed"];
+const IMAGE_LIMIT = Math.floor(3.5 * 1024 * 1024);
+
+export function PhaseStatusForm({
+  phaseKey,
+  title,
+  when,
+  status,
+  dictionary,
+}: {
+  phaseKey: string;
+  title: string;
+  when: string;
+  status: RoadmapStatus;
+  dictionary: Dictionary;
+}) {
+  const [state, action, pending] = useActionState(savePhaseAction, null);
+
+  return (
+    <form action={action} className="border border-line bg-canvas px-5 py-5">
+      <h2 className="text-[1.25rem] font-semibold text-ink">{title}</h2>
+      <p className={`mt-1 ${supportText}`}>{when}</p>
+      <input name="phase" type="hidden" value={phaseKey} />
+      <label className={`mt-4 ${fieldLabel}`} htmlFor={`phase-${phaseKey}`}>
+        État
+      </label>
+      <select id={`phase-${phaseKey}`} name="status" defaultValue={status} className={`mt-2 ${fieldControl}`}>
+        {statuses.map((item) => (
+          <option key={item} value={item}>
+            {dictionary.timeline[item]}
+          </option>
+        ))}
+      </select>
+      <div className="mt-4">
+        <button type="submit" className={primaryLink} disabled={pending}>
+          {dictionary.adminUi.save}
+        </button>
+      </div>
+      <ActionNotice state={state} dictionary={dictionary} />
+    </form>
+  );
+}
+
+export function AnnouncementForm({ dictionary }: { dictionary: Dictionary }) {
+  const [state, action, pending] = useActionState(saveAnnouncementAction, null);
+  const copy = dictionary.adminUi;
+  const formRef = useResetOnSuccess(state);
+
+  return (
+    <form ref={formRef} action={action} className="max-w-2xl space-y-4 border border-line bg-canvas px-5 py-5">
+      <h2 className="text-[1.25rem] font-semibold text-ink">{copy.create}</h2>
+      <p className={bodyText}>Le texte est publié tel que vous l&apos;écrivez, sur les pages française et anglaise.</p>
+      <TextField name="title" label="Titre" />
+      <TextArea name="body" label="Texte" />
+      <PublishButtons pending={pending} draft={copy.draft} publish={copy.publish} />
+      <ActionNotice state={state} dictionary={dictionary} />
+    </form>
+  );
+}
+
+export function ResultForm({
+  dictionary,
+  teams,
+  statement,
+  place1,
+  place2,
+  place3,
+}: {
+  dictionary: Dictionary;
+  teams: readonly AdminTeamOption[];
+  statement: string;
+  place1: string;
+  place2: string;
+  place3: string;
+}) {
+  const [state, action, pending] = useActionState(saveResultAction, null);
+  const copy = dictionary.adminUi;
+  const places = [
+    ["place1", "1", place1],
+    ["place2", "2", place2],
+    ["place3", "3", place3],
+  ] as const;
+
+  return (
+    <form action={action} className="max-w-2xl space-y-4 border border-line bg-canvas px-5 py-5">
+      <p className={bodyText}>{copy.resultsPublish}</p>
+      {places.map(([name, label, value]) => (
+        <label key={name} className={fieldLabel}>
+          {copy.resultsPlace} {label}
+          <select name={name} defaultValue={value} className={`mt-2 ${fieldControl}`}>
+            <option value="">—</option>
+            {teams.map((team) => (
+              <option key={team.id} value={team.id}>
+                {team.name}
+              </option>
+            ))}
+          </select>
+        </label>
+      ))}
+      <TextArea name="statement" label="Texte du résultat" defaultValue={statement} />
+      <PublishButtons pending={pending} draft={copy.draft} publish={copy.publish} />
+      <ActionNotice state={state} dictionary={dictionary} />
+    </form>
+  );
+}
+
+export function ActivityForm({
+  dictionary,
+  categories,
+}: {
+  dictionary: Dictionary;
+  categories: readonly { id: ActivityCategory; label: string }[];
+}) {
+  const [state, action, pending] = useActionState(saveActivityAction, null);
+  const copy = dictionary.adminUi;
+  const formRef = useResetOnSuccess(state);
+
+  return (
+    <form ref={formRef} action={action} className="max-w-2xl space-y-4 border border-line bg-canvas px-5 py-5">
+      <h2 className="text-[1.25rem] font-semibold text-ink">{copy.create}</h2>
+      <p className={bodyText}>
+        Date déjà passée, description et photographie. L&apos;original est conservé. Une activité à venir ne peut pas être publiée comme tenue.
+      </p>
+      <label className={fieldLabel}>
+        Catégorie
+        <select name="category" className={`mt-2 ${fieldControl}`} defaultValue={categories[0]?.id}>
+          {categories.map((item) => (
+            <option key={item.id} value={item.id}>
+              {item.label}
+            </option>
+          ))}
+        </select>
+      </label>
+      <TextField name="title" label="Titre (ex. Première session)" />
+      <TextArea name="description" label="Description" />
+      <label className={fieldLabel}>
+        Date réelle
+        <input name="occurredOn" type="date" className={`mt-2 ${fieldControl}`} />
+      </label>
+      <ImageField />
+      <PublishButtons pending={pending} draft={copy.draft} publish={copy.publish} />
+      <ActionNotice state={state} dictionary={dictionary} />
+    </form>
+  );
+}
+
+export function GalleryForm({ dictionary }: { dictionary: Dictionary }) {
+  const [state, action, pending] = useActionState(saveGalleryAction, null);
+  const formRef = useResetOnSuccess(state);
+
+  return (
+    <form ref={formRef} action={action} className="max-w-2xl space-y-4 border border-line bg-canvas px-5 py-5">
+      <h2 className="text-[1.25rem] font-semibold text-ink">{dictionary.adminUi.create}</h2>
+      <ImageField />
+      <TextArea name="description" label="Description" />
+      <PublishButtons pending={pending} draft={dictionary.adminUi.draft} publish={dictionary.adminUi.publish} />
+      <ActionNotice state={state} dictionary={dictionary} />
+    </form>
+  );
+}
+
+function PublishButtons({ pending, draft, publish }: { pending: boolean; draft: string; publish: string }) {
+  return (
+    <div className="flex flex-col gap-3 sm:flex-row">
+      <button type="submit" name="intent" value="draft" className={secondaryLink} disabled={pending}>
+        {draft}
+      </button>
+      <button type="submit" name="intent" value="publish" className={primaryLink} disabled={pending}>
+        {publish}
+      </button>
+    </div>
+  );
+}
+
+function TextField({ name, label }: { name: string; label: string }) {
+  return (
+    <label className={fieldLabel}>
+      {label}
+      <input name={name} className={`mt-2 ${fieldControl}`} />
+    </label>
+  );
+}
+
+function TextArea({ name, label, defaultValue = "" }: { name: string; label: string; defaultValue?: string }) {
+  return (
+    <label className={fieldLabel}>
+      {label}
+      <textarea name={name} defaultValue={defaultValue} rows={5} className={`mt-2 ${fieldControl}`} />
+    </label>
+  );
+}
+
+function ImageField() {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [preview, setPreview] = useState<string | null>(null);
+  const [message, setMessage] = useState("");
+
+  useEffect(() => {
+    const form = inputRef.current?.form;
+    if (!form) {
+      return;
+    }
+
+    const onReset = () => {
+      setPreview((current) => {
+        if (current) {
+          URL.revokeObjectURL(current);
+        }
+        return null;
+      });
+      setMessage("");
+    };
+    form.addEventListener("reset", onReset);
+    return () => form.removeEventListener("reset", onReset);
+  }, []);
+
+  return (
+    <div>
+      <label className={fieldLabel}>
+        Image
+        <input
+          ref={inputRef}
+          name="image"
+          type="file"
+          accept="image/jpeg,image/png,image/webp"
+          className={`mt-2 ${fieldControl}`}
+          onChange={(event) => {
+            const file = event.target.files?.[0];
+            setPreview((current) => {
+              if (current) {
+                URL.revokeObjectURL(current);
+              }
+              return file ? URL.createObjectURL(file) : null;
+            });
+            setMessage(file && file.size > IMAGE_LIMIT ? "Cette image dépasse 3,5 Mo." : "");
+          }}
+        />
+      </label>
+      {message ? <p className={`mt-2 ${supportText}`}>{message}</p> : null}
+      {preview ? (
+        // Aperçu local de l'original choisi. Le fichier déposé n'est pas recompressé.
+        // eslint-disable-next-line @next/next/no-img-element
+        <img src={preview} alt="" className="mt-3 aspect-[4/3] w-full max-w-sm border border-line object-contain" />
+      ) : null}
+    </div>
+  );
+}
+
+function useResetOnSuccess(state: AdminActionState) {
+  const formRef = useRef<HTMLFormElement>(null);
+
+  useEffect(() => {
+    if (state?.status === "ok") {
+      formRef.current?.reset();
+    }
+  }, [state]);
+
+  return formRef;
+}
+
+function ActionNotice({ state, dictionary }: { state: AdminActionState; dictionary: Dictionary }) {
+  if (state === null) {
+    return null;
+  }
+
+  const copy = dictionary.adminUi;
+  const message =
+    state.detail ??
+    (state.status === "ok"
+      ? copy.saved
+      : state.status === "missing"
+        ? copy.tableMissing
+        : state.status === "forbidden"
+          ? copy.unauthorized
+          : copy.actionFailed);
+
+  return (
+    <div className="mt-4">
+      <StatusMessage tone={state.status === "ok" ? "success" : "warning"}>{message}</StatusMessage>
+    </div>
+  );
+}

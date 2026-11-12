@@ -340,7 +340,7 @@ Interactions : notice absente → bouton inactif ; courriel déjà lié → mess
 
 But : montrer les équipes soumises, sans courriel.
 
-Hiérarchie : titre, règles en bref, fiches de même équilibre (nom, effectif, membres, titre du sujet et lien de l'article), état vide « Aucune équipe n'est encore enregistrée. ». Les trois premières places sont en vert sur Résultats, sans être répétées ici.
+Hiérarchie : titre, règles en bref, fiches de même équilibre (nom, effectif, membres, titre du sujet, courte description, bouton bleu vers l'article), état vide « Aucune équipe n'est encore enregistrée. ». Après publication, les trois équipes placées sont vertes et montrent leur rang en numéro. Les notes n'y figurent pas.
 
 ### Accueil — statistique d'équipes
 
@@ -385,14 +385,12 @@ Avant publication :
 
 Après publication, dans cet ordre :
 
-1. Première équipe.
-2. Deuxième équipe.
-3. Troisième équipe.
-4. Liens d'articles publics, chacun vers `forum.cardano.org`, dans un nouvel onglet.
-5. Texte du résultat final dans la langue de la page.
-6. Lien vers les annonces.
+1. Trois fiches vertes : rang en numéro, nom de l'équipe, bouton « Lire l'article complet sur Cardano Forum » lorsque le lien existe.
+2. Texte du résultat final dans la langue de la page.
+3. Bouton « Consultez les résultats totaux des équipes », seulement si le classeur original a été déposé. Il télécharge le fichier. Le site ne l'interprète pas.
+4. Lien vers les annonces.
 
-Les notes, les commentaires du jury, les autres places et les intérêts cochés n'apparaissent pas.
+Les notes, les commentaires du jury et les intérêts cochés n'apparaissent pas sur la page.
 
 Interactions : lire seulement. Pas de filtre par note.
 
@@ -480,9 +478,13 @@ But : voir les décomptes réels et entrer dans les écrans.
 
 Hiérarchie :
 
-1. Cinq décomptes réels : équipes `submitted`, équipes à compléter, articles non vérifiés, annonces `published`, profils forum autres que `verified`.
-2. Liens vers Équipes, Annonces, Présences, Résultats et Exports.
-3. Aucun lauréat et aucun chiffre de communication.
+1. Titre et phrase d'orientation de l'espace organisateurs.
+2. Décomptes réels en cases : équipes soumises, responsables, membres, abonnés, annonces publiées, activités publiées, résultat publié, courriels envoyés.
+3. Raccourcis vers nouvelle annonce, nouvelle activité, nouvelle image et saisie des résultats.
+4. Bloc « À traiter », campagnes récentes, puis état du calendrier D-30.
+5. Aucun lauréat inventé et aucun chiffre fictif.
+
+Apparition : les titres, cases et formulaires glissent depuis les extrémités, en décalage. `prefers-reduced-motion` fige l'affichage.
 
 États : chargement des décomptes ; erreur de lecture ; zéro affiché comme « 0 », pas comme un état vide masqué.
 
@@ -500,7 +502,7 @@ Interactions : corriger ; ajouter ou retirer dans 3–5 ; transférer le leader 
 
 ### Évaluation du jury
 
-Hors du site pour la première édition (D-38). L'écran Résultats ne saisit pas de notes. Il sert à publier les trois places après consolidation dans Google Sheets.
+Hors du site pour la première édition (D-38). L'écran Résultats ne saisit pas de notes. Il publie les trois places après consolidation hors site et peut recevoir le classeur original.
 
 ### Résultats finaux
 

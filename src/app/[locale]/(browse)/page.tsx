@@ -98,6 +98,17 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
         </Suspense>
         <Suspense
           fallback={
+            <section className="mt-16 border-t border-line pt-12 md:mt-24 md:pt-16" aria-labelledby="home-latest">
+              <h2 id="home-latest" className={sectionTitle}>
+                {dictionary.home.latestAnnouncements}
+              </h2>
+            </section>
+          }
+        >
+          <HomeLatest locale={locale} dictionary={dictionary} />
+        </Suspense>
+        <Suspense
+          fallback={
             <HomeParticipationStats
               locale={locale}
               dictionary={dictionary}
@@ -107,17 +118,6 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
           }
         >
           <LiveHomeParticipationStats locale={locale} dictionary={dictionary} />
-        </Suspense>
-        <Suspense
-          fallback={
-            <section className="mt-16 border-t border-line pt-12 md:mt-24 md:pt-16" aria-labelledby="home-latest">
-              <h2 id="home-latest" className={sectionTitle}>
-                {dictionary.home.latestAnnouncements}
-              </h2>
-            </section>
-          }
-        >
-          <HomeLatest locale={locale} dictionary={dictionary} />
         </Suspense>
         <OrganizerContact
           locale={locale}

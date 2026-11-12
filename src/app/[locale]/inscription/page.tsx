@@ -1,9 +1,12 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
+import { bodyText } from "@/components/classes";
 import { PageFrame } from "@/components/PageHeader";
 import { RegistrationForm } from "@/components/RegistrationForm";
 import { getDictionary } from "@/content/get-dictionary";
-import { isLocale } from "@/lib/locales";
+import { isLocale, type Locale } from "@/lib/locales";
 import { pageMetadata } from "@/lib/metadata";
+import { readRegistrationAvailability } from "@/lib/registration-gate";
 
 export async function generateMetadata({
   params,
@@ -29,7 +32,16 @@ export default async function RegistrationPage({
 
   return (
     <PageFrame>
-      <RegistrationForm locale={locale} dictionary={dictionary} />
+      <Suspense fallback={<p className={bodyText}>{dictionary.workspace.loading}</p>}>
+        <RegistrationScreen locale={locale} />
+      </Suspense>
     </PageFrame>
   );
+}
+
+async function RegistrationScreen({ locale }: { locale: Locale }) {
+  const dictionary = getDictionary(locale);
+  const availability = await readRegistrationAvailability();
+
+  return <RegistrationForm locale={locale} dictionary={dictionary} availability={availability} />;
 }

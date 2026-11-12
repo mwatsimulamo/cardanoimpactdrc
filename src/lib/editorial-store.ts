@@ -71,6 +71,19 @@ export type StoredResult = {
   status: "draft" | "published";
   publishedAt: string | null;
   updatedAt: string;
+  workbookName: string;
+  teamPlaces: readonly TeamPlace[];
+};
+
+export type TeamPlace = {
+  teamId: string;
+  place: number;
+};
+
+export type ResultWorkbook = {
+  name: string;
+  type: string;
+  bytes: Uint8Array;
 };
 
 type RowError = { code?: string; message?: string };
@@ -380,11 +393,15 @@ export async function removeGalleryItem(id: string): Promise<StoreWrite> {
 export async function readResultFile(): Promise<StoredResult | null | "missing" | "error"> {
   try {
     const supabase = createServiceRoleSupabaseClient();
-    const { data, error } = await supabase
-      .from("competition_results")
-      .select("status,statement_fr,place_1_team_id,place_2_team_id,place_3_team_id,published_at,updated_at")
-      .limit(1)
-      .maybeSingle();
+    const basic = "status,statement_fr,place_1_team_id,place_2_team_id,place_3_team_id,published_at,updated_at";
+    let selected = await supabase.from("competition_results").select(`${basic},workbook_name,team_places`).limit(1).maybeSingle();
+    if (selected.error && /team_places/i.test(selected.error.message ?? "")) {
+      selected = await supabase.from("competition_results").select(`${basic},workbook_name`).limit(1).maybeSingle();
+    }
+    if (selected.error && /workbook_name/i.test(selected.error.message ?? "")) {
+      selected = await supabase.from("competition_results").select(basic).limit(1).maybeSingle();
+    }
+    const { data, error } = selected;
     if (error) {
       return classify(error);
     }
@@ -406,6 +423,8 @@ export async function readResultFile(): Promise<StoredResult | null | "missing" 
       status,
       publishedAt: data.published_at,
       updatedAt: data.updated_at,
+      workbookName: "workbook_name" in data && typeof data.workbook_name === "string" ? data.workbook_name : "",
+      teamPlaces: "team_places" in data ? teamPlacesFrom(data.team_places) : [],
     };
   } catch (error) {
     unstable_rethrow(error);
@@ -413,10 +432,10 @@ export async function readResultFile(): Promise<StoredResult | null | "missing" 
   }
 }
 
-export async function writeResultFile(record: StoredResult): Promise<StoreWrite> {
+export async function writeResultFile(record: StoredResult, workbook?: ResultWorkbook): Promise<StoreWrite> {
   try {
     const supabase = createServiceRoleSupabaseClient();
-    const payload = {
+    const payload: Record<string, unknown> = {
       statement_fr: record.statement,
       place_1_team_id: record.place1 || null,
       place_2_team_id: record.place2 || null,
@@ -425,18 +444,61 @@ export async function writeResultFile(record: StoredResult): Promise<StoreWrite>
       published_at: record.publishedAt,
       updated_at: record.updatedAt,
     };
+    if (workbook) {
+      payload.workbook_name = workbook.name;
+      payload.workbook_type = workbook.type;
+      payload.workbook_data = Buffer.from(workbook.bytes).toString("base64");
+    }
+    payload.team_places = record.teamPlaces;
     const current = await supabase.from("competition_results").select("id").limit(1).maybeSingle();
     if (current.error) {
       return classify(current.error);
     }
 
-    const { error } = current.data
-      ? await supabase.from("competition_results").update(payload).eq("id", current.data.id)
-      : await supabase.from("competition_results").insert(payload);
+    const write = (values: Record<string, unknown>) =>
+      current.data
+        ? supabase.from("competition_results").update(values).eq("id", current.data.id)
+        : supabase.from("competition_results").insert(values);
+    let { error } = await write(payload);
+    if (error && /team_places/i.test(error.message ?? "")) {
+      if (record.teamPlaces.length > 0) {
+        return "error";
+      }
+      const withoutPlaces = { ...payload };
+      delete withoutPlaces.team_places;
+      error = (await write(withoutPlaces)).error;
+    }
     return error ? classify(error) : "ok";
   } catch (error) {
     unstable_rethrow(error);
     return "error";
+  }
+}
+
+const WORKBOOK_TYPES = new Set([
+  "application/vnd.ms-excel",
+  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+]);
+
+export async function readResultWorkbook(): Promise<{ bytes: Uint8Array; type: string; name: string; status: string } | null> {
+  try {
+    const supabase = createServiceRoleSupabaseClient();
+    const { data, error } = await supabase
+      .from("competition_results")
+      .select("status,workbook_name,workbook_type,workbook_data")
+      .limit(1)
+      .maybeSingle();
+    const bytes = data ? decodeImage(data.workbook_data) : null;
+    if (error || !data || !WORKBOOK_TYPES.has(data.workbook_type) || !bytes || bytes.byteLength === 0) {
+      return null;
+    }
+
+    const fallback = data.workbook_type === "application/vnd.ms-excel" ? "resultats-equipes.xls" : "resultats-equipes.xlsx";
+    const name = typeof data.workbook_name === "string" && data.workbook_name.trim().length > 0 ? data.workbook_name.trim() : fallback;
+    return { bytes, type: data.workbook_type, name, status: data.status };
+  } catch (error) {
+    unstable_rethrow(error);
+    return null;
   }
 }
 
@@ -535,6 +597,32 @@ function classify(error: RowError): "missing" | "error" {
   }
 
   return "error";
+}
+
+export function teamPlacesFrom(value: unknown): TeamPlace[] {
+  if (!Array.isArray(value)) {
+    return [];
+  }
+
+  const places: TeamPlace[] = [];
+  const seenPlaces = new Set<number>();
+  const seenTeams = new Set<string>();
+  for (const item of value) {
+    if (typeof item !== "object" || item === null) {
+      continue;
+    }
+    const record = item as { teamId?: unknown; place?: unknown };
+    const teamId = typeof record.teamId === "string" ? record.teamId : "";
+    const place = typeof record.place === "number" ? record.place : Number.NaN;
+    if (!ID.test(teamId) || !Number.isInteger(place) || place < 4 || place > 99 || seenPlaces.has(place) || seenTeams.has(teamId)) {
+      continue;
+    }
+    seenPlaces.add(place);
+    seenTeams.add(teamId);
+    places.push({ teamId, place });
+  }
+
+  return places.sort((left, right) => left.place - right.place);
 }
 
 function asStatus(value: string): "draft" | "published" | null {

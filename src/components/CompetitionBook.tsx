@@ -2,10 +2,9 @@ import Link from "next/link";
 import { Suspense } from "react";
 import { ArticleBody } from "@/components/ArticleBody";
 import { blockTitle, justifiedText, primaryLink, secondaryLink, sectionTitle, supportText, textLink } from "@/components/classes";
-import { ExternalLink } from "@/components/ExternalLink";
 import { MenuBook, SectionHeading } from "@/components/MenuBook";
 import { guideSectionLinks, ParticipantGuide } from "@/components/ParticipantGuide";
-import { PublicTeamsBoard } from "@/components/PublicTeamsBoard";
+import { ForumArticleButton, placeAppearance, PublicTeamsBoard, ResultsWorkbookButton, type PublicTeamRank } from "@/components/PublicTeamsBoard";
 import { getDictionary } from "@/content/get-dictionary";
 import type { Dictionary } from "@/content/types";
 import { localePath, type Locale } from "@/lib/locales";
@@ -22,23 +21,16 @@ async function LivePublicTeams({
   newTabLabel: string;
 }) {
   const [result, published] = await Promise.all([readSubmittedPublicTeams(), readPublishedResult()]);
-  const placedNames = published?.places ?? [];
+  const ranks: PublicTeamRank[] = published
+    ? published.places.map((place) => ({ teamId: place.teamId, place: place.place }))
+    : [];
 
   if (result.status === "error") {
-    return (
-      <PublicTeamsBoard teams={[]} copy={copy} newTabLabel={newTabLabel} placedNames={placedNames} status="error" />
-    );
+    return <PublicTeamsBoard teams={[]} copy={copy} newTabLabel={newTabLabel} status="error" />;
   }
 
-  return (
-    <PublicTeamsBoard teams={result.teams} copy={copy} newTabLabel={newTabLabel} placedNames={placedNames} />
-  );
+  return <PublicTeamsBoard teams={result.teams} copy={copy} newTabLabel={newTabLabel} ranks={ranks} />;
 }
-
-const placeLabels = {
-  fr: ["Première place", "Deuxième place", "Troisième place"],
-  en: ["First place", "Second place", "Third place"],
-} as const;
 
 export function CompetitionBook({ locale }: { locale: Locale }) {
   const dictionary = getDictionary(locale);
@@ -199,27 +191,39 @@ async function PublishedResults({
           </div>
         ) : (
           <div className="mt-8 space-y-8">
-            <ol className="grid gap-4 md:grid-cols-3">
-              {result.places.map((team, index) => (
-                <li key={placeLabels[locale][index]} className="border border-[#1f7a4d] bg-[#e7f6ee]">
-                  <span aria-hidden="true" className="block h-1.5 bg-[#1f7a4d]" />
-                  <div className="px-5 py-6">
-                    <p className="text-[0.9375rem] font-semibold text-[#146c43]">{placeLabels[locale][index]}</p>
-                    <p className="mt-2 text-[1.25rem] font-semibold leading-[1.35] text-[#0f5c38]">{team}</p>
-                  </div>
-                </li>
-              ))}
-            </ol>
-            {result.articleUrls.length > 0 ? (
-              <ul className="space-y-2">
-                {result.articleUrls.map((url) => (
-                  <li key={url}>
-                    <ExternalLink href={url} newTabLabel={dictionary.links.opensNewTab} />
+            <ol className="grid items-stretch gap-4 md:grid-cols-2">
+              {result.places.map((place) => {
+                const tone = placeAppearance(place.place);
+                const label =
+                  place.place <= 3
+                    ? dictionary.participatingTeams.places[place.place - 1]
+                    : `${dictionary.participatingTeams.placeLabel} ${place.place}`;
+                return (
+                  <li key={place.teamId} className={`flex h-full flex-col ${tone.card}`}>
+                    <div className="flex items-start gap-3 px-5 py-5">
+                      <p className={`inline-flex size-9 shrink-0 items-center justify-center text-[1.125rem] font-semibold tabular-nums ${tone.badge}`}>
+                        <span className="sr-only">{label} </span>
+                        {place.place}
+                      </p>
+                      <h3 className={`text-[1.25rem] font-semibold leading-[1.3] ${tone.title}`}>{place.name}</h3>
+                    </div>
+                    <div className="mt-auto px-5 pb-5">
+                      {place.articleUrl ? (
+                        <ForumArticleButton
+                          href={place.articleUrl}
+                          label={dictionary.participatingTeams.readArticle}
+                          newTabLabel={dictionary.links.opensNewTab}
+                        />
+                      ) : (
+                        <p className={`text-[0.9375rem] leading-[1.5] ${tone.quiet}`}>{dictionary.participatingTeams.articleMissing}</p>
+                      )}
+                    </div>
                   </li>
-                ))}
-              </ul>
-            ) : null}
+                );
+              })}
+            </ol>
             <ArticleBody text={result.statement[locale]} />
+            {result.hasWorkbook ? <ResultsWorkbookButton label={dictionary.results.fullResults} /> : null}
             <p>
               <Link className={textLink} href={localePath(locale, "annonces")}>
                 {dictionary.nav.announcements}

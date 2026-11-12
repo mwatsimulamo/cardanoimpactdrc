@@ -49,17 +49,5 @@ export async function PublicRoadmap({ locale, dictionary }: { locale: Locale; di
 }
 
 function statusLabel(dictionary: Dictionary, status: RoadmapStatus): string {
-  if (status === "done") {
-    return dictionary.timeline.done;
-  }
-
-  if (status === "current") {
-    return dictionary.timeline.current;
-  }
-
-  if (status === "postponed") {
-    return dictionary.timeline.postponed;
-  }
-
-  return dictionary.timeline.upcoming;
+  return dictionary.timeline[status];
 }

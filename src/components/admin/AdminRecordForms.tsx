@@ -15,10 +15,16 @@ import {
   type AdminActionState,
 } from "@/lib/admin-record-actions";
 import type { ActivityCategory } from "@/lib/documented-activities";
-import type { RoadmapStatus } from "@/lib/program-roadmap";
+import {
+  isRegistrationOpen,
+  isRegistrationPhase,
+  phaseKeys,
+  statusesForPhase,
+  type PhaseKey,
+  type RoadmapStatus,
+} from "@/lib/program-roadmap";
 import type { AdminTeamOption } from "@/lib/published-records";
 
-const statuses: readonly RoadmapStatus[] = ["upcoming", "current", "done", "postponed"];
 const IMAGE_LIMIT = Math.floor(3.5 * 1024 * 1024);
 
 export function PhaseStatusForm({
@@ -35,22 +41,39 @@ export function PhaseStatusForm({
   dictionary: Dictionary;
 }) {
   const [state, action, pending] = useActionState(savePhaseAction, null);
+  const key = phaseKeys.includes(phaseKey as PhaseKey) ? (phaseKey as PhaseKey) : null;
+  const options = key ? statusesForPhase(key) : (["upcoming", "current", "done", "postponed"] as const);
+  const registration = key ? isRegistrationPhase(key) : false;
+  const formOpen = isRegistrationOpen(status);
 
   return (
-    <form action={action} className="border border-line bg-canvas px-5 py-5">
+    <form action={action} className="border border-line bg-canvas px-5 py-5 transition-colors duration-150 hover:bg-surface/40">
       <h2 className="text-[1.25rem] font-semibold text-ink">{title}</h2>
       <p className={`mt-1 ${supportText}`}>{when}</p>
       <input name="phase" type="hidden" value={phaseKey} />
       <label className={`mt-4 ${fieldLabel}`} htmlFor={`phase-${phaseKey}`}>
-        État
+        {dictionary.adminUi.phaseStatus}
       </label>
       <select id={`phase-${phaseKey}`} name="status" defaultValue={status} className={`mt-2 ${fieldControl}`}>
-        {statuses.map((item) => (
+        {options.map((item) => (
           <option key={item} value={item}>
             {dictionary.timeline[item]}
           </option>
         ))}
       </select>
+      {registration ? (
+        <p className={`mt-3 ${supportText}`}>
+          {dictionary.adminUi.phaseRegistration} :{" "}
+          <span className="font-semibold text-ink">
+            {formOpen ? dictionary.adminUi.phaseFormOpen : dictionary.adminUi.phaseFormClosed}
+          </span>
+          . Ouvert = formulaire accessible. Clôturé ou Terminé = formulaire indisponible. Les enregistrements déjà reçus restent.
+        </p>
+      ) : (
+        <p className={`mt-3 ${supportText}`}>
+          Étape de programme sans formulaire d&apos;inscription lié. « En cours » et « Terminé » décrivent l&apos;avancement, pas une ouverture de formulaire.
+        </p>
+      )}
       <div className="mt-4">
         <button type="submit" className={primaryLink} disabled={pending}>
           {dictionary.adminUi.save}
@@ -118,6 +141,8 @@ export function ResultForm({
   place1,
   place2,
   place3,
+  workbookName = "",
+  teamPlaces = [],
 }: {
   dictionary: Dictionary;
   teams: readonly AdminTeamOption[];
@@ -125,6 +150,8 @@ export function ResultForm({
   place1: string;
   place2: string;
   place3: string;
+  workbookName?: string;
+  teamPlaces?: readonly { teamId: string; place: number }[];
 }) {
   const [state, action, pending] = useActionState(saveResultAction, null);
   const copy = dictionary.adminUi;
@@ -135,7 +162,8 @@ export function ResultForm({
   ] as const;
 
   return (
-    <form action={action} className="max-w-2xl space-y-4 border border-line bg-canvas px-5 py-5">
+    <form action={action} className="max-w-2xl space-y-4 border border-line bg-canvas px-5 py-6 md:px-8">
+      <h2 className="text-[1.25rem] font-semibold text-ink">Saisie du résultat</h2>
       <p className={bodyText}>{copy.resultsPublish}</p>
       {places.map(([name, label, value]) => (
         <label key={name} className={fieldLabel}>
@@ -150,7 +178,46 @@ export function ResultForm({
           </select>
         </label>
       ))}
+      <div className="space-y-3 border border-line bg-surface px-4 py-4">
+        <p className={fieldLabel}>Places suivantes</p>
+        <p className={supportText}>
+          Indiquez 4, 5, puis les places suivantes. 4 et 5 s&apos;affichent en jaune. Les autres gardent la fiche habituelle. Une case vide n&apos;affiche pas de rang.
+        </p>
+        <ul className="space-y-3">
+          {teams.map((team) => (
+            <li key={team.id}>
+              <label className={fieldLabel}>
+                {team.name}
+                <input
+                  name={`extraPlace-${team.id}`}
+                  type="number"
+                  min={4}
+                  max={99}
+                  inputMode="numeric"
+                  defaultValue={teamPlaces.find((item) => item.teamId === team.id)?.place ?? ""}
+                  className={`mt-2 ${fieldControl}`}
+                />
+              </label>
+            </li>
+          ))}
+        </ul>
+      </div>
       <RichTextField name="statement" label="Texte du résultat" defaultValue={statement} />
+      <label className={fieldLabel}>
+        Classeur des résultats totaux
+        <input
+          name="workbook"
+          type="file"
+          accept=".xls,.xlsx,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+          className={`mt-2 ${fieldControl}`}
+        />
+      </label>
+      <p className={supportText}>
+        Fichier .xls ou .xlsx, 3,5 Mo au plus. L&apos;original est conservé. Le site ne lit pas les notes.
+        {workbookName
+          ? ` Fichier actuel : ${workbookName}. Laisser vide pour le conserver.`
+          : " Sans fichier, le bouton public n'apparaît pas."}
+      </p>
       <NotifyFields />
       <PublishButtons pending={pending} draft={copy.draft} publish={copy.publish} />
       <ActionNotice state={state} dictionary={dictionary} />

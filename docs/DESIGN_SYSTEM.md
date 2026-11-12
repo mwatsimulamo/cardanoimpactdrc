@@ -94,7 +94,7 @@ Le contenu public est centré et limité à `72rem`. Les paragraphes, listes et 
 - L'accueil ouvre sur le visuel fourni `public/accueil.webp`, en pleine largeur et sur la hauteur de l'écran sous l'en-tête. Le titre du programme, la phrase en `#8EAFFF` et les deux actions sont centrés dans cette image, avec un voile `#001C5C` à 75 % pour le contraste. Le premier bouton est blanc avec le texte `#001C5C`. Le second a le fond `#0033AD` et le texte blanc. Le fichier est animé et affiché sans recompression.
 - Les six phases et les domaines sont des cartes `canvas`, avec un liseré `#B7CDFF`. Les cartes de l'accueil ont le liseré en haut. Les pages détaillées l'ont à gauche.
 
-Hors de la constellation de D-02 et du visuel d'accueil, le mouvement se limite au changement de couleur en 150 millisecondes sur le survol et le focus. Pas d'animation d'apparition, de défilement parallaxe, de carrousel ni de compteur animé.
+Hors de la constellation de D-02 et du visuel d'accueil, le mouvement se limite au changement de couleur en 150 millisecondes sur le survol et le focus, plus deux exceptions d'apparition : les trois parcours de la page Programme (`.path-reveal`) et les écrans d'administration (`.admin-in-left`, `.admin-in-right`, `.admin-in-up`, `.admin-stagger`), où titres, cases et formulaires glissent depuis les extrémités. Ces apparitions sont désactivées si `prefers-reduced-motion` est actif. Pas de défilement parallaxe, de carrousel ni de compteur animé.
 
 ## Structure des pages publiques
 
@@ -145,6 +145,8 @@ Une bande pleine, bordure de 1 pixel, texte dans la couleur d'état, fond dans l
 ### Tableau d'administration
 
 Texte `0.9375rem`, en-tête en graisse 600, séparateurs `line`, ligne survolée en `surface`. Sous 768 pixels, chaque enregistrement devient une liste de paires libellé / valeur, dans le même ordre que les colonnes. Les actions sont des boutons texte : « Confirmer », « Refuser », « Exporter ».
+
+L'espace organisateurs conserve le même système sombre. La barre latérale fixe le menu et le retour au site. Le tableau de bord ouvre sur les décomptes réels, les raccourcis de publication, les alertes à traiter, les campagnes récentes et l'état du calendrier. Les formulaires d'édition tiennent dans une case `canvas` avec titre explicite. Les entrées arrivent en léger glissement depuis la gauche ou la droite, en décalage, sans ombre ni dégradé.
 
 ## Responsive
 

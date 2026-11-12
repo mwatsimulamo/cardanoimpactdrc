@@ -4,11 +4,20 @@ import { OrganizerContact } from "@/components/OrganizerContact";
 import { PageFrame, PageHeader } from "@/components/PageHeader";
 import { getDictionary } from "@/content/get-dictionary";
 import { localePath, type Locale } from "@/lib/locales";
+import { readRegistrationAvailability } from "@/lib/registration-gate";
+import { publicRegistrationState } from "@/lib/registration-status";
 
-export function ProgramPresentation({ locale }: { locale: Locale }) {
+export async function ProgramPresentation({ locale }: { locale: Locale }) {
   const dictionary = getDictionary(locale);
   const story = dictionary.program.story;
   const registerHref = localePath(locale, "inscription");
+  const teamsState = publicRegistrationState((await readRegistrationAvailability()).teamsStatus);
+  const teamsBanner =
+    teamsState === "open"
+      ? dictionary.registration.teamsOpen
+      : teamsState === "closed"
+        ? dictionary.registration.teamsClosed
+        : dictionary.registration.teamsUpcoming;
 
   return (
     <PageFrame>
@@ -34,7 +43,7 @@ export function ProgramPresentation({ locale }: { locale: Locale }) {
         <h2 id="program-how" className={`${sectionTitle} scroll-mt-28`}>
           {story.howTitle}
         </h2>
-        <p className={`mt-4 ${casePanel} ${justifiedSupport}`}>{dictionary.registration.closed}</p>
+        <p className={`mt-4 ${casePanel} ${justifiedSupport}`}>{teamsBanner}</p>
         <ol className="mt-8 space-y-6">
           <li id="programme-training" className="path-reveal scroll-mt-28 border border-line bg-surface">
             <article>

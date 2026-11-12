@@ -7,10 +7,17 @@ export type PublishedAnnouncement = {
   body: Record<Locale, string>;
 };
 
+export type PublishedPlace = {
+  teamId: string;
+  name: string;
+  place: number;
+  articleUrl: string | null;
+};
+
 export type PublishedResult = {
-  places: readonly [string, string, string];
-  articleUrls: readonly string[];
+  places: readonly PublishedPlace[];
   statement: Record<Locale, string>;
+  hasWorkbook: boolean;
 };
 
 export type FaqItem = {
@@ -122,8 +129,8 @@ const faqItems: readonly FaqItem[] = [
       en: "When do the results appear?",
     },
     answer: {
-      fr: "Les équipes sélectionnées, au plus cinq, sont annoncées le 17 décembre 2026. La page Résultats ne montre que les trois premières places, et seulement après la saisie du jury. Le jury compte cinq membres. Leurs noms et les notes ne sont pas publiés.",
-      en: "The selected teams, at most five, are announced on December 17, 2026. The Results page shows only the first three places, and only after the jury's entry. The jury has five members. Their names and the scores are not published.",
+      fr: "Les équipes sélectionnées, au plus cinq, sont annoncées le 17 décembre 2026. Après la saisie du jury, la page Résultats montre les trois premières places, avec le lien de leur article. Le classeur complet n'apparaît que si les organisateurs le publient. Le jury compte cinq membres. Leurs noms et les notes ne sont pas affichés sur la page.",
+      en: "The selected teams, at most five, are announced on December 17, 2026. After the jury's entry, the Results page shows the first three places, with the link to their article. The complete workbook appears only if the organizers publish it. The jury has five members. Their names and the scores are not shown on the page.",
     },
   },
   {

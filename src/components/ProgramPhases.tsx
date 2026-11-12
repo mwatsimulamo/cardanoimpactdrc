@@ -2,8 +2,8 @@ import Link from "next/link";
 import { blockTitle, justifiedText, sectionTitle, supportText, textLink } from "@/components/classes";
 import type { Dictionary } from "@/content/types";
 import { localePath, type Locale } from "@/lib/locales";
+import { phaseAccent } from "@/lib/program-roadmap";
 import { readPublishedRoadmap } from "@/lib/published-records";
-
 
 export async function ProgramPhases({
   locale,
@@ -55,10 +55,12 @@ export async function ProgramPhases({
             >
               <span
                 aria-hidden="true"
-                className={`absolute bg-brand ${detailed ? "inset-y-0 left-0 w-1.5" : "inset-x-0 top-0 h-1.5"}`}
+                className={`absolute ${detailed ? "inset-y-0 left-0 w-1.5" : "inset-x-0 top-0 h-1.5"}`}
+                style={{ backgroundColor: phaseAccent[key] }}
               />
               <p
-                className="text-[1.75rem] font-semibold leading-none text-brand tabular-nums"
+                className="text-[1.75rem] font-semibold leading-none tabular-nums"
+                style={{ color: phaseAccent[key] }}
               >
                 {String(index + 1).padStart(2, "0")}
               </p>

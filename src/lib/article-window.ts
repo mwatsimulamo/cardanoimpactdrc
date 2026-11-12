@@ -1,7 +1,7 @@
-import { civilDateInGoma } from "@/lib/registration-gate";
+import { civilDateInGoma } from "@/lib/goma-date";
 
-export const ARTICLE_OPENS_ON = "2026-11-30";
-export const ARTICLE_CLOSES_ON = "2026-12-13";
+export const ARTICLE_OPENS_ON = "2026-12-06";
+export const ARTICLE_CLOSES_ON = "2026-12-15";
 
 /** Ouvert pour tester la soumission avant la fenêtre officielle. */
 export const ARTICLE_SUBMISSIONS_ACCEPTED = true;

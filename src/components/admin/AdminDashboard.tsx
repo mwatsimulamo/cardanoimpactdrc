@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { blockTitle, bodyText, justifiedText, pageTitle, sectionTitle, supportText } from "@/components/classes";
+import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
+import { blockTitle, bodyText, justifiedText, primaryLink, secondaryLink, sectionTitle, supportText } from "@/components/classes";
 import type { Dictionary } from "@/content/types";
 import { readMailStats } from "@/lib/email/service";
 import { localePath, type Locale } from "@/lib/locales";
@@ -45,66 +46,102 @@ export async function AdminDashboard({ locale, dictionary }: { locale: Locale; d
     mailReady && mail.failed > 0 ? { href: "admin/communications", text: `${mail.failed} envoi(s) en échec à reprendre.` } : null,
     mailReady && mail.pending > 0 ? { href: "admin/communications", text: `${mail.pending} envoi(s) encore en attente.` } : null,
   ].filter((item) => item !== null);
+  const shortcuts = [
+    { href: "admin/annonces", label: "Nouvelle annonce", tone: "primary" as const },
+    { href: "admin/activites", label: "Nouvelle activité", tone: "secondary" as const },
+    { href: "admin/galerie", label: "Nouvelle image", tone: "secondary" as const },
+    { href: "admin/resultats", label: "Saisir les résultats", tone: "secondary" as const },
+  ];
 
   return (
     <div className="space-y-10">
-      <header>
-        <h1 className={pageTitle}>{copy.navDashboard}</h1>
-        <p className={`mt-3 max-w-3xl ${bodyText}`}>{dictionary.workspace.adminLede}</p>
-      </header>
+      <AdminPageHeader title={copy.navDashboard} lede={dictionary.workspace.adminLede} />
+
       <section aria-label="Synthèse">
-        <ul className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <ul className="admin-stagger grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
           {cards.map((card) => (
             <li key={card.title}>
-              <Link href={localePath(locale, card.href)} className="block h-full border border-line bg-canvas px-5 py-5 hover:bg-surface focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand">
-                <span className="text-brand" aria-hidden="true">{cardIcon(card.icon)}</span>
-                <p className={`mt-3 ${supportText}`}>{card.title}</p>
-                <p className={`mt-2 ${blockTitle}`}>{card.value}</p>
+              <Link
+                href={localePath(locale, card.href)}
+                className="group block h-full border border-line bg-canvas px-5 py-5 transition-colors duration-150 hover:bg-surface focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+              >
+                <span className="flex items-start justify-between gap-3">
+                  <span className={`min-w-0 ${supportText}`}>{card.title}</span>
+                  <span className="text-brand transition-colors duration-150 group-hover:text-brand-hover" aria-hidden="true">
+                    {cardIcon(card.icon)}
+                  </span>
+                </span>
+                <p className={`mt-4 tabular-nums ${blockTitle}`}>{card.value}</p>
                 <p className={`mt-2 ${supportText}`}>{card.detail}</p>
               </Link>
             </li>
           ))}
         </ul>
       </section>
-      <div className="max-w-3xl space-y-8 border-t border-line pt-8">
-      {attention.length > 0 ? (
-        <section>
-          <h2 className={sectionTitle}>À traiter</h2>
-          <ul className="mt-3 space-y-2">
-            {attention.map((item) => (
-              <li key={item.text}>
-                <Link href={localePath(locale, item.href)} className={`${justifiedText} underline decoration-brand underline-offset-2`}>
-                  {item.text}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </section>
-      ) : null}
-      <section>
-        <h2 className={sectionTitle}>Campagnes récentes</h2>
-        {mailReady && mail.recent.length > 0 ? (
-          <ul className="mt-3 space-y-2">
-            {mail.recent.map((item, index) => (
-              <li key={`${item.kind}-${item.subject}-${index}`} className={justifiedText}>
-                {item.kind === "publication" ? "Publication" : "Campagne"} — {item.subject}
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p className={`mt-3 ${justifiedText}`}>Aucune campagne indépendante ou notification de publication.</p>
-        )}
-      </section>
-      <section>
-        <h2 className={sectionTitle}>{copy.navCalendar}</h2>
-        <ol className="mt-3 space-y-2">
-          {phases.phases.map((phase) => (
-            <li key={phase.key} className={justifiedText}>
-              {dictionary.phases[phase.key].title}. {dictionary.timeline[phase.status]}.
-            </li>
+
+      <section className="admin-in-up border border-line bg-canvas px-5 py-6 md:px-8" style={{ ["--admin-delay" as string]: "220ms" }} aria-labelledby="admin-shortcuts">
+        <h2 id="admin-shortcuts" className={sectionTitle}>
+          {copy.shortcuts}
+        </h2>
+        <p className={`mt-2 ${supportText}`}>Publier ou préparer le prochain contenu depuis ici.</p>
+        <div className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+          {shortcuts.map((item) => (
+            <Link key={item.href} href={localePath(locale, item.href)} className={item.tone === "primary" ? primaryLink : secondaryLink}>
+              {item.label}
+            </Link>
           ))}
-        </ol>
+        </div>
       </section>
+
+      <div className="grid gap-8 xl:grid-cols-2">
+        <div className="admin-in-left space-y-8" style={{ ["--admin-delay" as string]: "280ms" }}>
+          {attention.length > 0 ? (
+            <section className="border border-line bg-canvas px-5 py-6">
+              <h2 className={sectionTitle}>{copy.attentionTitle}</h2>
+              <ul className="mt-4 space-y-3">
+                {attention.map((item) => (
+                  <li key={item.text}>
+                    <Link href={localePath(locale, item.href)} className={`${justifiedText} underline decoration-brand underline-offset-2`}>
+                      {item.text}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          ) : null}
+          <section className="border border-line bg-canvas px-5 py-6">
+            <h2 className={sectionTitle}>{copy.recentCampaigns}</h2>
+            {mailReady && mail.recent.length > 0 ? (
+              <ul className="mt-4 space-y-3">
+                {mail.recent.map((item, index) => (
+                  <li key={`${item.kind}-${item.subject}-${index}`} className={justifiedText}>
+                    {item.kind === "publication" ? "Publication" : "Campagne"} — {item.subject}
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className={`mt-4 ${justifiedText}`}>{copy.emptyCampaigns}</p>
+            )}
+          </section>
+        </div>
+
+        <section className="admin-in-right border border-line bg-canvas px-5 py-6" style={{ ["--admin-delay" as string]: "320ms" }}>
+          <h2 className={sectionTitle}>{copy.navCalendar}</h2>
+          <p className={`mt-2 ${supportText}`}>État choisi par les organisateurs, indépendant de la date civile.</p>
+          <ol className="mt-5 space-y-3">
+            {phases.phases.map((phase) => (
+              <li key={phase.key} className="border-l-2 border-brand/70 pl-4">
+                <p className="font-semibold text-ink">{dictionary.phases[phase.key].title}</p>
+                <p className={`mt-1 ${bodyText}`}>{dictionary.timeline[phase.status]}</p>
+              </li>
+            ))}
+          </ol>
+          <p className="mt-5">
+            <Link href={localePath(locale, "admin/calendrier")} className={secondaryLink}>
+              {copy.navCalendar}
+            </Link>
+          </p>
+        </section>
       </div>
     </div>
   );

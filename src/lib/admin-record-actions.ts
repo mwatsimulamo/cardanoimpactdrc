@@ -26,6 +26,7 @@ export type AdminActionState = {
 } | null;
 
 const IMAGE_LIMIT = Math.floor(3.5 * 1024 * 1024);
+const WORKBOOK_LIMIT = IMAGE_LIMIT;
 const IMAGE_TYPES = new Set(["image/jpeg", "image/png", "image/webp"]);
 const IMAGE_DETAIL = "L'image doit être un JPEG, PNG ou WebP de 3,5 Mo au plus.";
 
@@ -92,12 +93,29 @@ export async function saveResultAction(
     return { status: "forbidden" };
   }
 
+  const workbook = await readUploadedWorkbook(formData.get("workbook"));
+  if (workbook === "invalid") {
+    return { status: "invalid", detail: "Le classeur doit être un fichier .xls ou .xlsx de 3,5 Mo au plus." };
+  }
+
+  const place1 = String(formData.get("place1") ?? "");
+  const place2 = String(formData.get("place2") ?? "");
+  const place3 = String(formData.get("place3") ?? "");
+  const parsedPlaces = readExtraPlaces(formData);
+  if (parsedPlaces === "invalid") {
+    return { status: "invalid", detail: "Chaque place suivante est un nombre entier de 4 à 99, sans doublon." };
+  }
+  const official = new Set([place1, place2, place3]);
+  const teamPlaces = parsedPlaces.filter((item) => !official.has(item.teamId));
+
   const saved = await saveResult({
     statement: String(formData.get("statement") ?? ""),
-    place1: String(formData.get("place1") ?? ""),
-    place2: String(formData.get("place2") ?? ""),
-    place3: String(formData.get("place3") ?? ""),
+    place1,
+    place2,
+    place3,
     publish: formData.get("intent") === "publish",
+    workbook,
+    teamPlaces,
   });
   if (saved.status === "ok") {
     refreshPublic();
@@ -240,6 +258,76 @@ async function readUploadedImage(value: FormDataEntryValue | null): Promise<Edit
   }
 
   return { bytes, type };
+}
+
+function readExtraPlaces(formData: FormData): { teamId: string; place: number }[] | "invalid" {
+  const places: { teamId: string; place: number }[] = [];
+  const seen = new Set<number>();
+  for (const [key, value] of formData.entries()) {
+    if (!key.startsWith("extraPlace-") || typeof value !== "string") {
+      continue;
+    }
+    const text = value.trim();
+    if (text.length === 0) {
+      continue;
+    }
+    const teamId = key.slice("extraPlace-".length);
+    const place = Number(text);
+    if (!isEditorialId(teamId) || !Number.isInteger(place) || place < 4 || place > 99 || seen.has(place)) {
+      return "invalid";
+    }
+    seen.add(place);
+    places.push({ teamId, place });
+  }
+  return places;
+}
+
+async function readUploadedWorkbook(
+  value: FormDataEntryValue | null,
+): Promise<{ name: string; type: string; bytes: Uint8Array } | null | "invalid"> {
+  if (!(value instanceof File) || value.size === 0) {
+    return null;
+  }
+
+  if (value.size > WORKBOOK_LIMIT || /\.xlsm$/i.test(value.name)) {
+    return "invalid";
+  }
+
+  const bytes = new Uint8Array(await value.arrayBuffer());
+  const type = workbookTypeOf(bytes);
+  const name = type ? workbookNameOf(value.name, type) : null;
+  if (!type || !name) {
+    return "invalid";
+  }
+
+  return { name, type, bytes };
+}
+
+function workbookTypeOf(bytes: Uint8Array): string | null {
+  if (bytes.length >= 8 && bytes[0] === 0xd0 && bytes[1] === 0xcf && bytes[2] === 0x11 && bytes[3] === 0xe0) {
+    return "application/vnd.ms-excel";
+  }
+
+  if (bytes.length >= 4 && bytes[0] === 0x50 && bytes[1] === 0x4b && bytes[2] === 0x03 && bytes[3] === 0x04) {
+    return "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+  }
+
+  return null;
+}
+
+function workbookNameOf(value: string, type: string): string | null {
+  const extension = type === "application/vnd.ms-excel" ? ".xls" : ".xlsx";
+  const base = (value.split(/[/\\]/).pop() ?? "").trim();
+  if (/\.xlsm$/i.test(base)) {
+    return null;
+  }
+
+  const cleaned = base.replace(/[^\w.\- ()]/g, "").slice(0, 80);
+  if (cleaned.toLowerCase().endsWith(extension)) {
+    return cleaned;
+  }
+
+  return `resultats-equipes${extension}`;
 }
 
 function imageTypeOf(bytes: Uint8Array): string | null {

@@ -1,5 +1,6 @@
 import "server-only";
 
+import { unstable_rethrow } from "next/navigation";
 import { cache } from "react";
 
 import { createServiceRoleSupabaseClient } from "@/lib/supabase/service-role";
@@ -18,10 +19,15 @@ import {
   writePhaseFile,
   writeResultFile,
   type EditorialImage,
+  type ResultWorkbook,
+  type TeamPlace,
 } from "@/lib/editorial-store";
+import { isForumUrl } from "@/lib/forum-links";
+import { readSubmittedPublicTeams } from "@/lib/participating-teams";
 import {
   listPublishedRoadmap,
   phaseKeys,
+  statusesForPhase,
   type PhaseKey,
   type PublishedRoadmapPhase,
   type RoadmapStatus,
@@ -75,6 +81,8 @@ export type AdminResultDraft = {
   place2: string;
   place3: string;
   status: string;
+  workbookName: string;
+  teamPlaces: readonly TeamPlace[];
 };
 
 export type AdminActivityDraft = {
@@ -96,7 +104,7 @@ export type AdminHistoryRow = {
   createdAt: string;
 };
 
-const PHASE_STATUS = new Set<RoadmapStatus>(["upcoming", "current", "done", "postponed"]);
+const PHASE_STATUS = new Set<RoadmapStatus>(["upcoming", "open", "current", "done", "closed", "postponed"]);
 
 export async function readPublishedRoadmap(): Promise<{
   availability: RecordAvailability;
@@ -122,12 +130,18 @@ export async function savePhaseStatus(phaseKey: string, status: string): Promise
     return "invalid";
   }
 
+  const key = phaseKey as PhaseKey;
+  const next = status as RoadmapStatus;
+  if (!statusesForPhase(key).includes(next)) {
+    return "invalid";
+  }
+
   const current = await readPhaseFile();
   if (current === "missing" || current === "error") {
     return current;
   }
 
-  return writePhaseFile({ ...current, [phaseKey]: status });
+  return writePhaseFile({ ...current, [phaseKey]: next });
 }
 
 export async function readPublishedAnnouncements(): Promise<readonly PublishedAnnouncement[]> {
@@ -243,16 +257,40 @@ export const readPublishedResult = cache(async function readPublishedResult(): P
     return null;
   }
 
+  const ranked = [
+    { teamId: draft.place1, place: 1 },
+    { teamId: draft.place2, place: 2 },
+    { teamId: draft.place3, place: 3 },
+    ...draft.teamPlaces.filter((item) => item.teamId !== draft.place1 && item.teamId !== draft.place2 && item.teamId !== draft.place3),
+  ];
   const names = await teamNameMap();
-  const places = [draft.place1, draft.place2, draft.place3].map((id) => names.get(id) ?? "");
-  if (places.some((name) => name.length === 0) || draft.statement.trim().length === 0) {
+  const links = await articleUrlByTeam(ranked.map((item) => item.teamId));
+  const submitted = await readSubmittedPublicTeams();
+  if (submitted.status === "ready") {
+    for (const team of submitted.teams) {
+      if (team.articleUrl) {
+        links.set(team.id, team.articleUrl);
+      }
+    }
+  }
+  const places = ranked
+    .map((item) => ({
+      teamId: item.teamId,
+      name: names.get(item.teamId) ?? "",
+      place: item.place,
+      articleUrl: links.get(item.teamId) ?? null,
+    }))
+    .filter((place) => place.name.length > 0)
+    .sort((left, right) => left.place - right.place);
+  const podium = places.filter((place) => place.place <= 3);
+  if (podium.length < 3 || draft.statement.trim().length === 0) {
     return null;
   }
 
   return {
-    places: [places[0] ?? "", places[1] ?? "", places[2] ?? ""],
-    articleUrls: [],
+    places,
     statement: { fr: draft.statement, en: draft.statement },
+    hasWorkbook: draft.workbookName.trim().length > 0,
   };
 });
 
@@ -277,6 +315,8 @@ export async function readAdminResult(): Promise<{
       place2: row?.place2 ?? "",
       place3: row?.place3 ?? "",
       status: row?.status ?? "draft",
+      workbookName: row?.workbookName ?? "",
+      teamPlaces: row?.teamPlaces ?? [],
     },
   };
 }
@@ -287,11 +327,23 @@ export async function saveResult(input: {
   place2: string;
   place3: string;
   publish: boolean;
+  workbook: ResultWorkbook | null;
+  teamPlaces: readonly TeamPlace[];
 }): Promise<SavedRecord> {
   const statement = sanitizeRichText(input.statement).trim();
   const places = [input.place1, input.place2, input.place3];
   const complete = plainExcerpt(statement, 8000).length > 0 && places.every((id) => id.length > 0) && new Set(places).size === 3;
-  if (input.publish && !complete) {
+  const known = await teamNameMap();
+  const extraPlaces = new Set<number>();
+  const extras = input.teamPlaces ?? [];
+  const extrasValid = extras.every((item) => {
+    if (!known.has(item.teamId) || places.includes(item.teamId) || extraPlaces.has(item.place)) {
+      return false;
+    }
+    extraPlaces.add(item.place);
+    return item.place >= 4 && item.place <= 99;
+  });
+  if ((input.publish && !complete) || !extrasValid) {
     return { status: "invalid", publicPath: null };
   }
 
@@ -304,7 +356,9 @@ export async function saveResult(input: {
     status: input.publish ? "published" : "draft",
     publishedAt: input.publish ? now : null,
     updatedAt: now,
-  });
+    workbookName: input.workbook?.name ?? "",
+    teamPlaces: extras,
+  }, input.workbook ?? undefined);
   return {
     status,
     publicPath: status === "ok" && input.publish ? "/fr/resultats" : null,
@@ -517,7 +571,49 @@ export async function readAdminCounts(): Promise<{
 }
 
 function emptyResult(): AdminResultDraft {
-  return { statementFr: "", statementEn: "", place1: "", place2: "", place3: "", status: "draft" };
+  return { statementFr: "", statementEn: "", place1: "", place2: "", place3: "", status: "draft", workbookName: "", teamPlaces: [] };
+}
+
+async function articleUrlByTeam(ids: readonly string[]): Promise<Map<string, string>> {
+  const links = new Map<string, string>();
+  const wanted = ids.filter((id) => id.length > 0);
+  if (wanted.length === 0) {
+    return links;
+  }
+
+  try {
+    const supabase = createServiceRoleSupabaseClient();
+    const { data, error } = await supabase.from("team_articles").select("team_id,url,is_current").in("team_id", wanted);
+    if (error || !data) {
+      return links;
+    }
+
+    const current = new Map<string, string>();
+    const fallback = new Map<string, string>();
+    for (const row of data) {
+      const teamId = typeof row.team_id === "string" ? row.team_id : "";
+      const url = typeof row.url === "string" && isForumUrl(row.url) ? row.url : "";
+      if (teamId.length === 0 || url.length === 0) {
+        continue;
+      }
+      if (row.is_current === true) {
+        current.set(teamId, url);
+      } else if (!fallback.has(teamId)) {
+        fallback.set(teamId, url);
+      }
+    }
+
+    for (const id of wanted) {
+      const url = current.get(id) ?? fallback.get(id);
+      if (url) {
+        links.set(id, url);
+      }
+    }
+    return links;
+  } catch (error) {
+    unstable_rethrow(error);
+    return links;
+  }
 }
 
 function todayInGoma(): string {

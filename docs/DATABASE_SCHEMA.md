@@ -77,16 +77,17 @@ create table public.admin_profiles (
 create table public.program_phases (
   phase_key text primary key check (
     phase_key in (
-      'launch',
+      'sessions_signup',
       'training',
+      'workshop_signup',
       'teams',
       'competition',
       'jury',
-      'workshop'
+      'closing'
     )
   ),
   status text not null default 'upcoming' check (
-    status in ('upcoming', 'current', 'done', 'postponed')
+    status in ('upcoming', 'open', 'current', 'done', 'closed', 'postponed')
   ),
   actual_start date,
   actual_end date,
@@ -622,7 +623,7 @@ Le courriel, le profil X et l'URL WhatsApp de D-32 restent dans le contenu versi
 | Table | Rôle |
 | --- | --- |
 | `admin_profiles` | Organisateur autorisé. Une ligne par compte `auth.users`. Pas de second rôle (A-06). |
-| `program_phases` | État des six phases D-30. Clés `launch`, `training`, `teams`, `competition`, `jury`, `workshop`. Statuts `upcoming`, `current`, `done`, `postponed`. Les dates prévues restent dans le contenu versionné. `actual_start` et `actual_end` sont des dates civiles facultatives. Aucun déclencheur ne change le statut à partir de la date. |
+| `program_phases` | État des sept phases D-42. Clés `sessions_signup`, `training`, `workshop_signup`, `teams`, `competition`, `jury`, `closing`. Statuts `upcoming`, `open`, `current`, `done`, `closed`, `postponed`. Les dates prévues restent dans le contenu versionné. Aucun déclencheur ne change le statut à partir de la date. Les étapes `sessions_signup`, `workshop_signup` et `teams` ouvrent le formulaire lié seulement en `open`. |
 | `teams` | Équipe du concours. Statuts `submitted`, `suspended`, `rejected` (D-37). Ville et pays obligatoires. Pas de thématique (A-14). |
 | `team_members` | Membre. Rôle `leader`, `deputy` ou `member`. Un seul leader actif, au plus un adjoint actif. Courriel unique tant que `left_at` est nul (A-04). |
 | `team_member_forum_profiles` | Profil forum d'un membre. Les deux champs ensemble ou vides. Statuts `not_provided`, `pending_review`, `verified`, `mismatch`. |
@@ -631,7 +632,7 @@ Le courriel, le profil X et l'URL WhatsApp de D-32 restent dans le contenu versi
 | `leader_access_challenges` | Code d'accès du team leader (D-24). `secret_hash` sert à l'ouverture. `access_code` conserve le code pour les organisateurs. La table n'est pas lisible par le public. Réutilisable tant que `used_at` est nul et que `expires_at` n'est pas passé. |
 | `team_activity_logs` | Journal des modifications et des transferts de responsabilité. Pas de mot de passe, pas de secret. |
 | `public_teams` | Vue : identifiant, nom, nombre de membres des équipes `submitted`. Seule lecture publique des équipes. |
-| `competition_results` | Texte bilingue du résultat officiel, saisi après consolidation hors site (D-38). |
+| `competition_results` | Résultat officiel saisi après consolidation hors site (D-38). `workbook_name`, `workbook_type` et `workbook_data` conservent le classeur original .xls ou .xlsx. `team_places` conserve les places à partir de 4, saisies par les organisateurs. Le site ne lit pas le classeur et n'invente pas de place. |
 | `team_rankings` | Places publiques 1, 2 et 3, après D-26. |
 | `announcements` | Communication bilingue. Le texte est brut (D-07). |
 | `activities` | Séance opérationnelle des présences. `starts_at` nul tant que l'heure n'est pas fixée (A-09). |

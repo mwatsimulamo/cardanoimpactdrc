@@ -19,7 +19,10 @@ import { StatusMessage } from "@/components/StatusMessage";
 import type { Dictionary } from "@/content/types";
 import { lumaEvents } from "@/lib/luma-events";
 import { localePath, type Locale } from "@/lib/locales";
-import { registrationGate } from "@/lib/registration-gate";
+import {
+  publicRegistrationState,
+  type RegistrationAvailability,
+} from "@/lib/registration-status";
 import { submitTeamRegistration } from "@/lib/submit-team-registration";
 import {
   emptyMember,
@@ -36,9 +39,11 @@ import {
 export function RegistrationForm({
   locale,
   dictionary,
+  availability,
 }: {
   locale: Locale;
   dictionary: Dictionary;
+  availability: RegistrationAvailability;
 }) {
   const fields = dictionary.registration.fields;
   const journey = dictionary.registration.journey;
@@ -66,7 +71,10 @@ export function RegistrationForm({
     [fields.required, teamForm],
   );
 
-  const registrationOpen = registrationGate() === "open";
+  const registrationOpen = availability.teamsOpen;
+  const sessionsState = publicRegistrationState(availability.sessionsStatus);
+  const workshopState = publicRegistrationState(availability.workshopStatus);
+  const teamsState = publicRegistrationState(availability.teamsStatus);
   const describedBy = registrationOpen ? "registration-window" : "registration-closed registration-window";
   const teamsHref = localePath(locale, "equipes");
   const leaderHref = localePath(locale, "equipe");
@@ -135,6 +143,14 @@ export function RegistrationForm({
             cta={journey.training.session1Cta}
             href={lumaEvents.session1}
             newTab={dictionary.links.opensNewTab}
+            open={availability.sessionsOpen}
+            stateLabel={
+              sessionsState === "open"
+                ? dictionary.registration.sessionsOpen
+                : sessionsState === "closed"
+                  ? dictionary.registration.sessionsClosed
+                  : dictionary.registration.sessionsUpcoming
+            }
           />
           <SessionCard
             kicker={journey.training.session2Title}
@@ -143,6 +159,14 @@ export function RegistrationForm({
             cta={journey.training.session2Cta}
             href={lumaEvents.session2}
             newTab={dictionary.links.opensNewTab}
+            open={availability.sessionsOpen}
+            stateLabel={
+              sessionsState === "open"
+                ? dictionary.registration.sessionsOpen
+                : sessionsState === "closed"
+                  ? dictionary.registration.sessionsClosed
+                  : dictionary.registration.sessionsUpcoming
+            }
           />
           <SessionCard
             title={journey.workshop.sessionTitle}
@@ -150,6 +174,14 @@ export function RegistrationForm({
             cta={journey.workshop.cta}
             href={lumaEvents.workshop}
             newTab={dictionary.links.opensNewTab}
+            open={availability.workshopOpen}
+            stateLabel={
+              workshopState === "open"
+                ? dictionary.registration.workshopOpen
+                : workshopState === "closed"
+                  ? dictionary.registration.workshopClosed
+                  : dictionary.registration.workshopUpcoming
+            }
           />
         </div>
       </section>
@@ -160,11 +192,16 @@ export function RegistrationForm({
         </h2>
         <p className={`mt-4 ${justifiedText}`}>{journey.formIntro}</p>
         <div className="mt-6 space-y-4">
-          {registrationOpen ? null : (
-            <StatusMessage id="registration-closed" tone="warning">
-              {dictionary.registration.closed}
-            </StatusMessage>
-          )}
+          <StatusMessage id="registration-closed" tone={registrationOpen ? "success" : "warning"}>
+            {teamsState === "open"
+              ? dictionary.registration.teamsOpen
+              : teamsState === "closed"
+                ? dictionary.registration.teamsClosed
+                : dictionary.registration.teamsUpcoming}
+          </StatusMessage>
+          {!registrationOpen ? (
+            <StatusMessage tone="warning">{dictionary.registration.closed}</StatusMessage>
+          ) : null}
           <p id="registration-window" className={justifiedText}>
             {dictionary.registration.period}
             {registrationOpen ? null : ` ${dictionary.registration.outsideWindow}`}
@@ -439,6 +476,8 @@ function SessionCard({
   cta,
   href,
   newTab,
+  open,
+  stateLabel,
 }: {
   kicker?: string;
   title: string;
@@ -446,17 +485,24 @@ function SessionCard({
   cta: string;
   href: string;
   newTab: string;
+  open: boolean;
+  stateLabel: string;
 }) {
   return (
     <article className="path-reveal flex h-full flex-col gap-2 border border-line bg-surface px-5 py-6">
       {kicker ? <p className="text-base font-semibold text-brand">{kicker}</p> : null}
       <h2 className={blockTitle}>{title}</h2>
       <p className={`${blockTitle} text-brand`}>{when}</p>
+      <p className={supportText}>{stateLabel}</p>
       <div className="mt-auto pt-6">
-        <a className={primaryLink} href={href} target="_blank" rel="noopener noreferrer">
-          {cta}
-          <span className="sr-only"> ({newTab})</span>
-        </a>
+        {open ? (
+          <a className={primaryLink} href={href} target="_blank" rel="noopener noreferrer">
+            {cta}
+            <span className="sr-only"> ({newTab})</span>
+          </a>
+        ) : (
+          <p className={`${supportText} font-semibold`}>{stateLabel}</p>
+        )}
       </div>
     </article>
   );

@@ -112,7 +112,9 @@ export const en = {
     statsTeams: "Registered teams",
     statsParticipants: "Participants",
     statsLink: "See participating teams",
-    latestAnnouncements: "Latest announcements",
+    latestAnnouncements: "Announcements",
+    latestAnnouncementsLede: "The latest official publications of the program.",
+    announcementRead: "Read the announcement",
     latestActivities: "Recent activities",
     latestEmpty: "Nothing has been published in this section yet.",
     roadmapLink: "See the roadmap",
@@ -146,35 +148,40 @@ export const en = {
     body: "Cardano Learning & Research for Real Use Cases in Goma, DR Congo is based in Goma, in the Democratic Republic of the Congo. CIPot-DR Congo is for understanding this program, registering, receiving information, and following its progress. The organizers have a private area. The data in that area is not shown here.",
   },
   phases: {
-    launch: {
-      title: "Launch and Registration",
-      when: "November 9–21, 2026",
-      body: "Launch and registration, November 9–21, 2026.",
+    sessions_signup: {
+      title: "Registration for sessions 1 and 2",
+      when: "November 13–29, 2026",
+      body: "Registration for online training sessions 1 and 2, November 13–29, 2026.",
     },
     training: {
-      title: "Online Training Sessions",
-      when: "November 23–24, 2026",
-      body: "Online training sessions, November 23–24, 2026. The time and the meeting link are not published.",
+      title: "Online training sessions",
+      when: "November 30 and December 1, 2026",
+      body: "Online training sessions on November 30 and December 1, 2026. The time and the meeting link are not published.",
+    },
+    workshop_signup: {
+      title: "Registration for the in-person session",
+      when: "November 30 – December 17, 2026",
+      body: "Registration for the in-person session, from November 30 to December 17, 2026.",
     },
     teams: {
-      title: "Team Formation",
-      when: "November 25–29, 2026",
-      body: "Team formation, November 25–29, 2026.",
+      title: "Team formation and competition launch",
+      when: "December 1–5, 2026",
+      body: "Team formation and competition launch, December 1–5, 2026.",
     },
     competition: {
-      title: "Research Competition and Article Submission",
-      when: "November 30 – December 13, 2026",
-      body: "Research competition and article submission, from November 30 to December 13, 2026, on Cardano Forum, at https://forum.cardano.org/. Teams conduct their research and publish their articles there.",
+      title: "Research and submission of work",
+      when: "December 6–15, 2026",
+      body: "Research and submission of work, from December 6 to 15, 2026, on Cardano Forum, at https://forum.cardano.org/. Teams conduct their research and publish their articles there.",
     },
     jury: {
-      title: "Jury Evaluation",
-      when: "December 14–17, 2026",
-      body: "Jury evaluation, December 14–17, 2026. Jury names and scores are not published.",
+      title: "Jury evaluation of the teams",
+      when: "December 16–17, 2026",
+      body: "Jury evaluation of the teams, December 16–17, 2026. Jury names and scores are not published.",
     },
-    workshop: {
-      title: "In-Person Closing Workshop in Goma",
-      when: "Friday, December 18, 2026",
-      body: "In-person closing workshop on Friday, December 18, 2026, in Goma, Democratic Republic of the Congo. The time and the venue address are not published.",
+    closing: {
+      title: "In-person event and results publication",
+      when: "December 18, 2026",
+      body: "In-person event and results publication on December 18, 2026, in Goma, Democratic Republic of the Congo. The time and the venue address are not published.",
     },
   },
   timeline: {
@@ -182,7 +189,14 @@ export const en = {
     current: "In progress",
     next: "Next",
     upcoming: "Upcoming",
+    open: "Open",
+    closed: "Closed",
     postponed: "Postponed",
+  },
+  registrationState: {
+    upcoming: "Registration upcoming.",
+    open: "Registration open.",
+    closed: "Registration closed.",
   },
   program: {
     title: "Program",
@@ -213,7 +227,7 @@ export const en = {
       howLead: "There are three ways to take part. They are not exclusive: you can choose one, or combine several.",
       training: {
         title: "Two online training sessions",
-        when: "November 23 and 24, 2026",
+        when: "November 30 and December 1, 2026",
         intro: "Participants will take part in two sessions meant to give them the knowledge they need to take part in Cardano Learning & Research for Real Use Cases in Goma, DR Congo.",
         sessions: [
           {
@@ -244,7 +258,7 @@ export const en = {
       },
       competition: {
         title: "Research competition",
-        when: "Teams: November 25–29, 2026. Articles: November 30–December 13, 2026.",
+        when: "Teams: December 1–5, 2026. Work: December 6–15, 2026.",
         points: [
           "Form a team and choose a concrete problem in the DRC.",
           "Analyze that problem and study the solutions that already exist.",
@@ -305,23 +319,25 @@ export const en = {
     lede: "Each card leads to the page that details that part of the program.",
     read: "View the page",
     who: {
-      launch:
-        "Registration is on this site and does not create an account here. It runs from November 9 to 21, 2026, and stays closed until the participant notice is published. A checked interest confirms neither participation nor attendance.",
+      sessions_signup:
+        "Registration for sessions 1 and 2 is on Luma, from November 13 to 29, 2026, only when the organizers open that stage.",
       training:
-        "No Cardano Forum account is required to take part in the online training sessions. The time and the meeting link are not published.",
+        "No Cardano Forum account is required to take part in the online training sessions on November 30 and December 1, 2026. The time and the meeting link are not published.",
+      workshop_signup:
+        "Registration for the in-person session is on Luma, from November 30 to December 17, 2026, only when the organizers open that stage.",
       teams:
-        "Each team has 3 to 5 members and one principal leader. An assistant is optional. A person joins only one team. Checking an interest does not add anyone to a team.",
+        "Each team has 3 to 5 members and one principal leader. An assistant is optional. A person joins only one team. The form opens only when the organizers open the December 1–5, 2026 stage.",
       competition:
         "This is not a hackathon. Every member has their own Cardano Forum account. No prior experience in blockchain or programming is required. A well-argued negative conclusion is a valid result.",
       jury:
         "Five members evaluate the research and the critical analysis. Names and scores are not published. The tie-break is published on the Evaluations page.",
-      workshop:
-        "The workshop is held on Friday, December 18, 2026, in Bakanja, Goma. No Cardano Forum account is required. The time and the precise address are not published.",
+      closing:
+        "The in-person event is held on December 18, 2026, in Bakanja, Goma. No Cardano Forum account is required. The time and the precise address are not published.",
     },
   },
   evaluation: {
     title: "Evaluations",
-    lede: "Evaluations of Cardano Learning & Research for Real Use Cases in Goma, DR Congo, December 14–17, 2026. The jury has five members. Their names, the team scores, and the ranking are not published until the results are.",
+    lede: "Evaluations of Cardano Learning & Research for Real Use Cases in Goma, DR Congo, December 16–17, 2026. The jury has five members. Their names, the team scores, and the ranking are not published until the results are.",
     unpublished: "No evaluation record has been published.",
     criteriaTitle: "Criteria",
     criteriaIntro:
@@ -358,7 +374,7 @@ export const en = {
     tieBreak:
       "In the event of a tie, the higher score for “Understanding of the problem” prevails, then the score for “Quality of the research and the evidence”. This site does not break ties.",
     selection: [
-      "The jury evaluates every piece of research received on time, from November 30 to December 13, 2026.",
+      "The jury evaluates every piece of research received on time, from December 6 to 15, 2026.",
       "A jury member who has a connection with a team declares it and does not score that team.",
       "Up to five teams are selected for the workshop. They are announced on December 17, 2026. The time is not published.",
       "Three winning teams are then named. The respective weight of the article and the presentation is not published.",
@@ -367,7 +383,7 @@ export const en = {
     ],
   },
   guide: {
-    lede: "Participant guide for Cardano Learning & Research for Real Use Cases in Goma, DR Congo. Research competition from November 30 to December 13, 2026. Final workshop on Friday, December 18, 2026, in Goma.",
+    lede: "Participant guide for Cardano Learning & Research for Real Use Cases in Goma, DR Congo. Research and submission of work from December 6 to 15, 2026. In-person event on December 18, 2026, in Goma.",
     contents: "On this page",
     related: "Go to",
     forumTitle: "Cardano Forum",
@@ -441,7 +457,7 @@ export const en = {
     deliverable: [
       "Each team produces one original research article: the problem and its context, the evidence and references, an assessment of how relevant blockchain and Cardano are, then a conclusion and recommendations.",
       "The required language, the word count, the length of the summary, and the required reference format are not published.",
-      "The team publishes the article on Cardano Forum, at https://forum.cardano.org/, between November 30 and December 13, 2026.",
+      "The team publishes the article on Cardano Forum, at https://forum.cardano.org/, between December 6 and 15, 2026.",
       "Members take part in the discussion under their publication.",
       "The authors keep ownership of their article. By publishing it, they accept that it may be read, discussed, and cited, with their names.",
       "The precise channel for sending the link to the organizers is not published. The email address and the WhatsApp group already shown remain the contact channels.",
@@ -479,7 +495,7 @@ export const en = {
     lede: "The teams registered for the competition of Cardano Learning & Research for Real Use Cases in Goma, DR Congo. No email address is shown.",
     brief: [
       "A team has 3 to 5 people. Each person belongs to only one team. It has one team leader, and at most one deputy.",
-      "Participants form their team, or ask the organizers for help finding teammates. Team formation runs from November 25 to 29, 2026. The competition is held from five teams.",
+      "Participants form their team, or ask the organizers for help finding teammates. Team formation runs from December 1 to 5, 2026. The competition is held from five teams.",
       "Each card shows the name, the members, then the topic title and the article link once they are published. The Cardano Forum username and profile link stay with the organizers.",
     ],
     empty: "No team has been registered yet.",
@@ -493,8 +509,12 @@ export const en = {
     forumLabel: "Cardano Forum",
     forumMissing: "Cardano Forum ID not published.",
     topicHeading: "Research topic",
-    topicMissing: "The topic and the article have not been published yet.",
-    readArticle: "Read the article on Cardano Forum",
+    topicMissing: "The topic has not been published yet.",
+    publicationHeading: "Publication",
+    articleMissing: "The article has not been published yet.",
+    rosterCount: "registered teams",
+    placeLabel: "Place",
+    readArticle: "Read the full article on Cardano Forum",
     leaderNote: "Only the team leader opens the team space, with the access code.",
     winnersTitle: "Selected ideas",
     winnersEmpty:
@@ -514,7 +534,7 @@ export const en = {
     invitation:
       "Enter your Cardano Forum username and the public address of your profile. You can do this in this registration. A later change will require verification of your email address.",
     period:
-      "Research competition of Cardano Learning & Research for Real Use Cases in Goma, DR Congo and article submission, from November 30 to December 13, 2026, on Cardano Forum, at https://forum.cardano.org/. Teams conduct their research and publish their articles there.",
+      "Research and submission of work for Cardano Learning & Research for Real Use Cases in Goma, DR Congo, from December 6 to 15, 2026, on Cardano Forum, at https://forum.cardano.org/. Teams conduct their research and publish their articles there.",
     condition:
       "A Cardano Forum account is required to take part in the research competition. It is not required for the online training sessions or the in-person closing workshop.",
     introduction:
@@ -530,7 +550,7 @@ export const en = {
       "Each member keeps their own first name, last name, email, username, and public profile address.",
       "The leader's account does not replace anyone else's.",
       "The competition is held if at least five teams are registered. What happens with fewer teams is not published.",
-      "The deadline time for registering a team is not published. Team formation runs from November 25 to 29, 2026.",
+      "The deadline time for registering a team is not published. Team formation runs from December 1 to 5, 2026, when that stage is open.",
       "Participating teams, the names of their members, their project or idea, and the public article link are published on the Participating teams page once they have been supplied.",
     ],
     omitted:
@@ -538,11 +558,20 @@ export const en = {
   },
   registration: {
     title: "Register",
-    period: "Launch and registration, November 9–21, 2026.",
-    closed:
-      "Registration is not open yet. The participant information notice must be published first.",
+    period:
+      "Team formation and competition launch, December 1–5, 2026. The form opens only when the organizers set that stage to Open.",
+    closed: "Team registration is not open at the moment.",
+    teamsUpcoming: "Registration upcoming.",
+    teamsOpen: "Registration open.",
+    teamsClosed: "Registration closed.",
+    sessionsUpcoming: "Registration upcoming.",
+    sessionsOpen: "Registration open.",
+    sessionsClosed: "Registration closed.",
+    workshopUpcoming: "Registration upcoming.",
+    workshopOpen: "Registration open.",
+    workshopClosed: "Registration closed.",
     outsideWindow:
-      "Even during this period, submission stays closed until the notice is published. Outside this period, a real submission stays closed.",
+      "Submission is possible only when the organizers open the “Team formation and competition launch” stage.",
     review:
       "The request creates neither an account on this site nor a Cardano Forum account. The organizers will review it.",
     interestLegend: "Initial interest",
@@ -603,7 +632,7 @@ export const en = {
       training: {
         index: "01",
         title: "Online training",
-        when: "November 23 and 24, 2026",
+        when: "November 30 and December 1, 2026",
         body: "Two training sessions to discover the fundamentals of Cardano and to think critically about how it might apply to real challenges in the Democratic Republic of the Congo.",
         points: [
           "Discover Cardano and the fundamentals of blockchain.",
@@ -616,18 +645,18 @@ export const en = {
         luma: "Registration for each session is on Luma.",
         session1Title: "Session 1",
         session1Topic: "Cardano and blockchain fundamentals",
-        session1When: "November 23, 2026",
+        session1When: "November 30, 2026",
         session1Cta: "Register for session 1",
         session2Title: "Session 2",
         session2Topic: "Blockchain and real-world challenges",
-        session2When: "November 24, 2026",
+        session2When: "December 1, 2026",
         session2Cta: "Register for session 2",
       },
       competition: {
         index: "02",
         title: "Research competition",
-        teamsWhen: "Team formation: November 25–29, 2026",
-        articlesWhen: "Research and article submission: November 30–December 13, 2026",
+        teamsWhen: "Team formation: December 1–5, 2026",
+        articlesWhen: "Research and submission of work: December 6–15, 2026",
         body: "A chance to examine a real issue in the DRC through structured research and critical analysis.",
         points: [
           "Identify a concrete challenge in the DRC.",
@@ -738,6 +767,7 @@ export const en = {
     empty: "The competition results of Cardano Learning & Research for Real Use Cases in Goma, DR Congo have not been published yet.",
     pendingNote:
       "No place, team name, or score is shown before that publication.",
+    fullResults: "See the full team results",
   },
   faq: {
     title: "FAQ",
@@ -807,7 +837,7 @@ export const en = {
     forumVerified: "Verified",
     forumMismatch: "Mismatch",
     articleTitle: "Article submission",
-    articlePeriod: "Official period: 30 November to 13 December 2026.",
+    articlePeriod: "Official period: 6 to 15 December 2026.",
     articleName: "Article title",
     articleSummary: "Short description",
     articleSummaryLimit: "300 characters maximum.",
@@ -870,7 +900,7 @@ export const en = {
     articleSaved: "The article is saved. The topic and the link appear on the participating teams page.",
     articleInvalid:
       "Enter a title, a description of at most 300 characters, and a public https://forum.cardano.org/… link.",
-    articleClosed: "Article submission runs from 30 November to 13 December 2026.",
+    articleClosed: "Article submission runs from 6 to 15 December 2026.",
     membersPrivateNote: "These emails stay in the leader space. They are not published.",
     membersForumLede:
       "Add or edit each member's Cardano Forum username and public profile link.",
@@ -908,7 +938,11 @@ export const en = {
     logout: "Sign out",
     unauthorized: "This space is reserved for the organizers.",
     backToLogin: "Back to sign in",
+    backToSite: "Back to the site",
     previewBanner: "A publication from this space appears on the public site.",
+    attentionTitle: "Needs attention",
+    recentCampaigns: "Recent campaigns",
+    emptyCampaigns: "No independent campaign or publication notice.",
     confirmTitle: "Confirm",
     confirmBody: "This action is not sent to the server. Confirm to see it in the preview.",
     confirm: "Confirm",
@@ -954,7 +988,11 @@ export const en = {
     pagesTitle: "Public content",
     pagesFaq: "FAQ",
     pagesHome: "Home",
-    pagesProtected: "Official D-30 dates cannot be changed here.",
+    pagesProtected: "Official D-42 dates cannot be changed here. Only the operational status is set.",
+    phaseStatus: "Stage status",
+    phaseRegistration: "Linked form",
+    phaseFormOpen: "Publicly accessible",
+    phaseFormClosed: "Not available to the public",
     mediaTitle: "Media library",
     mediaHint: "Originals stay attached to their record. No image is transformed.",
     historyTitle: "Action history",

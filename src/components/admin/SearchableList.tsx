@@ -32,7 +32,7 @@ export function SearchableList({
   const slice = visible.slice(current * pageSize, current * pageSize + pageSize);
 
   return (
-    <div>
+    <div className="admin-in-up" style={{ ["--admin-delay" as string]: "120ms" }}>
       <label className={fieldLabel}>
         {label}
         <input
@@ -45,7 +45,7 @@ export function SearchableList({
         />
       </label>
       {slice.length === 0 ? <p className={`mt-4 ${supportText}`}>{empty}</p> : null}
-      <ul className={`mt-4 grid gap-4 ${columns}`}>{slice}</ul>
+      <ul className={`admin-stagger mt-4 grid gap-4 ${columns}`}>{slice}</ul>
       {visible.length > pageSize ? (
         <div className="mt-4 flex flex-wrap items-center gap-3">
           <button type="button" className={secondaryLink} disabled={current === 0} onClick={() => setPage(current - 1)}>

@@ -1,7 +1,8 @@
 "use client";
 
 import { useActionState, useMemo, useState } from "react";
-import { bodyText, fieldControl, fieldLabel, pageTitle, primaryLink, secondaryLink, sectionTitle, supportText } from "@/components/classes";
+import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
+import { bodyText, fieldControl, fieldLabel, primaryLink, secondaryLink, sectionTitle, supportText } from "@/components/classes";
 import { StatusMessage } from "@/components/StatusMessage";
 import {
   previewCampaignAction,
@@ -72,27 +73,29 @@ export function AdminCommunications({
 
   return (
     <div className="space-y-10">
-      <header>
-        <h1 className={pageTitle}>Communications</h1>
-        <p className={`mt-3 max-w-3xl ${bodyText}`}>
-          Les adresses restent dans l&apos;administration. Un même courriel n&apos;est envoyé qu&apos;une fois par envoi, même s&apos;il appartient à plusieurs groupes.
-        </p>
-      </header>
+      <AdminPageHeader
+        title="Communications"
+        lede="Les adresses restent dans l'administration. Un même courriel n'est envoyé qu'une fois par envoi, même s'il appartient à plusieurs groupes."
+      />
       {availability !== "ready" ? (
-        <StatusMessage tone="warning">
-          {availability === "missing"
-            ? "Les tables de courriel ne sont pas encore appliquées."
-            : "Les données de courriel n'ont pas pu être lues."}
-        </StatusMessage>
+        <div className="admin-in-up">
+          <StatusMessage tone="warning">
+            {availability === "missing"
+              ? "Les tables de courriel ne sont pas encore appliquées."
+              : "Les données de courriel n'ont pas pu être lues."}
+          </StatusMessage>
+        </div>
       ) : null}
-      <section className="border border-line bg-canvas px-5 py-5">
+      <section className="admin-in-left border border-line bg-canvas px-5 py-6" style={{ ["--admin-delay" as string]: "100ms" }}>
         <h2 className={sectionTitle}>Notifications de publication</h2>
         <p className={`mt-3 ${bodyText}`}>
           Elles partent depuis Annonces, Activités ou Résultats, au moment de publier. La page reste publiée si le courriel échoue. La galerie n&apos;envoie rien.
         </p>
       </section>
-      <CampaignForm />
-      <section>
+      <div className="admin-in-right" style={{ ["--admin-delay" as string]: "160ms" }}>
+        <CampaignForm />
+      </div>
+      <section className="admin-in-up" style={{ ["--admin-delay" as string]: "220ms" }}>
         <h2 className={sectionTitle}>Abonnés à la lettre</h2>
         <div className="mt-4 flex flex-col gap-3 md:flex-row">
           <input

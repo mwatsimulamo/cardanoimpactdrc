@@ -66,7 +66,7 @@ English : Home, Program, Schedule, Activities, Competition, Participating teams,
 
 Le lien Activités ouvre `/activites` dans la langue courante. C'est un menu de l'en-tête, placé avant Informations. Il n'est plus un sous-menu de Programme et il n'a pas de colonne dans le pied de page.
 
-Le menu Concours, dans l'en-tête, contient Concours, Évaluations, Équipes participantes et Résultats (D-33, D-34). Équipes participantes ouvre `/equipes`. Elle liste les équipes `submitted` en fiches de même équilibre : nom, effectif, membres, puis le titre du sujet et le lien de l'article s'ils sont publiés. Le nom d'utilisateur et le lien du profil Cardano Forum restent pour les organisateurs. Elle n'affiche ni courriel ni note. Les trois premières places ne sont pas répétées ici : elles sont en vert sur Résultats. Évaluations ouvre `/evaluations`. Cette page reprend la phrase de la phase d'évaluation et n'affiche ni nom de juré, ni note, ni classement. Elle précise que l'évaluation de la première édition se fait hors du site (D-38).
+Le menu Concours, dans l'en-tête, contient Concours, Évaluations, Équipes participantes et Résultats (D-33, D-34). Équipes participantes ouvre `/equipes`. Elle liste les équipes `submitted` en fiches de même équilibre : nom, effectif, membres, puis le titre du sujet et le lien de l'article s'ils sont publiés. Le nom d'utilisateur et le lien du profil Cardano Forum restent pour les organisateurs. Elle n'affiche ni courriel ni note. Après la publication du résultat, les trois équipes placées y apparaissent en vert, avec leur rang en numéro. Les notes n'y figurent pas. Évaluations ouvre `/evaluations`. Cette page reprend la phrase de la phase d'évaluation et n'affiche ni nom de juré, ni note, ni classement. Elle précise que l'évaluation de la première édition se fait hors du site (D-38).
 
 Le pied de page reprend la phrase : « Les informations affichées sont celles publiées par les organisateurs. » / « The information shown is the information published by the organizers. » Il regroupe les parties du programme et le calendrier, sans feuille de route et sans équipe, puis Annonces et Contact, puis Inscription, Concours et Résultats. La FAQ est un petit menu de l'en-tête, placé avant le choix de langue. Équipes participantes, Évaluations et Activités restent dans l'en-tête et n'apparaissent pas dans le pied de page. Il ne contient pas le choix de langue ni de lettre d'information.
 
@@ -199,14 +199,12 @@ Tant qu'aucun résultat n'est publié, elle affiche « Résultats non publiés �
 
 Après publication, elle affiche seulement :
 
-1. l'équipe de la première place ;
-2. l'équipe de la deuxième place ;
-3. l'équipe de la troisième place ;
-4. les liens d'articles rendus publics ;
-5. le texte bilingue du résultat final ;
-6. les annonces officielles déjà publiées, ou le lien vers leur liste.
+1. trois fiches vertes, avec le rang en numéro, le nom de l'équipe et le bouton vers son article lorsqu'un lien du forum existe ;
+2. le texte du résultat final, saisi en français et repris tel quel ;
+3. le bouton « Consultez les résultats totaux des équipes », seulement si un classeur .xls ou .xlsx a été déposé ;
+4. le lien vers les annonces.
 
-Aucune note chiffrée n'apparaît.
+Aucune note chiffrée n'est affichée. Le classeur est l'original déposé. Le site ne le lit pas.
 
 ### PUB-07 Annonces
 
@@ -270,7 +268,7 @@ Les pages ne lisent pas `team_members`, `attendance_records` ni les journaux d'�
 
 ### PUB-11 Équipes participantes
 
-Liste les équipes `submitted`, en fiches de même équilibre : nom, nombre de membres, prénoms, noms et rôles, puis le titre du sujet et le lien de l'article s'ils sont publiés. Le nom d'utilisateur et le lien du profil Cardano Forum restent pour les organisateurs. État vide : « Aucune équipe n'est encore enregistrée. » Aucun courriel. Une équipe `suspended` ou `rejected` n'apparaît pas. Les trois premières places suivent D-22 et n'apparaissent qu'une fois, en vert, sur Résultats. Le guide Concours ne contient pas la section Équipe du programme.
+Liste les équipes `submitted`, en fiches de même équilibre : nom, nombre de membres, prénoms, noms et rôles, puis le titre du sujet et le lien de l'article s'ils sont publiés. Le nom d'utilisateur et le lien du profil Cardano Forum restent pour les organisateurs. État vide : « Aucune équipe n'est encore enregistrée. » Aucun courriel. Une équipe `suspended` ou `rejected` n'apparaît pas. Après la publication du résultat, les trois équipes placées y apparaissent en vert, avec leur rang en numéro. Les notes n'y figurent pas. Le guide Concours ne contient pas la section Équipe du programme.
 
 ### PUB-12 Espace du responsable
 
@@ -361,7 +359,7 @@ Affiche cinq décomptes réels : équipes `submitted`, équipes dont la complét
 - Un texte bilingue accompagne le résultat final. Les deux langues sont requises pour publier, comme pour une annonce.
 - `published` enregistre l'organisateur et l'instant. Avant cela, la page publique ne montre aucune place.
 - Les liens d'articles affichés avec le résultat sont ceux déjà marqués `verified` et rendus publics.
-- Les notes chiffrées ne sont pas sur le site (D-38). L'écran n'offre ni saisie de note, ni import Google Sheets dans cette phase. Après consolidation hors site, l'organisateur saisit seulement le résultat officiel à publier.
+- Les notes chiffrées ne sont pas affichées (D-38). L'écran ne saisit pas de note et n'importe pas le classeur. Après consolidation hors site, l'organisateur saisit les trois places et peut joindre un fichier .xls ou .xlsx. L'original est conservé. Sans nouveau fichier, le classeur déjà déposé reste en place. Le bouton public n'apparaît qu'après publication, et seulement si un fichier est présent.
 
 ### ADM-10 Activités, intervenants et médias
 

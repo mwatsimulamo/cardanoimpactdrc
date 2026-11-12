@@ -1,42 +1,47 @@
-const timeZone = "Africa/Lubumbashi";
+import "server-only";
 
-/** La notice A-13 n'a pas encore de texte. */
-export const PARTICIPANT_NOTICE_PUBLISHED = false;
+import {
+  isRegistrationOpen,
+  type PhaseKey,
+  type RoadmapStatus,
+} from "@/lib/program-roadmap";
+import { readPublishedRoadmap } from "@/lib/published-records";
+import type { RegistrationAvailability } from "@/lib/registration-status";
 
-/** Ouvert pour accepter les enregistrements d'équipes et les tester. */
-export const REGISTRATION_SUBMISSIONS_ACCEPTED = true;
+export type { RegistrationAvailability, RegistrationPublicState } from "@/lib/registration-status";
+export { publicRegistrationState } from "@/lib/registration-status";
+export { civilDateInGoma } from "@/lib/goma-date";
 
-export const REGISTRATION_OPENS_ON = "2026-11-09";
-export const REGISTRATION_CLOSES_ON = "2026-11-21";
+export type RegistrationGate = "open" | "closed";
 
-export type RegistrationGate = "notice" | "window" | "open";
-
-export function civilDateInGoma(now = new Date()): string {
-  return new Intl.DateTimeFormat("en-CA", {
-    timeZone,
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  }).format(now);
+function statusOf(
+  phases: readonly { key: PhaseKey; status: RoadmapStatus }[],
+  key: PhaseKey,
+): RoadmapStatus {
+  return phases.find((phase) => phase.key === key)?.status ?? "upcoming";
 }
 
 /**
- * L'envoi n'est ouvert que si la notice est publiée et si le jour civil
- * à Goma est compris entre le 9 et le 21 novembre 2026.
+ * Source unique : `program_phases` via le calendrier publié.
+ * Un formulaire n'est accessible que si l'admin a posé le statut « open ».
  */
-export function registrationGate(now?: Date): RegistrationGate {
-  if (REGISTRATION_SUBMISSIONS_ACCEPTED) {
-    return "open";
-  }
+export async function readRegistrationAvailability(): Promise<RegistrationAvailability> {
+  const roadmap = await readPublishedRoadmap();
+  const sessionsStatus = statusOf(roadmap.phases, "sessions_signup");
+  const workshopStatus = statusOf(roadmap.phases, "workshop_signup");
+  const teamsStatus = statusOf(roadmap.phases, "teams");
 
-  if (!PARTICIPANT_NOTICE_PUBLISHED) {
-    return "notice";
-  }
+  return {
+    sessionsStatus,
+    workshopStatus,
+    teamsStatus,
+    sessionsOpen: isRegistrationOpen(sessionsStatus),
+    workshopOpen: isRegistrationOpen(workshopStatus),
+    teamsOpen: isRegistrationOpen(teamsStatus),
+  };
+}
 
-  const day = civilDateInGoma(now ?? new Date());
-  if (day < REGISTRATION_OPENS_ON || day > REGISTRATION_CLOSES_ON) {
-    return "window";
-  }
-
-  return "open";
+export async function teamRegistrationGate(): Promise<RegistrationGate> {
+  const availability = await readRegistrationAvailability();
+  return availability.teamsOpen ? "open" : "closed";
 }

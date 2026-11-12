@@ -94,6 +94,8 @@ export type Dictionary = {
     statsParticipants: string;
     statsLink: string;
     latestAnnouncements: string;
+    latestAnnouncementsLede: string;
+    announcementRead: string;
     latestActivities: string;
     latestEmpty: string;
     roadmapLink: string;
@@ -112,19 +114,27 @@ export type Dictionary = {
     body: string;
   };
   phases: {
-    launch: { title: string; when: string; body: string };
+    sessions_signup: { title: string; when: string; body: string };
     training: { title: string; when: string; body: string };
+    workshop_signup: { title: string; when: string; body: string };
     teams: { title: string; when: string; body: string };
     competition: { title: string; when: string; body: string };
     jury: { title: string; when: string; body: string };
-    workshop: { title: string; when: string; body: string };
+    closing: { title: string; when: string; body: string };
   };
   timeline: {
     done: string;
     current: string;
     next: string;
     upcoming: string;
+    open: string;
+    closed: string;
     postponed: string;
+  };
+  registrationState: {
+    upcoming: string;
+    open: string;
+    closed: string;
   };
   program: {
     title: string;
@@ -183,12 +193,13 @@ export type Dictionary = {
     lede: string;
     read: string;
     who: {
-      launch: string;
+      sessions_signup: string;
       training: string;
+      workshop_signup: string;
       teams: string;
       competition: string;
       jury: string;
-      workshop: string;
+      closing: string;
     };
   };
   evaluation: {
@@ -254,6 +265,10 @@ export type Dictionary = {
     forumMissing: string;
     topicHeading: string;
     topicMissing: string;
+    publicationHeading: string;
+    articleMissing: string;
+    rosterCount: string;
+    placeLabel: string;
     readArticle: string;
     leaderNote: string;
     winnersTitle: string;
@@ -280,6 +295,15 @@ export type Dictionary = {
     title: string;
     period: string;
     closed: string;
+    teamsUpcoming: string;
+    teamsOpen: string;
+    teamsClosed: string;
+    sessionsUpcoming: string;
+    sessionsOpen: string;
+    sessionsClosed: string;
+    workshopUpcoming: string;
+    workshopOpen: string;
+    workshopClosed: string;
     outsideWindow: string;
     review: string;
     interestLegend: string;
@@ -418,6 +442,7 @@ export type Dictionary = {
     title: string;
     empty: string;
     pendingNote: string;
+    fullResults: string;
   };
   faq: {
     title: string;
@@ -577,7 +602,11 @@ export type Dictionary = {
     logout: string;
     unauthorized: string;
     backToLogin: string;
+    backToSite: string;
     previewBanner: string;
+    attentionTitle: string;
+    recentCampaigns: string;
+    emptyCampaigns: string;
     confirmTitle: string;
     confirmBody: string;
     confirm: string;
@@ -624,6 +653,10 @@ export type Dictionary = {
     pagesFaq: string;
     pagesHome: string;
     pagesProtected: string;
+    phaseStatus: string;
+    phaseRegistration: string;
+    phaseFormOpen: string;
+    phaseFormClosed: string;
     mediaTitle: string;
     mediaHint: string;
     historyTitle: string;

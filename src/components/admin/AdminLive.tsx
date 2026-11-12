@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { SearchableList } from "@/components/admin/SearchableList";
 import { OriginalImage } from "@/components/OriginalImage";
 import {
@@ -9,7 +10,7 @@ import {
   ResultForm,
 } from "@/components/admin/AdminRecordForms";
 import { RemoveRecordForm } from "@/components/admin/RemoveRecordForm";
-import { blockTitle, bodyText, pageTitle, supportText } from "@/components/classes";
+import { blockTitle, bodyText, supportText } from "@/components/classes";
 import { ExternalLink } from "@/components/ExternalLink";
 import type { Dictionary } from "@/content/types";
 import { activityCategories, type ActivityCategory } from "@/lib/documented-activities";
@@ -34,11 +35,10 @@ export async function AdminCalendarScreen({ dictionary }: { dictionary: Dictiona
   const roadmap = await readPublishedRoadmap();
 
   return (
-    <div className="space-y-6">
-      <h1 className={pageTitle}>{dictionary.adminUi.navCalendar}</h1>
-      <p className={bodyText}>{dictionary.adminUi.pagesProtected}</p>
+    <div className="space-y-8">
+      <AdminPageHeader title={dictionary.adminUi.navCalendar} lede={dictionary.adminUi.pagesProtected} />
       <StoreNotice availability={roadmap.availability} dictionary={dictionary} />
-      <div className="max-w-2xl space-y-4">
+      <div className="admin-stagger max-w-2xl space-y-4">
         {roadmap.phases.map((phase) => (
           <PhaseStatusForm
             key={phase.key}
@@ -58,11 +58,12 @@ export async function AdminAnnouncementScreen({ dictionary }: { dictionary: Dict
   const records = await readAdminAnnouncements();
 
   return (
-    <div className="space-y-6">
-      <h1 className={pageTitle}>{dictionary.adminUi.navAnnouncements}</h1>
-      <p className={bodyText}>Une annonce publiée apparaît sur le site public.</p>
+    <div className="space-y-8">
+      <AdminPageHeader title={dictionary.adminUi.navAnnouncements} lede="Une annonce publiée apparaît sur le site public." />
       <StoreNotice availability={records.availability} dictionary={dictionary} />
-      <AnnouncementForm dictionary={dictionary} />
+      <div className="admin-in-right" style={{ ["--admin-delay" as string]: "100ms" }}>
+        <AnnouncementForm dictionary={dictionary} />
+      </div>
       <EditorialList
         empty={dictionary.adminUi.empty}
         kind="announcement"
@@ -87,14 +88,18 @@ export async function AdminActivityScreen({ dictionary }: { dictionary: Dictiona
   const records = await readAdminActivities();
 
   return (
-    <div className="space-y-6">
-      <h1 className={pageTitle}>{dictionary.adminUi.navActivities}</h1>
-      <p className={bodyText}>Une fiche publiée apparaît dans Activités, avec sa date, son texte et sa photographie.</p>
-      <StoreNotice availability={records.availability} dictionary={dictionary} />
-      <ActivityForm
-        dictionary={dictionary}
-        categories={activityCategories.map((id) => ({ id, label: dictionary.activities.categories[id] }))}
+    <div className="space-y-8">
+      <AdminPageHeader
+        title={dictionary.adminUi.navActivities}
+        lede="Une fiche publiée apparaît dans Activités, avec sa date, son texte et sa photographie."
       />
+      <StoreNotice availability={records.availability} dictionary={dictionary} />
+      <div className="admin-in-right" style={{ ["--admin-delay" as string]: "100ms" }}>
+        <ActivityForm
+          dictionary={dictionary}
+          categories={activityCategories.map((id) => ({ id, label: dictionary.activities.categories[id] }))}
+        />
+      </div>
       <EditorialList
         empty={dictionary.adminUi.empty}
         kind="activity"
@@ -128,11 +133,15 @@ export async function AdminGalleryScreen({ dictionary }: { dictionary: Dictionar
   const records = stored === "missing" || stored === "error" ? [] : [...stored].sort((left, right) => right.createdAt.localeCompare(left.createdAt));
 
   return (
-    <div className="space-y-6">
-      <h1 className={pageTitle}>{dictionary.adminUi.navGallery}</h1>
-      <p className={bodyText}>Une image publiée, avec sa description, apparaît dans la galerie publique. L&apos;original n&apos;est pas transformé.</p>
+    <div className="space-y-8">
+      <AdminPageHeader
+        title={dictionary.adminUi.navGallery}
+        lede="Une image publiée, avec sa description, apparaît dans la galerie publique. L'original n'est pas transformé."
+      />
       <StoreNotice availability={stored === "missing" || stored === "error" ? stored : "ready"} dictionary={dictionary} />
-      <GalleryForm dictionary={dictionary} />
+      <div className="admin-in-right" style={{ ["--admin-delay" as string]: "100ms" }}>
+        <GalleryForm dictionary={dictionary} />
+      </div>
       <EditorialList
         empty={dictionary.adminUi.empty}
         kind="gallery"
@@ -151,18 +160,24 @@ export async function AdminResultScreen({ dictionary }: { dictionary: Dictionary
   const records = await readAdminResult();
 
   return (
-    <div className="space-y-6">
-      <h1 className={pageTitle}>{dictionary.adminUi.resultsTitle}</h1>
+    <div className="space-y-8">
+      <AdminPageHeader title={dictionary.adminUi.resultsTitle} lede={dictionary.adminUi.resultsPublish} />
       <StoreNotice availability={records.availability} dictionary={dictionary} />
-      <ResultForm
-        dictionary={dictionary}
-        teams={records.teams}
-        statement={records.draft.statementFr}
-        place1={records.draft.place1}
-        place2={records.draft.place2}
-        place3={records.draft.place3}
-      />
-      <p className={supportText}>{statusLabel(records.draft.status)}</p>
+      <div className="admin-in-right" style={{ ["--admin-delay" as string]: "100ms" }}>
+        <ResultForm
+          dictionary={dictionary}
+          teams={records.teams}
+          statement={records.draft.statementFr}
+          place1={records.draft.place1}
+          place2={records.draft.place2}
+          place3={records.draft.place3}
+          workbookName={records.draft.workbookName}
+          teamPlaces={records.draft.teamPlaces}
+        />
+      </div>
+      <p className={`admin-in-up ${supportText}`} style={{ ["--admin-delay" as string]: "180ms" }}>
+        {statusLabel(records.draft.status)}
+      </p>
     </div>
   );
 }
@@ -172,11 +187,11 @@ export async function AdminTeamsScreen({ dictionary }: { dictionary: Dictionary 
   const copy = dictionary.participatingTeams;
 
   return (
-    <div className="space-y-6">
-      <h1 className={pageTitle}>{dictionary.adminUi.navTeams}</h1>
-      <p className={bodyText}>
-        Même lecture que la page publique, avec en plus le courriel, le profil Cardano Forum et le code d&apos;accès.
-      </p>
+    <div className="space-y-8">
+      <AdminPageHeader
+        title={dictionary.adminUi.navTeams}
+        lede="Même lecture que la page publique, avec en plus le courriel, le profil Cardano Forum et le code d'accès."
+      />
       {records.availability !== "ready" ? <p className={bodyText}>{dictionary.adminUi.actionFailed}</p> : null}
       {records.teams.length === 0 ? <p className={bodyText}>{dictionary.adminUi.empty}</p> : (
       <SearchableList label={dictionary.adminUi.search} empty="Aucune équipe pour cette recherche.">
@@ -246,13 +261,13 @@ export async function AdminHistoryScreen({ dictionary }: { dictionary: Dictionar
   const records = await readAdminHistory();
 
   return (
-    <div className="space-y-6">
-      <h1 className={pageTitle}>{dictionary.adminUi.navHistory}</h1>
+    <div className="space-y-8">
+      <AdminPageHeader title={dictionary.adminUi.navHistory} />
       {records.availability === "missing" ? <p className={bodyText}>{dictionary.adminUi.tableMissing}</p> : null}
       {records.rows.length === 0 && records.availability === "ready" ? (
         <p className={bodyText}>{dictionary.adminUi.empty}</p>
       ) : null}
-      <ul className="space-y-3">
+      <ul className="admin-stagger space-y-3">
         {records.rows.map((row) => (
           <li key={row.id} className="border border-line bg-canvas px-5 py-4">
             <p className={supportText}>{row.createdAt}</p>
@@ -267,8 +282,7 @@ export async function AdminHistoryScreen({ dictionary }: { dictionary: Dictionar
 export function AdminNoteScreen({ title, body }: { title: string; body: string }) {
   return (
     <div className="space-y-4">
-      <h1 className={pageTitle}>{title}</h1>
-      <p className={bodyText}>{body}</p>
+      <AdminPageHeader title={title} lede={body} />
     </div>
   );
 }
@@ -294,7 +308,7 @@ function EditorialList({
   }
 
   return (
-    <ul className="grid gap-4 lg:grid-cols-2">
+    <ul className="admin-stagger grid gap-4 lg:grid-cols-2">
       {items.map((item) => (
         <li key={item.id} className="flex h-full flex-col border border-line bg-canvas">
           {item.imageSrc ? (
@@ -332,7 +346,7 @@ function StoreNotice({
   }
 
   return (
-    <p className={bodyText}>
+    <p className={`admin-in-up ${bodyText}`}>
       {availability === "missing" ? dictionary.adminUi.tableMissing : dictionary.adminUi.actionFailed}
     </p>
   );

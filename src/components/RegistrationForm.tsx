@@ -138,7 +138,7 @@ export function RegistrationForm({
         </div>
         <div
           id="registration-sessions"
-          className="mt-8 grid scroll-mt-28 gap-4 sm:grid-cols-2"
+          className="mt-8 grid scroll-mt-28 gap-4 md:grid-cols-3"
         >
           <SessionCard
             kicker={journey.training.session1Title}
@@ -172,23 +172,23 @@ export function RegistrationForm({
                   : dictionary.registration.sessionsUpcoming
             }
           />
-        </div>
-        <div id="registration-workshop" className="mt-4 max-w-xl scroll-mt-28">
-          <SessionCard
-            title={journey.workshop.sessionTitle}
-            when={journey.workshop.when}
-            cta={journey.workshop.cta}
-            href={lumaEvents.workshop}
-            newTab={dictionary.links.opensNewTab}
-            open={availability.workshopOpen}
-            stateLabel={
-              workshopState === "open"
-                ? dictionary.registration.workshopOpen
-                : workshopState === "closed"
-                  ? dictionary.registration.workshopClosed
-                  : dictionary.registration.workshopUpcoming
-            }
-          />
+          <div id="registration-workshop" className="h-full scroll-mt-28">
+            <SessionCard
+              title={journey.workshop.sessionTitle}
+              when={journey.workshop.when}
+              cta={journey.workshop.cta}
+              href={lumaEvents.workshop}
+              newTab={dictionary.links.opensNewTab}
+              open={availability.workshopOpen}
+              stateLabel={
+                workshopState === "open"
+                  ? dictionary.registration.workshopOpen
+                  : workshopState === "closed"
+                    ? dictionary.registration.workshopClosed
+                    : dictionary.registration.workshopUpcoming
+              }
+            />
+          </div>
         </div>
       </section>
 

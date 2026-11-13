@@ -1,4 +1,5 @@
 import { createHash } from "node:crypto";
+import { normalizeEmailAddress } from "@/lib/email-address";
 
 export const emailAudiences = ["leaders", "members", "subscribers"] as const;
 
@@ -10,17 +11,11 @@ export type MailRecipient = {
   teamId: string | null;
 };
 
-const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const PUBLIC_PATH = /^\/(fr|en)(\/[a-z0-9-]+)*$/;
 const PRIVATE_PATH = /^\/(fr|en)\/(admin|equipe|desinscription)(\/|$)/;
 
 export function normalizeEmail(value: string): string | null {
-  const email = value.trim().toLowerCase();
-  if (email.length === 0 || email.length > 254 || !EMAIL.test(email)) {
-    return null;
-  }
-
-  return email;
+  return normalizeEmailAddress(value);
 }
 
 export function cleanText(value: string, max: number): string {

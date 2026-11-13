@@ -1,3 +1,5 @@
+import { isValidEmailAddress, normalizeEmailAddress } from "@/lib/email-address";
+
 export type MemberRole = "leader" | "deputy" | "member";
 
 export type TeamMemberDraft = {
@@ -70,12 +72,11 @@ export function emptyTeamDraft(): TeamDraft {
 }
 
 export function normalizeEmail(value: string): string {
-  return value.trim().toLowerCase();
+  return normalizeEmailAddress(value) ?? value.trim().toLowerCase();
 }
 
 export function isPlausibleEmail(value: string): boolean {
-  const email = value.trim();
-  return email.length <= EMAIL_MAX && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  return value.trim().length <= EMAIL_MAX && isValidEmailAddress(value);
 }
 
 export function isMemberRole(value: unknown): value is MemberRole {

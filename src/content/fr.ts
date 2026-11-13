@@ -90,7 +90,7 @@ export const fr = {
     phasesBarHint: "La barre au bas de chaque étape situe sa période dans l'ensemble du calendrier.",
     phasesLegendTitle: "Légende",
     phasesProgressLabel: "Avancement du programme",
-    phasesCardCta: "Voir cette étape",
+    phasesCardCta: "Aller à cette étape",
     phaseDay: "jour",
     phaseDays: "jours",
     teamLead: "Une équipe qui travaille pour la réussite de Cardano Learning & Research for Real Use Cases in Goma, DR Congo.",

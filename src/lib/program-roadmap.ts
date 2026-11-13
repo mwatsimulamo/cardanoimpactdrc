@@ -1,4 +1,4 @@
-import type { Locale } from "@/lib/locales";
+import { localePath, type Locale } from "@/lib/locales";
 
 export const phaseKeys = [
   "sessions_signup",
@@ -127,6 +127,25 @@ export function listPublishedRoadmap(): readonly PublishedRoadmapPhase[] {
 
 export function isRegistrationPhase(key: PhaseKey): boolean {
   return (registrationPhaseKeys as readonly string[]).includes(key);
+}
+
+/** Lien public depuis une carte du calendrier d'accueil. */
+export function phaseTargetHref(locale: Locale, key: PhaseKey): string {
+  switch (key) {
+    case "sessions_signup":
+    case "training":
+      return `${localePath(locale, "inscription")}#registration-sessions`;
+    case "workshop_signup":
+      return `${localePath(locale, "inscription")}#registration-workshop`;
+    case "teams":
+      return `${localePath(locale, "inscription")}#registration-form`;
+    case "competition":
+      return `${localePath(locale, "concours")}#guide-research`;
+    case "jury":
+      return `${localePath(locale, "evaluations")}#section-evaluations`;
+    case "closing":
+      return `${localePath(locale, "programme")}#programme-workshop`;
+  }
 }
 
 export function statusesForPhase(key: PhaseKey): readonly RoadmapStatus[] {

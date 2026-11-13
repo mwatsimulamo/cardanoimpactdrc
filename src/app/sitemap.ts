@@ -8,7 +8,6 @@ const siteUrl = "https://www.cardanoimpactdrc.org";
 const publicSegments = [
   "",
   "programme",
-  "calendrier",
   "concours",
   "equipes",
   "evaluations",

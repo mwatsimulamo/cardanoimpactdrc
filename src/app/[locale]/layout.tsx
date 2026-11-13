@@ -144,7 +144,6 @@ function navigation(locale: Locale, dictionary: ReturnType<typeof getDictionary>
   return [
     { href: localePath(locale), label: dictionary.nav.home },
     { href: localePath(locale, "programme"), label: dictionary.nav.program },
-    { href: localePath(locale, "calendrier"), label: dictionary.nav.schedule },
     { href: localePath(locale, "feuille-de-route"), label: dictionary.nav.roadmap },
     { href: localePath(locale, "activites"), label: dictionary.nav.activities },
     { href: localePath(locale, "galerie"), label: dictionary.nav.gallery },
@@ -164,7 +163,7 @@ function programMenu(locale: Locale, dictionary: ReturnType<typeof getDictionary
   return [
     { href: `${page}#program-what`, label: dictionary.nav.programWhat },
     { href: `${page}#program-how`, label: dictionary.nav.programHow },
-    { href: `${page}#program-next`, label: dictionary.nav.schedule },
+    { href: `${localePath(locale)}#home-phases`, label: dictionary.nav.schedule },
     { href: `${page}#program-contact`, label: dictionary.nav.contact },
   ];
 }

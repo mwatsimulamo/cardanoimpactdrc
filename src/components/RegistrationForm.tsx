@@ -15,6 +15,7 @@ import {
   supportText,
   textLink,
 } from "@/components/classes";
+import { MenuSectionScroll } from "@/components/MenuSectionScroll";
 import { StatusMessage } from "@/components/StatusMessage";
 import type { Dictionary } from "@/content/types";
 import { lumaEvents } from "@/lib/luma-events";
@@ -123,8 +124,9 @@ export function RegistrationForm({
 
   return (
     <>
+      <MenuSectionScroll focusId="registration-lead" />
       <section aria-labelledby="registration-lead">
-        <h1 id="registration-lead" className={pageTitle}>
+        <h1 id="registration-lead" className={`${pageTitle} scroll-mt-28`}>
           {dictionary.registration.title}
         </h1>
         <div className="mt-4 space-y-3">
@@ -134,7 +136,10 @@ export function RegistrationForm({
             </p>
           ))}
         </div>
-        <div className="mt-8 grid gap-4 md:grid-cols-3">
+        <div
+          id="registration-sessions"
+          className="mt-8 grid scroll-mt-28 gap-4 sm:grid-cols-2"
+        >
           <SessionCard
             kicker={journey.training.session1Title}
             title={journey.training.session1Topic}
@@ -167,6 +172,8 @@ export function RegistrationForm({
                   : dictionary.registration.sessionsUpcoming
             }
           />
+        </div>
+        <div id="registration-workshop" className="mt-4 max-w-xl scroll-mt-28">
           <SessionCard
             title={journey.workshop.sessionTitle}
             when={journey.workshop.when}

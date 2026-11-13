@@ -1,13 +1,14 @@
 import Link from "next/link";
 import { blockTitle, sectionTitle, supportText } from "@/components/classes";
 import type { Dictionary } from "@/content/types";
-import { localePath, type Locale } from "@/lib/locales";
+import { type Locale } from "@/lib/locales";
 import { readPublishedRoadmap } from "@/lib/published-records";
 import {
   inclusiveDayCount,
   isStageActive,
   isStageFilled,
   legendStatuses,
+  phaseTargetHref,
   phaseWindowRatio,
   progressRatio,
   statusTone,
@@ -50,12 +51,12 @@ export async function PhaseTimeline({
           const window = phaseWindowRatio(phase.plannedStart, phase.plannedEnd);
           const dayLabel = days === 1 ? dictionary.home.phaseDay : dictionary.home.phaseDays;
           const showLegend = index === 0;
-          const href = `${localePath(locale, "calendrier")}#calendrier-${phase.key}`;
-
+          const href = phaseTargetHref(locale, phase.key);
           return (
             <li
+              id={`home-phase-${phase.key}`}
               key={phase.key}
-              className={`roadmap-stage relative pb-6 pl-12 last:pb-0 md:min-h-28 md:pb-8 md:pl-0 ${
+              className={`roadmap-stage relative scroll-mt-28 pb-6 pl-12 last:pb-0 md:min-h-28 md:pb-8 md:pl-0 ${
                 onLeft ? "roadmap-stage-left" : "roadmap-stage-right"
               }`}
               style={{
@@ -95,7 +96,6 @@ export async function PhaseTimeline({
                 <h3 className={`relative z-[1] mt-3 ${blockTitle}`}>
                   <span className="text-ink transition-colors duration-150 group-hover:text-white">
                     {copy.title}
-                    <span aria-hidden="true"> →</span>
                   </span>
                 </h3>
 

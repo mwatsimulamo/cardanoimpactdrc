@@ -54,7 +54,7 @@ Plan de travail sous A-02. Une adresse entre parenthèses est une répartition p
 | Accueil | `/fr`, `/en` | Exigé |
 | L'initiative | Section de l'accueil et du programme. Page séparée non retenue | Proposition d'écran, pas une route approuvée |
 | Programme | `/fr/programme` | Exigé |
-| Calendrier | `/fr/calendrier` | Exigé par les exigences fonctionnelles, même s'il n'était pas dans la liste de départ |
+| Calendrier | Section `#home-phases` de l'accueil | Plus de page `/calendrier` séparée ; l'admin conserve `/fr/admin/calendrier` |
 | Formations en ligne | Section du programme et ligne du calendrier | Pas une route séparée tant qu'elle n'est pas approuvée |
 | Concours | `/fr/concours` | Exigé |
 | Équipes participantes | `/fr/equipes` | Exigé par D-34. Fiches de même équilibre : nom, effectif, membres, titre et lien d'article s'ils sont publiés. Le profil Forum des membres reste pour les organisateurs. |

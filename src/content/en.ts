@@ -90,7 +90,7 @@ export const en = {
     phasesBarHint: "The bar at the bottom of each stage places its period within the full schedule.",
     phasesLegendTitle: "Legend",
     phasesProgressLabel: "Program progress",
-    phasesCardCta: "View this stage",
+    phasesCardCta: "Go to this stage",
     phaseDay: "day",
     phaseDays: "days",
     teamLead: "A team working for the success of Cardano Learning & Research for Real Use Cases in Goma, DR Congo.",

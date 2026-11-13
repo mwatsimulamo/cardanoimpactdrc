@@ -348,6 +348,8 @@ Le fichier ne contient pas de note interne, de message de contact ni d'identifia
 
 Affiche cinq décomptes réels : équipes `submitted`, équipes dont la complétude n'est pas prête, articles `submitted` non vérifiés, annonces `published`, membres au profil forum autre que `verified`. Liens vers Équipes, Annonces, Présences, Résultats et Exports. Aucun lauréat.
 
+Fréquentation : le tableau de bord propose un lien vers Vercel Web Analytics (`VERCEL_ANALYTICS_URL`). Le site collecte les pages vues avec `@vercel/analytics`. Il n'importe ni ne stocke les chiffres de fréquentation.
+
 ### ADM-09 Résultats du concours
 
 Écran réservé aux organisateurs, sous `/fr/admin/resultats` (D-22).

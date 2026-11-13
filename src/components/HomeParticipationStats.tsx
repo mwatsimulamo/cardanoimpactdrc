@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { blockTitle, casePanel, justifiedText, secondaryLink, sectionTitle } from "@/components/classes";
+import { blockTitle, casePanel, secondaryLink, sectionLede, sectionTitle, supportText } from "@/components/classes";
 import type { Dictionary } from "@/content/types";
 import { localePath, type Locale } from "@/lib/locales";
 import { readSubmittedPublicTeams } from "@/lib/participating-teams";
@@ -46,17 +46,17 @@ export function HomeParticipationStats({
       </h2>
       {hasCounts ? (
         <dl className="mt-8 grid gap-4 md:grid-cols-2">
-          <div className="border border-line bg-canvas px-5 py-6 text-center">
-            <dt className={justifiedText}>{dictionary.home.statsTeams}</dt>
+          <div className="rounded-xl border border-line bg-canvas px-5 py-6 text-center">
+            <dt className={supportText}>{dictionary.home.statsTeams}</dt>
             <dd className={`mt-2 tabular-nums ${blockTitle}`}>{teamCount}</dd>
           </div>
-          <div className="border border-line bg-canvas px-5 py-6 text-center">
-            <dt className={justifiedText}>{dictionary.home.statsParticipants}</dt>
+          <div className="rounded-xl border border-line bg-canvas px-5 py-6 text-center">
+            <dt className={supportText}>{dictionary.home.statsParticipants}</dt>
             <dd className={`mt-2 tabular-nums ${blockTitle}`}>{participantCount}</dd>
           </div>
         </dl>
       ) : (
-        <p className={`mt-6 ${casePanel} ${justifiedText}`}>{dictionary.home.statsEmpty}</p>
+        <p className={`mt-6 ${casePanel} text-center`}>{dictionary.home.statsEmpty}</p>
       )}
       <div className="mt-8 flex justify-center">
         <Link className={secondaryLink} href={teamsHref}>

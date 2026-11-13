@@ -20,7 +20,7 @@ export function EditorialCard({
   cta?: string;
 }) {
   return (
-    <article className="group flex h-full min-h-full flex-col bg-canvas transition-colors duration-150 hover:bg-surface focus-within:bg-surface">
+    <article className="group flex h-full min-h-full flex-col overflow-hidden rounded-xl bg-canvas transition-colors duration-150 hover:bg-surface focus-within:bg-surface">
       <Link
         href={href}
         className="flex h-full flex-col focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
@@ -60,7 +60,7 @@ export function EditorialEmptyCard({
   body: string;
 }) {
   return (
-    <article className="flex h-full flex-col bg-canvas">
+    <article className="flex h-full flex-col overflow-hidden rounded-xl bg-canvas">
       <div className="relative aspect-[16/10] shrink-0 overflow-hidden bg-surface">
         <div className="absolute inset-0 bg-action/50" aria-hidden="true" />
         <span className="absolute left-3 top-3 bg-canvas/90 px-2.5 py-1 text-[0.75rem] font-semibold uppercase tracking-[0.04em] text-muted">

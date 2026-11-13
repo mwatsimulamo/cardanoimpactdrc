@@ -177,7 +177,7 @@ export function RichTextField({
       const projected = size + src.length + 64;
       if (projected > RICH_TEXT_MAX_CHARS) {
         setNotice(
-          `Ajouter cette image dépasserait la limite du texte (${RICH_TEXT_MAX_CHARS.toLocaleString("fr-FR")} caractères). Votre texte actuel est conservé.`,
+          `Ajouter cette image dépasserait la limite du volume (images comprises). Réduisez la taille du fichier ou retirez une image déjà présente. Votre texte actuel est conservé.`,
         );
         return;
       }
@@ -233,7 +233,8 @@ export function RichTextField({
       </label>
       <p className={`mt-2 ${supportText}`}>
         Titres, listes, liens (Ctrl+K), citations et images. Collez une image directement dans le texte, ou utilisez l&apos;outil
-        Image. Chaque image : 3,5&nbsp;Mo au plus, à l&apos;original.
+        Image. Chaque image : 3,5&nbsp;Mo au plus, à l&apos;original. Jusqu&apos;à deux images de cette taille peuvent coexister dans
+        le même texte.
       </p>
       <div className="mt-2 flex flex-wrap gap-1 border border-line bg-surface p-2" role="toolbar" aria-label="Mise en forme">
         {tools.map((tool) => (

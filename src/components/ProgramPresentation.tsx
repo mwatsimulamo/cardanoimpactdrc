@@ -85,13 +85,13 @@ export async function ProgramPresentation({ locale }: { locale: Locale }) {
         <p className={`mt-2 max-w-[40rem] text-[1.0625rem] leading-[1.6] text-muted`}>{story.howLeadDetail}</p>
 
         <ol className="mt-10 space-y-6">
-          <li id="programme-training" className="path-reveal path-card relative scroll-mt-28 bg-surface px-5 pb-6 pt-14 md:px-8 md:pb-8 md:pt-16">
+          <li id="programme-training" className="path-reveal path-card relative scroll-mt-28 overflow-hidden rounded-xl bg-surface px-5 pb-6 pt-14 md:px-8 md:pb-8 md:pt-16">
             <PathBadge n="1" />
             <h3 className={`text-center ${blockTitle}`}>{story.training.title}</h3>
 
             <div className="mt-8 grid gap-4 md:grid-cols-2 md:gap-5">
               {story.training.sessions.map((session) => (
-                <section key={session.label} className="bg-canvas px-5 py-6 md:px-6">
+                <section key={session.label} className="rounded-xl bg-canvas px-5 py-6 md:px-6">
                   <p className="text-[0.9375rem] font-semibold uppercase tracking-[0.04em] text-brand">
                     {session.label}
                   </p>
@@ -122,19 +122,19 @@ export async function ProgramPresentation({ locale }: { locale: Locale }) {
 
           <li
             id="programme-competition"
-            className="path-reveal path-card relative scroll-mt-28 bg-canvas px-5 pb-6 pt-14 md:px-8 md:pb-8 md:pt-16"
+            className="path-reveal path-card relative scroll-mt-28 overflow-hidden rounded-xl bg-canvas px-5 pb-6 pt-14 md:px-8 md:pb-8 md:pt-16"
             style={{ animationDelay: "90ms" }}
           >
             <PathBadge n="2" />
             <h3 className={`text-center ${blockTitle}`}>{story.competition.title}</h3>
 
             <div className="mt-8 grid gap-4 md:grid-cols-2 md:gap-5">
-              <div className="bg-surface px-5 py-6 md:px-6">
+              <div className="rounded-xl bg-surface px-5 py-6 md:px-6">
                 <p className="text-[1.0625rem] font-semibold leading-[1.35] text-brand">{story.competition.when}</p>
                 <p className={`mt-4 ${justifiedText}`}>{story.competition.intro}</p>
               </div>
 
-              <div className="bg-surface px-5 py-6 md:px-6">
+              <div className="rounded-xl bg-surface px-5 py-6 md:px-6">
                 <p className="text-[0.9375rem] font-semibold uppercase tracking-[0.04em] text-brand">
                   {story.competition.lead}
                 </p>
@@ -164,19 +164,19 @@ export async function ProgramPresentation({ locale }: { locale: Locale }) {
 
           <li
             id="programme-workshop"
-            className="path-reveal path-card relative scroll-mt-28 bg-surface px-5 pb-6 pt-14 md:px-8 md:pb-8 md:pt-16"
+            className="path-reveal path-card relative scroll-mt-28 overflow-hidden rounded-xl bg-surface px-5 pb-6 pt-14 md:px-8 md:pb-8 md:pt-16"
             style={{ animationDelay: "180ms" }}
           >
             <PathBadge n="3" />
             <h3 className={`text-center ${blockTitle}`}>{story.workshop.title}</h3>
 
             <div className="mt-8 grid gap-4 md:grid-cols-2 md:gap-5">
-              <div className="bg-canvas px-5 py-6 md:px-6">
+              <div className="rounded-xl bg-canvas px-5 py-6 md:px-6">
                 <p className="text-[1.0625rem] font-semibold leading-[1.35] text-brand">{story.workshop.when}</p>
                 <p className={`mt-4 ${justifiedText}`}>{story.workshop.intro}</p>
               </div>
 
-              <div className="bg-canvas px-5 py-6 md:px-6">
+              <div className="rounded-xl bg-canvas px-5 py-6 md:px-6">
                 <p className="text-[0.9375rem] font-semibold uppercase tracking-[0.04em] text-brand">
                   {story.workshop.lead}
                 </p>
@@ -205,7 +205,7 @@ export async function ProgramPresentation({ locale }: { locale: Locale }) {
         <p className={`mt-8 text-[1.0625rem] font-semibold leading-[1.5] text-ink`}>{story.combineTitle}</p>
       </section>
 
-      <section className="mt-16 bg-canvas px-6 py-8 md:mt-20 md:px-8 md:py-10" aria-labelledby="program-next">
+      <section className="mt-16 rounded-xl bg-canvas px-6 py-8 md:mt-20 md:px-8 md:py-10" aria-labelledby="program-next">
         <h2 id="program-next" className={`${pageTitle} scroll-mt-28 text-pretty`}>
           {story.nextTitle}
         </h2>

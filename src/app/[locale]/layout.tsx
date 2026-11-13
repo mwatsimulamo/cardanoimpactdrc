@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Analytics } from "@vercel/analytics/next";
 import { Source_Sans_3 } from "next/font/google";
 import Link from "next/link";
 import { Suspense } from "react";
@@ -117,6 +118,7 @@ export default async function LocaleLayout({
         >
           <SiteFooter {...chrome} />
         </Suspense>
+        <Analytics />
       </body>
     </html>
   );

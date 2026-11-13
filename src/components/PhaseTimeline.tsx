@@ -76,7 +76,7 @@ export async function PhaseTimeline({
 
               <Link
                 href={href}
-                className={`roadmap-card group relative block border px-5 py-5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand md:w-[calc(50%-2.5rem)] ${
+                className={`roadmap-card group relative block overflow-hidden rounded-xl border px-5 py-5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand md:w-[calc(50%-2.5rem)] ${
                   onLeft ? "md:mr-auto" : "md:ml-auto"
                 }`}
                 style={{

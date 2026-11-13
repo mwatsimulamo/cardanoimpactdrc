@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { EditorialCard, EditorialEmptyCard } from "@/components/EditorialCard";
-import { justifiedText, secondaryLink, sectionTitle, textLink } from "@/components/classes";
+import { secondaryLink, sectionLede, sectionTitle, textLink } from "@/components/classes";
 import type { Dictionary } from "@/content/types";
 import { listPublicActivities } from "@/lib/documented-activities";
 import { EDITORIAL_PREVIEW_LIMIT } from "@/lib/editorial-preview";
@@ -24,7 +24,7 @@ export async function HomeLatest({ locale, dictionary }: { locale: Locale; dicti
         <h2 id="home-latest" className={`${sectionTitle} scroll-mt-28 text-center`}>
           {dictionary.home.latestAnnouncements}
         </h2>
-        <p className={`mx-auto mt-3 max-w-3xl text-center ${justifiedText}`}>{dictionary.home.latestAnnouncementsLede}</p>
+        <p className={`mt-3 ${sectionLede}`}>{dictionary.home.latestAnnouncementsLede}</p>
         {announcements.length === 0 ? (
           <ul className="mt-8 grid auto-rows-fr gap-4 lg:grid-cols-3">
             <li className="h-full">
@@ -61,7 +61,7 @@ export async function HomeLatest({ locale, dictionary }: { locale: Locale; dicti
 
       <div className="admin-in-right mt-14" style={{ ["--admin-delay" as string]: "120ms" }}>
         <h2 className={`${sectionTitle} text-center`}>{dictionary.home.latestActivities}</h2>
-        <p className={`mx-auto mt-3 max-w-3xl text-center ${justifiedText}`}>{dictionary.home.latestActivitiesLede}</p>
+        <p className={`mt-3 ${sectionLede}`}>{dictionary.home.latestActivitiesLede}</p>
         {activities.length === 0 ? (
           <ul className="mt-8 grid auto-rows-fr gap-4 lg:grid-cols-3">
             <li className="h-full">

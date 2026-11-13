@@ -20,11 +20,15 @@ const ALIGNABLE = new Set(["p", "h1", "h2", "h3", "blockquote", "li"]);
 const IMAGE_SRC =
   /^data:image\/(?:jpeg|jpg|png|webp|gif);base64,[A-Za-z0-9+/=\s]+$/i;
 
-/** Limite du HTML riche enregistré (images data URL comprises). */
-export const RICH_TEXT_MAX_CHARS = 1_500_000;
-
 /** Taille maximale d'une image inline collée ou insérée. */
 export const INLINE_IMAGE_MAX_BYTES = Math.floor(3.5 * 1024 * 1024);
+
+/**
+ * Limite du HTML riche enregistré (images data URL comprises).
+ * Une image de 3,5 Mo devient ~4,9 Mo de caractères en base64 :
+ * la limite couvre deux images à la taille max, plus le texte.
+ */
+export const RICH_TEXT_MAX_CHARS = Math.ceil(INLINE_IMAGE_MAX_BYTES * (4 / 3) * 2) + 250_000;
 
 export function sanitizeRichText(value: string): string {
   return value.replace(/<!--[\s\S]*?-->/g, "").replace(/<\/?([a-zA-Z0-9]+)([^>]*)>/g, (match, rawTag: string, rawAttrs: string) => {

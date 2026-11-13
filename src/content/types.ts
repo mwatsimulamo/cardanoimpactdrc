@@ -113,7 +113,11 @@ export type Dictionary = {
     emptyCardBadge: string;
     emptyCardTitle: string;
     roadmapLink: string;
-    ways: readonly { id: "programme-training" | "programme-competition" | "programme-workshop"; title: string }[];
+    ways: readonly {
+      id: "programme-training" | "programme-competition" | "programme-workshop";
+      title: string;
+      body: string;
+    }[];
     domainsTitle: string;
     domainsIntro: string;
     domains: readonly string[];
@@ -666,6 +670,7 @@ export type Dictionary = {
     search: string;
     empty: string;
     tableMissing: string;
+    historyTableMissing: string;
     saved: string;
     actionFailed: string;
     navDashboard: string;
@@ -685,6 +690,10 @@ export type Dictionary = {
     statsArticles: string;
     statsResults: string;
     shortcuts: string;
+    trafficTitle: string;
+    trafficLede: string;
+    trafficCta: string;
+    trafficMissing: string;
     peopleTitle: string;
     peopleCategoryOrg: string;
     peopleCategoryJury: string;

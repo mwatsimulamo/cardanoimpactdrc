@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { Suspense } from "react";
-import { blockTitle, primaryLink, sectionTitle } from "@/components/classes";
+import { blockTitle, primaryLink, sectionTitle, supportText } from "@/components/classes";
 import { HomeAims } from "@/components/HomeAims";
 import { HomeLatest } from "@/components/HomeLatest";
 import {
@@ -119,17 +119,28 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
           <h2 id="home-ways-prompt" className={`${sectionTitle} text-center`}>
             {dictionary.home.waysPrompt}
           </h2>
-          <h3 id="home-ways" className={`mt-6 text-center ${blockTitle}`}>
+          <h3 id="home-ways" className={`mt-3 text-center ${blockTitle}`}>
             {dictionary.home.waysTitle}
           </h3>
-          <ul className="mt-6 grid gap-4 md:grid-cols-3">
-            {dictionary.home.ways.map((way) => (
-              <li key={way.id}>
+          <ul className="mt-8 grid gap-4 md:grid-cols-3 md:gap-5">
+            {dictionary.home.ways.map((way, index) => (
+              <li
+                key={way.id}
+                className="path-reveal h-full"
+                style={{ animationDelay: `${index * 90}ms` }}
+              >
                 <Link
-                  className={`flex h-full min-h-36 items-end border border-line bg-canvas px-5 py-6 transition-colors duration-150 hover:bg-surface focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand md:px-6 ${blockTitle}`}
+                  className="path-card group flex h-full min-h-48 flex-col rounded-xl border border-line bg-canvas px-5 py-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand md:px-6"
                   href={`${localePath(locale, "programme")}#${way.id}`}
                 >
-                  {way.title}
+                  <span className={blockTitle}>{way.title}</span>
+                  <span className={`mt-3 ${supportText}`}>{way.body}</span>
+                  <span
+                    aria-hidden="true"
+                    className="mt-auto pt-6 text-[1.125rem] font-semibold text-brand transition-transform duration-300 group-hover:translate-x-1"
+                  >
+                    →
+                  </span>
                 </Link>
               </li>
             ))}

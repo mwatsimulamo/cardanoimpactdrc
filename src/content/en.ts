@@ -133,9 +133,21 @@ export const en = {
     emptyCardTitle: "Publication upcoming",
     roadmapLink: "See the roadmap",
     ways: [
-      { id: "programme-training", title: "Register for the online sessions" },
-      { id: "programme-competition", title: "Register for the research competition" },
-      { id: "programme-workshop", title: "Register for the workshop" },
+      {
+        id: "programme-training",
+        title: "Register for the online sessions",
+        body: "Two training sessions to discover Cardano and examine real challenges.",
+      },
+      {
+        id: "programme-competition",
+        title: "Register for the research competition",
+        body: "Form a team of 3 to 5 people and publish your article.",
+      },
+      {
+        id: "programme-workshop",
+        title: "Register for the in-person workshop",
+        body: "Closing day in Goma: meetings, exchange, and presentation of the work.",
+      },
     ],
     domainsTitle: "Areas of exploration",
     domainsIntro:
@@ -1004,6 +1016,8 @@ export const en = {
     search: "Search",
     empty: "No items.",
     tableMissing: "The tables are not created yet. Run supabase/migrations/20261106021000_admin_editorial.sql in the SQL editor, then reload.",
+    historyTableMissing:
+      "The team_activity_logs table is not created yet. Run supabase/migrations/20261113150000_team_activity_logs.sql in the SQL editor, then reload.",
     saved: "Saved. The public site reads this record.",
     actionFailed: "The record could not be saved.",
     navDashboard: "Dashboard",
@@ -1023,6 +1037,11 @@ export const en = {
     statsArticles: "Articles",
     statsResults: "Results",
     shortcuts: "Shortcuts",
+    trafficTitle: "Traffic",
+    trafficLede: "Visits and pages viewed are read in Vercel Web Analytics. This site does not store those figures.",
+    trafficCta: "Open Vercel analytics",
+    trafficMissing:
+      "Set VERCEL_ANALYTICS_URL (https link to the project Analytics dashboard) in the environment variables, enable Web Analytics on Vercel, then redeploy.",
     peopleTitle: "Team",
     peopleCategoryOrg: "Organization",
     peopleCategoryJury: "Jury",

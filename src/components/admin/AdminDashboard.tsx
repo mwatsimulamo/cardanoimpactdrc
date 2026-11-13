@@ -11,9 +11,11 @@ import {
   readAdminTeams,
   readPublishedRoadmap,
 } from "@/lib/published-records";
+import { readVercelAnalyticsUrl } from "@/lib/vercel-analytics";
 
 export async function AdminDashboard({ locale, dictionary }: { locale: Locale; dictionary: Dictionary }) {
   const copy = dictionary.adminUi;
+  const analyticsUrl = readVercelAnalyticsUrl();
   const [phases, counts, teams, announcements, activities, mail] = await Promise.all([
     readPublishedRoadmap(),
     readAdminCounts(),
@@ -77,6 +79,32 @@ export async function AdminDashboard({ locale, dictionary }: { locale: Locale; d
             </li>
           ))}
         </ul>
+      </section>
+
+      <section
+        className="admin-in-up rounded-xl border border-line bg-canvas px-5 py-6 md:px-8"
+        style={{ ["--admin-delay" as string]: "180ms" }}
+        aria-labelledby="admin-traffic"
+      >
+        <h2 id="admin-traffic" className={sectionTitle}>
+          {copy.trafficTitle}
+        </h2>
+        <p className={`mt-2 max-w-3xl ${bodyText}`}>{copy.trafficLede}</p>
+        {analyticsUrl ? (
+          <p className="mt-5">
+            <a
+              className={primaryLink}
+              href={analyticsUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {copy.trafficCta}
+              <span className="sr-only"> ({dictionary.links.opensNewTab})</span>
+            </a>
+          </p>
+        ) : (
+          <p className={`mt-4 ${supportText}`}>{copy.trafficMissing}</p>
+        )}
       </section>
 
       <section className="admin-in-up border border-line bg-canvas px-5 py-6 md:px-8" style={{ ["--admin-delay" as string]: "220ms" }} aria-labelledby="admin-shortcuts">

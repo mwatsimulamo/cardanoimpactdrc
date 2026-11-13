@@ -23,11 +23,17 @@ export const bodyText = "text-base leading-[1.7] text-ink md:text-[1.0625rem]";
 
 export const justifiedText = `${bodyText} hyphens-auto text-pretty md:text-justify`;
 
+/** Sous-texte d'une section à titre centré : reste centré (sans text-justify). */
+export const sectionLede = `${bodyText} mx-auto max-w-3xl text-pretty text-center`;
+
 export const supportText = "text-[0.9375rem] leading-[1.5] text-muted";
 
 export const justifiedSupport = `${supportText} hyphens-auto text-pretty md:text-justify`;
 
-export const casePanel = "border border-line bg-canvas px-5 py-6 md:px-8 md:py-8";
+/** Carte de contenu : léger rayon, bordure fine. Les boutons restent à 2px. */
+export const surfaceCard = "rounded-xl border border-line bg-canvas";
+
+export const casePanel = `${surfaceCard} px-5 py-6 md:px-8 md:py-8`;
 
 export const measure = bodyText;
 

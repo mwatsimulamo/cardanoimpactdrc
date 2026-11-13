@@ -509,7 +509,7 @@ function SessionCard({
   stateLabel: string;
 }) {
   return (
-    <article className="path-reveal flex h-full flex-col gap-2 border border-line bg-surface px-5 py-6">
+    <article className="path-reveal path-card flex h-full flex-col gap-2 overflow-hidden rounded-xl border border-line bg-surface px-5 py-6">
       {kicker ? <p className="text-base font-semibold text-brand">{kicker}</p> : null}
       <h2 className={blockTitle}>{title}</h2>
       <p className={`${blockTitle} text-brand`}>{when}</p>

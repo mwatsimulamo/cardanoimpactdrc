@@ -87,8 +87,9 @@ Le contenu public est centré et limité à `72rem`. Les paragraphes, listes et 
 - Espace vertical d'une section : 48 pixels, puis 96 pixels à partir de `md`.
 - Espace entre un titre et son paragraphe : 12 pixels.
 - Rayon des boutons et des champs : 2 pixels.
-- Cartes, listes et tableaux : angles droits, bordure de 1 pixel `line`.
-- Aucune ombre portée décorative.
+- Cartes de contenu (accueil, parcours, éditorial, équipes, sessions) : rayon 12 pixels (`rounded-xl`), bordure de 1 pixel `line`. Listes et tableaux hors carte : angles droits.
+- Le rebond au survol (`.path-card`, `.roadmap-card`) reste autorisé sur ces cartes interactives.
+- Aucune ombre portée décorative hors de ce rebond.
 - Aucun dégradé sur les cartes, les boutons ou le texte.
 - Le fond de toutes les pages est la constellation approuvée par D-02, composant `ConstellationBackground`, conservé tel quel. Dégradé radial de `--constellation-bg-outer` (`#050b1f`) vers `--constellation-bg-inner` (`#0a1a4a`), nœuds et lignes pilotés par les variables `--constellation-*` dans `src/app/globals.css`. Il est fixe, en `z-index: -1`, et ignore le pointeur. `prefers-reduced-motion` fige le dessin. Le texte est `#E8EEF8`. Les cases utilisent `canvas`, un bleu nuit translucide. L'en-tête et le pied de page sont `#0033AD`. On ne remplace pas ce fond et on n'en ajoute pas un autre.
 - L'accueil ouvre sur le visuel fourni `public/accueil.webp`, en pleine largeur et sur la hauteur de l'écran sous l'en-tête. Le titre du programme, la phrase en `#8EAFFF` et les deux actions sont centrés dans cette image, avec un voile `#001C5C` à 75 % pour le contraste. Le premier bouton est blanc avec le texte `#001C5C`. Le second a le fond `#0033AD` et le texte blanc. Le fichier est animé et affiché sans recompression.

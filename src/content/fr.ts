@@ -133,9 +133,21 @@ export const fr = {
     emptyCardTitle: "Publication à venir",
     roadmapLink: "Voir la feuille de route",
     ways: [
-      { id: "programme-training", title: "Inscrivez-vous aux sessions en ligne" },
-      { id: "programme-competition", title: "Inscrivez-vous au concours de recherche" },
-      { id: "programme-workshop", title: "Inscrivez-vous à l'atelier" },
+      {
+        id: "programme-training",
+        title: "Inscrivez-vous aux sessions en ligne",
+        body: "Deux formations pour découvrir Cardano et analyser des défis concrets.",
+      },
+      {
+        id: "programme-competition",
+        title: "Inscrivez-vous au concours de recherche",
+        body: "Formez une équipe de 3 à 5 personnes et publiez votre article.",
+      },
+      {
+        id: "programme-workshop",
+        title: "Inscrivez-vous à l'atelier en présentiel",
+        body: "Clôture à Goma : rencontres, échanges et présentation des travaux.",
+      },
     ],
     domainsTitle: "Domaines d'exploration",
     domainsIntro:
@@ -1009,6 +1021,8 @@ export const fr = {
     search: "Rechercher",
     empty: "Aucun élément.",
     tableMissing: "Les tables ne sont pas encore créées. Exécutez supabase/migrations/20261106021000_admin_editorial.sql dans l'éditeur SQL, puis rechargez.",
+    historyTableMissing:
+      "La table team_activity_logs n'existe pas encore. Exécutez supabase/migrations/20261113150000_team_activity_logs.sql dans l'éditeur SQL, puis rechargez.",
     saved: "Enregistré. Le site public lit cette donnée.",
     actionFailed: "L'enregistrement n'a pas abouti.",
     navDashboard: "Tableau de bord",
@@ -1028,6 +1042,12 @@ export const fr = {
     statsArticles: "Articles",
     statsResults: "Résultats",
     shortcuts: "Raccourcis",
+    trafficTitle: "Fréquentation",
+    trafficLede:
+      "Les visites et les pages consultées se lisent dans Vercel Web Analytics. Ce site ne stocke pas ces chiffres.",
+    trafficCta: "Ouvrir les statistiques Vercel",
+    trafficMissing:
+      "Indiquez VERCEL_ANALYTICS_URL (lien https du tableau Analytics du projet) dans les variables d'environnement, activez Web Analytics sur Vercel, puis redéployez.",
     peopleTitle: "Équipe",
     peopleCategoryOrg: "Organisation",
     peopleCategoryJury: "Jury",

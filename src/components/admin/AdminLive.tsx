@@ -264,7 +264,9 @@ export async function AdminHistoryScreen({ dictionary }: { dictionary: Dictionar
   return (
     <div className="space-y-8">
       <AdminPageHeader title={dictionary.adminUi.navHistory} />
-      {records.availability === "missing" ? <p className={bodyText}>{dictionary.adminUi.tableMissing}</p> : null}
+      {records.availability === "missing" ? (
+        <p className={bodyText}>{dictionary.adminUi.historyTableMissing}</p>
+      ) : null}
       {records.rows.length === 0 && records.availability === "ready" ? (
         <p className={bodyText}>{dictionary.adminUi.empty}</p>
       ) : null}

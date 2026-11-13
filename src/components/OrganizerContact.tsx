@@ -1,6 +1,6 @@
 import { existsSync } from "node:fs";
 import path from "node:path";
-import { blockTitle, justifiedText, sectionTitle, supportText, textLink } from "@/components/classes";
+import { blockTitle, justifiedText, sectionLede, sectionTitle, supportText, textLink } from "@/components/classes";
 import { OriginalImage } from "@/components/OriginalImage";
 import { ContactChannels } from "@/components/ContactChannels";
 import type { Dictionary } from "@/content/types";
@@ -63,11 +63,11 @@ function OrganizerContactLive({
       <h2 id="organizer-contact" className={`${sectionTitle} scroll-mt-28 text-center`}>
         {dictionary.reach.title}
       </h2>
-      {intro ? <p className={`mx-auto mt-4 max-w-3xl text-center ${justifiedText}`}>{intro}</p> : null}
+      {intro ? <p className={`mt-4 ${sectionLede}`}>{intro}</p> : null}
       {people.length > 0 ? (
-        <p className={`mt-4 ${justifiedText}`}>{dictionary.reach.lede}</p>
+        <p className={`mt-3 ${sectionLede}`}>{dictionary.reach.lede}</p>
       ) : portraits.length === 0 ? (
-        <p className={`mt-4 ${justifiedText}`}>{dictionary.reach.unpublished}</p>
+        <p className={`mt-3 ${sectionLede}`}>{dictionary.reach.unpublished}</p>
       ) : null}
       {people.length > 0 ? (
         <ul className="mt-8 grid gap-4 md:grid-cols-2">
@@ -162,7 +162,7 @@ function PortraitPhoto({
   const xHref = organizerProfileUrl(person.xUrl);
 
   return (
-    <div className="group relative aspect-square overflow-hidden bg-surface">
+    <div className="group relative aspect-square overflow-hidden rounded-xl bg-surface">
       {person.imageSrc ? (
         <OriginalImage src={person.imageSrc} alt="" className="h-full w-full object-contain" />
       ) : null}

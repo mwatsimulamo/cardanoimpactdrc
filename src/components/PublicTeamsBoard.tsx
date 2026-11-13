@@ -134,7 +134,7 @@ export function PublicTeamsBoard({
           const place = rankByTeam.get(team.id);
           const tone = placeAppearance(place);
           return (
-            <li key={team.id} className={`flex h-full flex-col ${tone.card}`}>
+            <li key={team.id} className={`flex h-full flex-col overflow-hidden rounded-xl ${tone.card}`}>
               <div className={`flex items-start justify-between gap-4 border-b px-5 py-4 ${tone.line}`}>
                 <div className="flex min-w-0 items-start gap-3">
                   {place ? <RankMark place={place} label={placeLabel(copy, place)} badge={tone.badge} /> : null}

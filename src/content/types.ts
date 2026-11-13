@@ -694,6 +694,11 @@ export type Dictionary = {
     trafficLede: string;
     trafficCta: string;
     trafficMissing: string;
+    teamsTableLede: string;
+    exportMembers: string;
+    exportTeams: string;
+    exportArticles: string;
+    exportHint: string;
     peopleTitle: string;
     peopleCategoryOrg: string;
     peopleCategoryJury: string;

@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
+import { AdminTeamsTable } from "@/components/admin/AdminTeamsTable";
 import { SearchableList } from "@/components/admin/SearchableList";
 import { OriginalImage } from "@/components/OriginalImage";
 import {
@@ -11,7 +12,6 @@ import {
 } from "@/components/admin/AdminRecordForms";
 import { RemoveRecordForm } from "@/components/admin/RemoveRecordForm";
 import { blockTitle, bodyText, supportText } from "@/components/classes";
-import { ExternalLink } from "@/components/ExternalLink";
 import type { Dictionary } from "@/content/types";
 import { activityCategories, type ActivityCategory } from "@/lib/documented-activities";
 import { plainExcerpt } from "@/lib/rich-text";
@@ -24,12 +24,6 @@ import {
   readAdminTeams,
   readPublishedRoadmap,
 } from "@/lib/published-records";
-
-const teamStatusLabel: Record<string, string> = {
-  submitted: "Enregistrée",
-  suspended: "Suspendue",
-  rejected: "Refusée",
-};
 
 export async function AdminCalendarScreen({ dictionary }: { dictionary: Dictionary }) {
   const roadmap = await readPublishedRoadmap();
@@ -185,75 +179,20 @@ export async function AdminResultScreen({ dictionary }: { dictionary: Dictionary
 
 export async function AdminTeamsScreen({ dictionary }: { dictionary: Dictionary }) {
   const records = await readAdminTeams();
-  const copy = dictionary.participatingTeams;
 
   return (
     <div className="space-y-8">
       <AdminPageHeader
         title={dictionary.adminUi.navTeams}
-        lede="Même lecture que la page publique, avec en plus le courriel, le profil Cardano Forum et le code d'accès."
+        lede={dictionary.adminUi.teamsTableLede}
       />
       {records.availability !== "ready" ? <p className={bodyText}>{dictionary.adminUi.actionFailed}</p> : null}
-      {records.teams.length === 0 ? <p className={bodyText}>{dictionary.adminUi.empty}</p> : (
-      <SearchableList label={dictionary.adminUi.search} empty="Aucune équipe pour cette recherche.">
-        {records.teams.map((team) => {
-          const hasArticle = Boolean(team.articleTitle || team.articleUrl);
-          return (
-            <li key={team.id} data-search={`${team.name} ${team.city} ${team.members.map((member) => member.name).join(" ")}`} className="flex h-full flex-col border border-line bg-canvas">
-              <span aria-hidden="true" className="h-1.5 bg-brand" />
-              <div className="flex flex-1 flex-col px-5 py-6">
-                <h2 className={blockTitle}>{team.name}</h2>
-                <p className="mt-3 flex items-baseline gap-2">
-                  <span className="text-[1.75rem] font-semibold leading-none text-ink tabular-nums">{team.members.length}</span>
-                  <span className={supportText}>{copy.memberCount}</span>
-                </p>
-                {team.members.length > 0 ? (
-                  <ul className="mt-6 space-y-3 border-t border-line pt-5">
-                    {team.members.map((member) => (
-                      <li key={`${team.id}-${member.email}-${member.name}`} className="grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-4">
-                        <div>
-                          <p className="font-semibold text-ink">{member.name}</p>
-                          <p className={supportText}>{member.email}</p>
-                          {member.forumUsername ? <p className={supportText}>{member.forumUsername}</p> : null}
-                        </div>
-                        <p className={supportText}>{roleLabel(copy, member.role)}</p>
-                      </li>
-                    ))}
-                  </ul>
-                ) : null}
-                <div className="mt-auto pt-6">
-                  {hasArticle ? (
-                    <div className="space-y-2 border-t border-line pt-5">
-                      <h3 className="text-[0.9375rem] font-semibold text-ink">{copy.topicHeading}</h3>
-                      {team.articleTitle ? <p className={bodyText}>{team.articleTitle}</p> : null}
-                      {team.articleUrl ? (
-                        <ExternalLink href={team.articleUrl} newTabLabel={dictionary.links.opensNewTab}>
-                          {copy.readArticle}
-                        </ExternalLink>
-                      ) : null}
-                    </div>
-                  ) : (
-                    <p className={`border-t border-line pt-5 ${supportText}`}>{copy.topicMissing}</p>
-                  )}
-                </div>
-                <dl className="mt-6 space-y-2 border-t border-line pt-5">
-                  <div>
-                    <dt className={supportText}>Ville et état</dt>
-                    <dd className={bodyText}>
-                      {team.city} · {teamStatusLabel[team.status] ?? team.status}
-                    </dd>
-                  </div>
-                  <div>
-                    <dt className={supportText}>Code d&apos;accès</dt>
-                    <dd className={bodyText}>{team.accessCode || "non enregistré"}</dd>
-                  </div>
-                </dl>
-              </div>
-            </li>
-          );
-        })}
-      </SearchableList>
-      )}
+      {records.availability === "ready" && records.teams.length === 0 ? (
+        <p className={bodyText}>{dictionary.adminUi.empty}</p>
+      ) : null}
+      {records.availability === "ready" && records.teams.length > 0 ? (
+        <AdminTeamsTable teams={records.teams} dictionary={dictionary} />
+      ) : null}
     </div>
   );
 }
@@ -353,18 +292,6 @@ function StoreNotice({
       {availability === "missing" ? dictionary.adminUi.tableMissing : dictionary.adminUi.actionFailed}
     </p>
   );
-}
-
-function roleLabel(copy: Dictionary["participatingTeams"], role: string): string {
-  if (role === "leader") {
-    return copy.roleLeader;
-  }
-
-  if (role === "deputy") {
-    return copy.roleDeputy;
-  }
-
-  return copy.roleMember;
 }
 
 function statusLabel(status: string): string {

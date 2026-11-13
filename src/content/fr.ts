@@ -1048,6 +1048,12 @@ export const fr = {
     trafficCta: "Ouvrir les statistiques Vercel",
     trafficMissing:
       "Indiquez VERCEL_ANALYTICS_URL (lien https du tableau Analytics du projet) dans les variables d'environnement, activez Web Analytics sur Vercel, puis redéployez.",
+    teamsTableLede:
+      "Une ligne par membre : équipe, courriel, compte Cardano Forum, article et code d'accès. Les CSV s'ouvrent dans Google Sheets ou Excel.",
+    exportMembers: "Exporter les membres (CSV)",
+    exportTeams: "Exporter les équipes (CSV)",
+    exportArticles: "Exporter les articles (CSV)",
+    exportHint: "UTF-8 avec BOM, sans notes de jury.",
     peopleTitle: "Équipe",
     peopleCategoryOrg: "Organisation",
     peopleCategoryJury: "Jury",

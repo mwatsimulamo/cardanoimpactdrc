@@ -56,21 +56,27 @@ export type AdminTeamOption = {
 };
 
 export type AdminTeamMember = {
+  givenName: string;
+  familyName: string;
   name: string;
   role: string;
   email: string;
   forumUsername: string;
   forumProfileUrl: string;
+  forumStatus: string;
 };
 
 export type AdminTeamRecord = {
   id: string;
   name: string;
   city: string;
+  country: string;
   status: string;
+  submittedAt: string;
   members: readonly AdminTeamMember[];
   articleTitle: string;
   articleUrl: string;
+  articleStatus: string;
   accessCode: string;
 };
 
@@ -525,7 +531,7 @@ export async function readAdminTeams(): Promise<{
     const { data, error } = await supabase
       .from("teams")
       .select(
-        "id,name,city,status,submitted_at,team_members(given_name,family_name,email,member_role,left_at,team_member_forum_profiles(forum_username,forum_profile_url)),team_articles(title,url,is_current)",
+        "id,name,city,country,status,submitted_at,team_members(given_name,family_name,email,member_role,left_at,team_member_forum_profiles(forum_username,forum_profile_url,status)),team_articles(title,url,status,is_current)",
       )
       .order("submitted_at", { ascending: true });
     if (error) {
@@ -720,20 +726,28 @@ function toAdminTeam(row: unknown, codes: Map<string, string>): AdminTeamRecord 
     id,
     name: stringValue(record.name),
     city: stringValue(record.city),
+    country: stringValue(record.country) || "République démocratique du Congo",
     status: stringValue(record.status),
+    submittedAt: stringValue(record.submitted_at),
     members: active.map((item) => {
       const member = asRecord(item);
       const forum = asRecord(member.team_member_forum_profiles);
+      const givenName = stringValue(member.given_name);
+      const familyName = stringValue(member.family_name);
       return {
-        name: `${stringValue(member.given_name)} ${stringValue(member.family_name)}`.trim(),
+        givenName,
+        familyName,
+        name: `${givenName} ${familyName}`.trim(),
         role: stringValue(member.member_role),
         email: stringValue(member.email),
         forumUsername: stringValue(forum.forum_username),
         forumProfileUrl: stringValue(forum.forum_profile_url),
+        forumStatus: stringValue(forum.status) || "not_provided",
       };
     }),
     articleTitle: stringValue(article.title),
     articleUrl: stringValue(article.url),
+    articleStatus: stringValue(article.status),
     accessCode: codes.get(id) ?? "",
   };
 }

@@ -299,7 +299,7 @@ Décision D-39.
 
 ### ADM-02 Équipes
 
-Liste : nom, ville, pays, statut `submitted` / `suspended` / `rejected`, nombre de membres, complétude calculée, état de l'article, date d'envoi. Recherche par nom d'équipe, courriel de membre ou nom de membre (A-19). Filtres : statut d'équipe, profils forum, article.
+Liste en tableau, une ligne par membre : équipe, ville, état, nom, rôle, courriel, compte Cardano Forum, article, code d'accès. Recherche par nom d'équipe, courriel ou forum (A-19). Trois exports CSV (A-17) : équipes, membres, articles.
 
 La fiche privée montre tous les membres, les profils forum, l'article courant, l'historique de vérification, le journal. L'organisateur peut corriger les champs, vérifier un profil (`verified` ou `mismatch`) en ouvrant le lien public, vérifier un article (`verified` ou `correction_requested`), suspendre ou rejeter avec justification, rétablir un accès responsable, transférer le rôle `leader`. Chaque acte est journalisé.
 

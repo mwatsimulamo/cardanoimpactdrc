@@ -172,6 +172,7 @@ export async function AdminResultScreen({ dictionary }: { dictionary: Dictionary
           place2={records.draft.place2}
           place3={records.draft.place3}
           workbookName={records.draft.workbookName}
+          workbookUrl={records.draft.workbookUrl}
           teamPlaces={records.draft.teamPlaces}
         />
       </div>

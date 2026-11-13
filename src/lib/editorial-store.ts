@@ -72,6 +72,7 @@ export type StoredResult = {
   publishedAt: string | null;
   updatedAt: string;
   workbookName: string;
+  workbookUrl: string;
   teamPlaces: readonly TeamPlace[];
 };
 
@@ -394,7 +395,14 @@ export async function readResultFile(): Promise<StoredResult | null | "missing" 
   try {
     const supabase = createServiceRoleSupabaseClient();
     const basic = "status,statement_fr,place_1_team_id,place_2_team_id,place_3_team_id,published_at,updated_at";
-    let selected = await supabase.from("competition_results").select(`${basic},workbook_name,team_places`).limit(1).maybeSingle();
+    let selected = await supabase
+      .from("competition_results")
+      .select(`${basic},workbook_name,workbook_url,team_places`)
+      .limit(1)
+      .maybeSingle();
+    if (selected.error && /workbook_url/i.test(selected.error.message ?? "")) {
+      selected = await supabase.from("competition_results").select(`${basic},workbook_name,team_places`).limit(1).maybeSingle();
+    }
     if (selected.error && /team_places/i.test(selected.error.message ?? "")) {
       selected = await supabase.from("competition_results").select(`${basic},workbook_name`).limit(1).maybeSingle();
     }
@@ -424,6 +432,7 @@ export async function readResultFile(): Promise<StoredResult | null | "missing" 
       publishedAt: data.published_at,
       updatedAt: data.updated_at,
       workbookName: "workbook_name" in data && typeof data.workbook_name === "string" ? data.workbook_name : "",
+      workbookUrl: "workbook_url" in data && typeof data.workbook_url === "string" ? data.workbook_url : "",
       teamPlaces: "team_places" in data ? teamPlacesFrom(data.team_places) : [],
     };
   } catch (error) {
@@ -443,6 +452,7 @@ export async function writeResultFile(record: StoredResult, workbook?: ResultWor
       status: record.status,
       published_at: record.publishedAt,
       updated_at: record.updatedAt,
+      workbook_url: record.workbookUrl,
     };
     if (workbook) {
       payload.workbook_name = workbook.name;
@@ -460,6 +470,11 @@ export async function writeResultFile(record: StoredResult, workbook?: ResultWor
         ? supabase.from("competition_results").update(values).eq("id", current.data.id)
         : supabase.from("competition_results").insert(values);
     let { error } = await write(payload);
+    if (error && /workbook_url/i.test(error.message ?? "")) {
+      const withoutUrl = { ...payload };
+      delete withoutUrl.workbook_url;
+      error = (await write(withoutUrl)).error;
+    }
     if (error && /team_places/i.test(error.message ?? "")) {
       if (record.teamPlaces.length > 0) {
         return "error";

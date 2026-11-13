@@ -63,7 +63,24 @@ export function ForumArticleButton({
   );
 }
 
-export function ResultsWorkbookButton({ label }: { label: string }) {
+export function ResultsWorkbookButton({
+  label,
+  href,
+  newTabLabel,
+}: {
+  label: string;
+  href?: string | null;
+  newTabLabel?: string;
+}) {
+  if (href) {
+    return (
+      <a className={articleButton} href={href} target="_blank" rel="noopener noreferrer">
+        {label}
+        {newTabLabel ? <span className="sr-only"> ({newTabLabel})</span> : null}
+      </a>
+    );
+  }
+
   return (
     <Link className={articleButton} href="/media/results/workbook">
       {label}

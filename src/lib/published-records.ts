@@ -34,7 +34,7 @@ import {
 } from "@/lib/program-roadmap";
 import type { PublishedAnnouncement, PublishedResult } from "@/lib/public-data";
 import { activityCategories, type ActivityCategory } from "@/lib/documented-activities";
-import { plainExcerpt, sanitizeRichText } from "@/lib/rich-text";
+import { plainExcerpt, RICH_TEXT_MAX_CHARS, sanitizeRichText } from "@/lib/rich-text";
 
 export type RecordAvailability = "ready" | "missing" | "error";
 
@@ -82,6 +82,7 @@ export type AdminResultDraft = {
   place3: string;
   status: string;
   workbookName: string;
+  workbookUrl: string;
   teamPlaces: readonly TeamPlace[];
 };
 
@@ -189,7 +190,12 @@ export async function readAdminAnnouncements(): Promise<{
 export type SavedRecord = {
   status: AdminWriteStatus;
   publicPath: string | null;
+  detail?: string;
 };
+
+function hasPublishableRichText(value: string): boolean {
+  return plainExcerpt(value, 8000).length > 0 || /<img\b/i.test(value);
+}
 
 export async function saveAnnouncement(input: {
   id?: string;
@@ -199,8 +205,18 @@ export async function saveAnnouncement(input: {
 }): Promise<SavedRecord> {
   const title = input.title.trim();
   const body = sanitizeRichText(input.body).trim();
-  if (title.length === 0 || title.length > 180 || body.length > 8000 || (input.publish && plainExcerpt(body, 8000).length === 0)) {
-    return { status: "invalid", publicPath: null };
+  if (title.length === 0 || title.length > 180) {
+    return { status: "invalid", publicPath: null, detail: "Indiquez un titre de 180 caractères au plus." };
+  }
+  if (body.length > RICH_TEXT_MAX_CHARS) {
+    return {
+      status: "invalid",
+      publicPath: null,
+      detail: `Le texte dépasse la limite (${RICH_TEXT_MAX_CHARS.toLocaleString("fr-FR")} caractères HTML, images comprises). Réduisez les images ou leur nombre. Votre saisie n'a pas été effacée.`,
+    };
+  }
+  if (input.publish && !hasPublishableRichText(body)) {
+    return { status: "invalid", publicPath: null, detail: "Ajoutez un texte ou une image dans le corps pour publier." };
   }
 
   const now = new Date().toISOString();
@@ -287,10 +303,12 @@ export const readPublishedResult = cache(async function readPublishedResult(): P
     return null;
   }
 
+  const workbookUrl = draft.workbookUrl.trim();
   return {
     places,
     statement: { fr: draft.statement, en: draft.statement },
-    hasWorkbook: draft.workbookName.trim().length > 0,
+    hasWorkbook: workbookUrl.length > 0 || draft.workbookName.trim().length > 0,
+    workbookUrl: workbookUrl.length > 0 ? workbookUrl : null,
   };
 });
 
@@ -316,6 +334,7 @@ export async function readAdminResult(): Promise<{
       place3: row?.place3 ?? "",
       status: row?.status ?? "draft",
       workbookName: row?.workbookName ?? "",
+      workbookUrl: row?.workbookUrl ?? "",
       teamPlaces: row?.teamPlaces ?? [],
     },
   };
@@ -328,6 +347,7 @@ export async function saveResult(input: {
   place3: string;
   publish: boolean;
   workbook: ResultWorkbook | null;
+  workbookUrl: string;
   teamPlaces: readonly TeamPlace[];
 }): Promise<SavedRecord> {
   const statement = sanitizeRichText(input.statement).trim();
@@ -357,6 +377,7 @@ export async function saveResult(input: {
     publishedAt: input.publish ? now : null,
     updatedAt: now,
     workbookName: input.workbook?.name ?? "",
+    workbookUrl: input.workbookUrl,
     teamPlaces: extras,
   }, input.workbook ?? undefined);
   return {
@@ -407,13 +428,30 @@ export async function saveDocumentedActivity(input: {
 
   const title = input.title.trim();
   const description = sanitizeRichText(input.description).trim();
-  if (title.length === 0 || title.length > 180 || description.length > 8000) {
-    return { status: "invalid", publicPath: null };
+  if (title.length === 0 || title.length > 180) {
+    return { status: "invalid", publicPath: null, detail: "Indiquez un titre de 180 caractères au plus." };
+  }
+  if (description.length > RICH_TEXT_MAX_CHARS) {
+    return {
+      status: "invalid",
+      publicPath: null,
+      detail: `La description dépasse la limite (${RICH_TEXT_MAX_CHARS.toLocaleString("fr-FR")} caractères HTML, images comprises). Réduisez les images ou leur nombre. Votre saisie n'a pas été effacée.`,
+    };
   }
 
   const occurredOn = /^\d{4}-\d{2}-\d{2}$/.test(input.occurredOn) ? input.occurredOn : "";
-  if (input.publish && (plainExcerpt(description, 8000).length === 0 || occurredOn.length === 0 || occurredOn > todayInGoma())) {
-    return { status: "invalid", publicPath: null };
+  if (input.publish && occurredOn.length === 0) {
+    return { status: "invalid", publicPath: null, detail: "Indiquez la date réelle de l'activité." };
+  }
+  if (input.publish && occurredOn > todayInGoma()) {
+    return {
+      status: "invalid",
+      publicPath: null,
+      detail: "Pour publier, indiquez une date déjà passée. Une activité prévue n'est pas présentée comme tenue.",
+    };
+  }
+  if (input.publish && !hasPublishableRichText(description)) {
+    return { status: "invalid", publicPath: null, detail: "Ajoutez une description ou une image dans le texte pour publier." };
   }
 
   const now = new Date().toISOString();
@@ -571,7 +609,17 @@ export async function readAdminCounts(): Promise<{
 }
 
 function emptyResult(): AdminResultDraft {
-  return { statementFr: "", statementEn: "", place1: "", place2: "", place3: "", status: "draft", workbookName: "", teamPlaces: [] };
+  return {
+    statementFr: "",
+    statementEn: "",
+    place1: "",
+    place2: "",
+    place3: "",
+    status: "draft",
+    workbookName: "",
+    workbookUrl: "",
+    teamPlaces: [],
+  };
 }
 
 async function articleUrlByTeam(ids: readonly string[]): Promise<Map<string, string>> {

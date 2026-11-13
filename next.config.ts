@@ -6,7 +6,8 @@ const nextConfig: NextConfig = {
   partialPrefetching: true,
   experimental: {
     serverActions: {
-      bodySizeLimit: "4mb",
+      // Couverture + images inline (data URL) dans le texte riche.
+      bodySizeLimit: "12mb",
     },
   },
   turbopack: {

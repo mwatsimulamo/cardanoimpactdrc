@@ -97,13 +97,13 @@ export function AnnouncementForm({
   const formRef = useResetOnSuccess(state, !record);
 
   return (
-    <form ref={formRef} action={action} className="max-w-3xl space-y-4">
+    <form ref={formRef} action={action} className="w-full max-w-5xl space-y-4">
       {record ? <input type="hidden" name="id" value={record.id} /> : null}
       <h2 className="text-[1.25rem] font-semibold text-ink">{record ? "Modifier l'annonce" : copy.create}</h2>
       <p className={bodyText}>
         {record
           ? "Le brouillon retire l'annonce du site. Publier la remet en ligne, à la même adresse."
-          : "Le texte est publié tel que vous l'écrivez, sur les pages française et anglaise."}
+          : "Le texte est publié tel que vous l'écrivez, sur les pages française et anglaise. Titres, liens et images dans le corps sont conservés."}
       </p>
       <TextField name="title" label="Titre" defaultValue={record?.title ?? ""} required />
       <RichTextField key={record?.id ?? "new-announcement"} name="body" label="Texte" defaultValue={record?.body ?? ""} />
@@ -142,6 +142,7 @@ export function ResultForm({
   place2,
   place3,
   workbookName = "",
+  workbookUrl = "",
   teamPlaces = [],
 }: {
   dictionary: Dictionary;
@@ -151,6 +152,7 @@ export function ResultForm({
   place2: string;
   place3: string;
   workbookName?: string;
+  workbookUrl?: string;
   teamPlaces?: readonly { teamId: string; place: number }[];
 }) {
   const [state, action, pending] = useActionState(saveResultAction, null);
@@ -203,21 +205,37 @@ export function ResultForm({
         </ul>
       </div>
       <RichTextField name="statement" label="Texte du résultat" defaultValue={statement} />
-      <label className={fieldLabel}>
-        Classeur des résultats totaux
-        <input
-          name="workbook"
-          type="file"
-          accept=".xls,.xlsx,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-          className={`mt-2 ${fieldControl}`}
-        />
-      </label>
-      <p className={supportText}>
-        Fichier .xls ou .xlsx, 3,5 Mo au plus. L&apos;original est conservé. Le site ne lit pas les notes.
-        {workbookName
-          ? ` Fichier actuel : ${workbookName}. Laisser vide pour le conserver.`
-          : " Sans fichier, le bouton public n'apparaît pas."}
-      </p>
+      <div className="space-y-3 border border-line bg-surface px-4 py-4">
+        <p className={fieldLabel}>Résultats totaux des équipes</p>
+        <p className={supportText}>
+          Indiquez un lien Google Sheet ou téléversez un fichier .xls / .xlsx. Le site n&apos;importe ni les lignes ni les notes. Si les deux sont fournis, le bouton public ouvre le lien.
+        </p>
+        <label className={fieldLabel}>
+          Lien Google Sheet
+          <input
+            name="workbookUrl"
+            type="url"
+            inputMode="url"
+            defaultValue={workbookUrl}
+            placeholder="https://docs.google.com/spreadsheets/d/…"
+            className={`mt-2 ${fieldControl}`}
+          />
+        </label>
+        <label className={fieldLabel}>
+          Fichier .xls ou .xlsx
+          <input
+            name="workbook"
+            type="file"
+            accept=".xls,.xlsx,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+            className={`mt-2 ${fieldControl}`}
+          />
+        </label>
+        <p className={supportText}>
+          Fichier : 3,5 Mo au plus. L&apos;original est conservé.
+          {workbookName ? ` Fichier actuel : ${workbookName}. Laisser vide pour le conserver.` : ""}
+          {!workbookUrl && !workbookName ? " Sans lien ni fichier, le bouton public n'apparaît pas." : ""}
+        </p>
+      </div>
       <NotifyFields />
       <PublishButtons pending={pending} draft={copy.draft} publish={copy.publish} />
       <ActionNotice state={state} dictionary={dictionary} />
@@ -240,11 +258,11 @@ export function ActivityForm({
   const formRef = useResetOnSuccess(state, !record);
 
   return (
-    <form ref={formRef} action={action} className="max-w-3xl space-y-4">
+    <form ref={formRef} action={action} className="w-full max-w-5xl space-y-4">
       {record ? <input type="hidden" name="id" value={record.id} /> : null}
       <h2 className="text-[1.25rem] font-semibold text-ink">{record ? "Modifier l'activité" : copy.create}</h2>
       <p className={bodyText}>
-        Date déjà passée, description et photographie. L&apos;original est conservé. Une activité à venir ne peut pas être publiée comme tenue.
+        Date déjà passée, description et photographie de couverture. Vous pouvez aussi placer des images dans le texte. L&apos;original est conservé. Une activité à venir ne peut pas être publiée comme tenue.
         {record ? " Le brouillon retire la fiche du site. Sans nouvelle photographie, l'originale est conservée." : ""}
       </p>
       <label className={fieldLabel}>
@@ -439,6 +457,8 @@ function useResetOnSuccess(state: AdminActionState, enabled = true) {
   const formRef = useRef<HTMLFormElement>(null);
 
   useEffect(() => {
+    // Uniquement après un enregistrement réussi. En cas d'erreur ou de limite
+    // dépassée, le formulaire (texte riche compris) n'est pas effacé.
     if (enabled && state?.status === "ok") {
       formRef.current?.reset();
     }

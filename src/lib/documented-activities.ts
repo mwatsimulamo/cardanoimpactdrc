@@ -186,7 +186,8 @@ async function loadDocumentedRecords(): Promise<readonly DocumentedActivityRecor
         slug: row.slug,
         category: category as ActivityCategory,
         title: { fr: row.title, en: row.title },
-        summary: { fr: text, en: text },
+        // Pas de résumé séparé : le corps passe par ArticleBody (HTML rendu).
+        summary: { fr: "", en: "" },
         description: { fr: text, en: text },
         highlights: { fr: "", en: "" },
         format: null,
@@ -200,7 +201,7 @@ async function loadDocumentedRecords(): Promise<readonly DocumentedActivityRecor
               {
                 id: row.id,
                 src: `/media/activity/${row.id}?v=${encodeURIComponent(row.updatedAt)}`,
-                caption: { fr: text || row.title, en: text || row.title },
+                caption: { fr: "", en: "" },
                 alt: { fr: row.title, en: row.title },
                 sortOrder: 0,
                 status: row.status === "published" ? "published" : "draft",

@@ -85,21 +85,29 @@ export const fr = {
       "Un programme qui explore le potentiel de Cardano et de la blockchain face aux défis réels de la RDC, à travers l'apprentissage, la recherche et l'exploration de cas d'usage concrets.",
     summary:
       "Cardano Learning & Research for Real Use Cases in Goma, DR Congo est mené à Goma, en République démocratique du Congo. CIPot-DR Congo permet de comprendre ce programme, de s'inscrire, de recevoir les informations et d'en suivre l'avancement. Cardano Learning & Research for Real Use Cases in Goma, DR Congo explore la façon dont la blockchain pourrait contribuer à des défis concrets en RDC, notamment l'éducation, l'agriculture, les chaînes d'approvisionnement et la traçabilité, l'entrepreneuriat, l'inclusion financière, la certification et l'identité numérique, les services publics et l'assistance humanitaire.",
-    phasesTitle: "Calendrier de Cardano Learning & Research for Real Use Cases in Goma, DR Congo",
+    phasesTitle: "Calendrier",
+    phasesRange: "Du 13 novembre au 18 décembre 2026",
+    phasesBarHint: "La barre au bas de chaque étape situe sa période dans l'ensemble du calendrier.",
+    phasesLegendTitle: "Légende",
+    phasesProgressLabel: "Avancement du programme",
+    phasesCardCta: "Voir cette étape",
+    phaseDay: "jour",
+    phaseDays: "jours",
     teamLead: "Une équipe qui travaille pour la réussite de Cardano Learning & Research for Real Use Cases in Goma, DR Congo.",
-    aimsTitle: "Cardano Learning & Research for Real Use Cases in Goma, DR Congo vous offre 3 possibilités.",
+    aimsTitle: "Un programme qui vous offre 3 possibilités",
+    aimsMediaAlt: "Atelier et apprentissage Cardano à Goma",
     aims: [
       {
         title: "Apprendre",
-        body: "Deux sessions en ligne et une en présentiel : fondamentaux, analyse de problèmes et portefeuilles.",
+        body: "Deux sessions en ligne, puis le présentiel à Goma : les bases de Cardano, l'analyse de vrais problèmes, et les portefeuilles. La curiosité suffit pour commencer.",
       },
       {
         title: "Explorer",
-        body: "Un concours en équipe, puis des articles sur ce que Cardano peut apporter en RDC.",
+        body: "Un concours en équipe : chercher ce que Cardano peut apporter face aux défis de la RDC, puis publier l'article. Et si votre sujet était le prochain ?",
       },
       {
         title: "Interagir",
-        body: "Le forum Cardano, pour échanger et faire un premier pas dans l'écosystème.",
+        body: "Le forum Cardano pour échanger, croiser d'autres parcours et faire un premier pas dans l'écosystème. Vous n'êtes pas seul·e à chercher.",
       },
     ],
     waysPrompt: "N'attendez pas, prenez part…",
@@ -115,8 +123,14 @@ export const fr = {
     latestAnnouncements: "Annonces",
     latestAnnouncementsLede: "Les dernières publications officielles du programme.",
     announcementRead: "Lire l'annonce",
-    latestActivities: "Activités récentes",
+    activityRead: "Voir l'activité",
+    seeMoreAnnouncements: "Voir plus d'annonces",
+    seeMoreActivities: "Voir plus d'activités",
+    latestActivities: "Activités réalisées",
+    latestActivitiesLede: "Les activités tenues, lorsqu'elles sont publiées par les organisateurs.",
     latestEmpty: "Rien n'est encore publié dans cette rubrique.",
+    emptyCardBadge: "Bientôt",
+    emptyCardTitle: "Publication à venir",
     roadmapLink: "Voir la feuille de route",
     ways: [
       { id: "programme-training", title: "Inscrivez-vous aux sessions en ligne" },
@@ -142,6 +156,7 @@ export const fr = {
     lede: "Chaque fiche publiée indique le nom, une courte biographie et les contacts de la personne.",
     unpublished:
       "Le nom, la courte biographie et les contacts de chaque personne ne sont pas encore publiés. Les canaux ci-dessous sont ceux de l'équipe.",
+    contactOn: "Contact sur",
   },
   initiative: {
     title: "L'initiative",
@@ -164,7 +179,7 @@ export const fr = {
       body: "Inscriptions à la session en présentiel, du 30 novembre au 17 décembre 2026.",
     },
     teams: {
-      title: "Formation des équipes et lancement du concours",
+      title: "Formation des équipes du concours",
       when: "Du 1er au 5 décembre 2026",
       body: "Formation des équipes et lancement du concours, du 1er au 5 décembre 2026.",
     },
@@ -201,19 +216,20 @@ export const fr = {
   program: {
     title: "Programme",
     lede: "Cardano Learning & Research for Real Use Cases in Goma, DR Congo est le programme présenté sur CIPot-DR Congo.",
-    organizationBody:
-      "Cardano Learning & Research for Real Use Cases in Goma, DR Congo est organisé à Goma, en République démocratique du Congo. Il est soutenu et financé par le programme Impact Pot des Ambassadeurs Cardano.",
+    whatMediaAlt:
+      "Carte de la République démocratique du Congo centrée sur Goma, avec des domaines d'exploration liés à Cardano.",
     story: {
       whatTitle: "Qu'est-ce que ce programme ?",
       overview: [
-        "Cardano Learning & Research for Real Use Cases in Goma, DR Congo réunit des étudiants, des entrepreneurs et des acteurs humanitaires à Goma afin d'explorer comment la technologie blockchain, et particulièrement Cardano, pourrait contribuer à répondre aux défis concrets auxquels fait face la République démocratique du Congo.",
-        "À travers des sessions de formation en ligne, un concours de recherche de deux semaines et un atelier pratique en présentiel, les participants seront amenés à examiner des problématiques locales, à évaluer différentes pistes de solutions et à partager leurs conclusions avec l'ensemble de l'écosystème Cardano.",
-        "Il ne s'agit pas d'un hackathon. C'est une occasion d'apprendre, d'explorer, de questionner et de contribuer à une réflexion collective et constructive sur les possibilités d'adoption de la blockchain en RDC.",
+        "**Cardano Learning & Research for Real Use Cases in Goma, DR Congo** est une initiative qui met en relation des étudiants, des entrepreneurs et des acteurs humanitaires autour d'une question centrale : dans quelle mesure la technologie blockchain, et particulièrement Cardano, peut-elle répondre à certains défis concrets de la République démocratique du Congo ?",
+        "Les participants découvrent les fondamentaux de Cardano, travaillent en équipe sur des problématiques locales, examinent des pistes d'application et présentent leurs analyses sous forme d'articles destinés à être partagés avec la communauté Cardano.",
+        "L'objectif n'est pas de construire un prototype dans le cadre d'un hackathon, ni de présumer que la blockchain constitue une réponse à chaque problème. Il s'agit plutôt de développer une compréhension critique de cette technologie, d'identifier les situations dans lesquelles elle pourrait apporter une réelle valeur ajoutée et de documenter des réflexions ancrées dans le contexte local.",
+        "Organisé à Goma, en République démocratique du Congo, le programme est soutenu et financé par l'**Impact Pot des Ambassadeurs Cardano**.",
       ],
       whoAnywhere:
-        "Cardano Learning & Research for Real Use Cases in Goma, DR Congo est ouvert aux personnes qui résident partout en République démocratique du Congo, et pas seulement à Goma. L'atelier du vendredi 18 décembre 2026, lui, a lieu à Goma.",
+        "Le programme est ouvert aux personnes qui résident partout en République démocratique du Congo, et pas seulement à Goma. L'atelier du vendredi 18 décembre 2026, lui, a lieu à Goma.",
       whoWelcome:
-        "Aucune expérience préalable en blockchain ou en programmation n'est exigée. Cardano Learning & Research for Real Use Cases in Goma, DR Congo accueille des personnes venues de domaines différents et encourage la diversité des expériences et des points de vue.",
+        "Aucune expérience préalable en blockchain ou en programmation n'est exigée. Le programme accueille des personnes venues de domaines différents et encourage la diversité des expériences et des points de vue.",
       profiles: [
         "Étudiants et jeunes diplômés.",
         "Entrepreneurs et porteurs d'initiatives.",
@@ -224,74 +240,75 @@ export const fr = {
       whoRules:
         "Chaque personne ne peut appartenir qu'à une seule équipe. Les membres du jury et les membres de l'équipe organisatrice ne peuvent pas participer au concours.",
       howTitle: "Comment participer ?",
-      howLead:
-        "Trois façons de prendre part. Elles ne s'excluent pas : vous pouvez en choisir une seule, ou en combiner plusieurs.",
+      howLead: "Trois façons de participer à ce programme.",
+      howLeadDetail: "Choisissez celui qui vous parle ou combinez-les.",
       training: {
         title: "Deux sessions de formation en ligne",
         when: "30 novembre et 1er décembre 2026",
         intro:
-          "Les participants prendront part à deux sessions destinées à leur donner les connaissances nécessaires pour participer à Cardano Learning & Research for Real Use Cases in Goma, DR Congo.",
+          "Posez les bases avant d'aller plus loin : comprendre Cardano, puis relier la blockchain aux problèmes concrets de la RDC.",
         sessions: [
           {
-            title: "Session 1 – Découvrir Cardano et la blockchain",
-            lead: "Nous aborderons notamment :",
+            label: "Session 1",
+            title: "Découvrir Cardano et la blockchain",
+            when: "30 novembre 2026",
             points: [
               "Les fondamentaux de la blockchain.",
-              "La présentation de Cardano et de son fonctionnement.",
-              "Les portefeuilles numériques (wallets).",
+              "Cardano et son fonctionnement.",
+              "Les portefeuilles numériques.",
               "Les transactions et les actifs numériques.",
               "Une introduction aux smart contracts.",
             ],
           },
           {
-            title: "Session 2 – De la blockchain aux problèmes réels",
-            lead: "Cette deuxième session sera consacrée à la réflexion sur les applications concrètes de la blockchain. Nous aborderons :",
+            label: "Session 2",
+            title: "De la blockchain aux problèmes réels",
+            when: "1er décembre 2026",
             points: [
-              "L'identification des problèmes réels dans notre environnement.",
-              "Les domaines dans lesquels la blockchain pourrait intervenir.",
+              "Identifier des problèmes concrets autour de vous.",
+              "Repérer où la blockchain pourrait intervenir.",
               "Les possibilités et les limites de Cardano.",
               "La méthodologie de recherche.",
-              "Les modalités de participation au concours de recherche.",
+              "Comment rejoindre le concours de recherche.",
             ],
           },
         ],
-        note: "Aucun compte Cardano Forum n'est nécessaire pour ces formations. L'heure et le lien de connexion ne sont pas publiés.",
+        note: "Aucun compte Cardano Forum n'est nécessaire pour ces formations.",
         cta: "S'inscrire aux formations",
       },
       competition: {
         title: "Concours de recherche",
         when: "Équipes : du 1er au 5 décembre 2026. Travaux : du 6 au 15 décembre 2026.",
+        intro:
+          "Travaillez en équipe sur un problème concret en RDC et partagez votre analyse avec la communauté Cardano.",
+        lead: "Au programme",
         points: [
-          "Constituer une équipe et choisir un problème concret en RDC.",
-          "Analyser ce problème et étudier les solutions qui existent déjà.",
-          "Évaluer si une solution fondée sur Cardano serait pertinente.",
-          "Publier les résultats dans un article sur Cardano Forum.",
+          "Formez une équipe et choisissez un problème concret en RDC.",
+          "Analysez-le et regardez les solutions qui existent déjà.",
+          "Évaluez si une approche fondée sur Cardano serait pertinente.",
+          "Publiez vos résultats dans un article sur Cardano Forum.",
         ],
-        note: "Chaque membre de l'équipe doit avoir son propre compte Cardano Forum.",
+        note: "Chaque membre de l'équipe doit avoir son propre compte Cardano Forum. Une personne, une seule équipe.",
         primary: "Découvrir le concours",
-        secondary: "S'inscrire",
+        secondary: "S'inscrire en équipe",
       },
       workshop: {
-        title: "Un atelier pratique en présentiel à Goma",
-        when: "Vendredi 18 décembre 2026, à Goma",
+        title: "Atelier en présentiel à Goma",
+        when: "Vendredi 18 décembre 2026 · Goma",
         intro:
-          "Cardano Learning & Research for Real Use Cases in Goma, DR Congo se terminera par une journée de rencontre et d'apprentissage en présentiel, prévue le 18 décembre 2026 à Goma.",
-        lead: "Cette journée réunira les participants autour de plusieurs activités :",
+          "Une journée où vous rencontrerez d'autres personnes intéressées par la blockchain et découvrirez comment poursuivre dans l'écosystème Cardano.",
+        lead: "Au programme",
         points: [
-          "Une présentation de l'écosystème Cardano.",
-          "Des exercices pratiques de création et d'utilisation de portefeuilles numériques.",
-          "Des démonstrations de transactions sur Cardano.",
-          "Une introduction au staking.",
-          "La présentation des meilleurs travaux de recherche.",
-          "Des échanges avec les participants et le jury.",
-          "La délibération et la remise des prix aux trois meilleures équipes.",
+          "Présentation de l'écosystème Cardano",
+          "Démonstration et pratique sur l'usage de portefeuilles Cardano",
+          "Comment participer dans l'écosystème Cardano",
+          "Présentation des meilleurs projets de recherche et remise des prix",
         ],
-        closing:
-          "Cet atelier sera également une occasion de rencontrer d'autres personnes intéressées par la technologie blockchain et de découvrir différentes possibilités de participation à l'écosystème Cardano.",
-        note: "Aucun compte Cardano Forum n'est requis pour participer uniquement à cet atelier. L'heure et l'adresse précise ne sont pas publiées. Le site ne connecte pas de portefeuille.",
-        cta: "Manifester mon intérêt pour l'atelier",
+        closing: "",
+        note: "Aucun compte Cardano Forum n'est requis pour cet atelier seul. Le site ne connecte pas de portefeuille.",
+        cta: "Manifester mon intérêt",
       },
-      combineTitle: "Vous pouvez participer à une seule activité ou combiner les trois.",
+      combineTitle: "Une seule activité ou les trois : à vous de choisir.",
       combineItems: [
         "Participer uniquement aux formations en ligne.",
         "Participer uniquement au concours de recherche, en respectant ses conditions.",
@@ -299,10 +316,14 @@ export const fr = {
         "Participer aux formations et à l'atelier.",
         "Participer aux trois activités.",
       ],
-      nextTitle: "Et maintenant, quelles sont les prochaines étapes ?",
+      nextTitle: "Et ensuite ?",
       nextBody:
-        "Cardano Learning & Research for Real Use Cases in Goma, DR Congo se déroule en plusieurs phases, depuis les inscriptions jusqu'à l'atelier de clôture. Le calendrier publié sur l'accueil indique les dates et permet d'en suivre l'avancement.",
-      nextCta: "Consulter le calendrier du programme",
+        "Le programme avance par étapes, des inscriptions à l'atelier de clôture. Le calendrier de l'accueil montre les dates et l'état de chaque phase.",
+      nextCta: "Voir le calendrier",
+      helpTitle: "Un point n'est pas clair ?",
+      helpBody:
+        "Si une étape, une date ou une inscription vous paraît confuse, contactez-nous. Nous vous répondrons avec les informations déjà publiées.",
+      helpCta: "Nous contacter",
     },
     trainingNoForum:
       "Aucun compte Cardano Forum n'est requis pour participer aux formations en ligne.",
@@ -339,11 +360,11 @@ export const fr = {
   },
   evaluation: {
     title: "Évaluations",
-    lede: "Évaluations de Cardano Learning & Research for Real Use Cases in Goma, DR Congo, les 16 et 17 décembre 2026. Le jury compte cinq membres. Leurs noms, les notes des équipes et le classement ne sont pas publiés tant que les résultats ne le sont pas.",
+    lede: "Les évaluations ont lieu les 16 et 17 décembre 2026. Le jury compte cinq membres. Leurs noms, les notes et le classement ne sont publiés qu'avec les résultats.",
     unpublished: "Aucun procès d'évaluation n'est publié.",
     criteriaTitle: "Critères",
     criteriaIntro:
-      "Le jury évalue la qualité de la recherche et la capacité d'analyse critique. Il ne juge pas la capacité à proposer une solution fondée sur Cardano.",
+      "Le jury évalue la qualité de la recherche et la capacité d'analyse critique, non la capacité à proposer une solution fondée sur Cardano.",
     pointsLabel: "Points",
     criteria: [
       {
@@ -385,48 +406,45 @@ export const fr = {
     ],
   },
   guide: {
-    lede: "Guide des participants de Cardano Learning & Research for Real Use Cases in Goma, DR Congo. Recherche et soumission des travaux du 6 au 15 décembre 2026. Événement en présentiel le 18 décembre 2026, à Goma.",
+    lede: "Guide du concours de recherche : règles publiées, soumission des travaux du 6 au 15 décembre 2026, atelier en présentiel le 18 décembre 2026 à Goma.",
     contents: "Sur cette page",
     related: "Aller vers",
     forumTitle: "Cardano Forum",
     forumIntro:
-      "Cardano Forum est une plateforme communautaire en ligne dédiée à l'écosystème Cardano. Elle rassemble des membres de la communauté, des développeurs, des chercheurs, des entrepreneurs et toute personne intéressée par Cardano afin de partager des connaissances et d'échanger des idées.",
+      "Cardano Forum est la plateforme communautaire de l'écosystème Cardano. Chercheurs, développeurs, entrepreneurs et membres de la communauté y partagent leurs connaissances et discutent des projets.",
     forumCanLead: "Sur Cardano Forum, vous pouvez notamment :",
     forumCan: [
       "Publier des articles et des recherches pour présenter vos idées, analyses et découvertes.",
       "Participer aux discussions et échanger avec d'autres membres de la communauté.",
       "Poser des questions et partager des connaissances sur Cardano, la blockchain, la gouvernance et les technologies associées.",
-      "Découvrir des projets et des initiatives et suivre les évolutions de l'écosystème.",
-      "Partager vos travaux avec une communauté internationale et recevoir des commentaires d'autres participants.",
+      "Découvrir des projets, suivre l'écosystème et recevoir des commentaires sur vos travaux.",
     ],
     forumAccess: "Accéder à Cardano Forum :",
     forumCompetition:
-      "Le concours de recherche de Cardano Learning & Research for Real Use Cases in Goma, DR Congo se déroulera sur cette plateforme. Les équipes y publieront leurs articles afin de présenter leurs recherches, de partager leurs propositions et de permettre à la communauté de découvrir et de discuter leurs travaux.",
+      "C'est sur cette plateforme que se déroule le concours : les équipes y publient leurs articles pour présenter leurs recherches et les ouvrir à la discussion.",
     forumAccountLabel: "Important :",
     forumAccount:
-      "Toute personne souhaitant participer au concours de recherche doit obligatoirement créer son propre compte sur Cardano Forum. Nous vous invitons donc à créer votre compte dès maintenant afin d'être prêt à participer au concours et à publier vos travaux.",
+      "Chaque participant crée son propre compte Cardano Forum — l'inscription sur ce site ne le crée pas, et le mot de passe du forum n'y est jamais demandé. Ce compte est obligatoire pour le concours, pas pour les sessions en ligne ni pour l'atelier. Une présentation personnelle sur le forum est encouragée, sans être exigée.",
     overviewTitle: "Aperçu",
     overview:
-      "Ce guide réunit les règles publiées du concours de recherche de Cardano Learning & Research for Real Use Cases in Goma, DR Congo : qui peut y prendre part, les questions à traiter, l'article à publier sur Cardano Forum, les principes à respecter, l'atelier final et les récompenses. Les évaluations, les équipes participantes et les résultats se lisent ensuite, chacun dans sa partie.",
+      "Ce guide regroupe l'essentiel du concours : qui peut y prendre part, les questions de recherche, l'article à publier sur Cardano Forum, les principes à respecter, l'atelier final et les récompenses. Les évaluations, les équipes participantes et les résultats suivent ensuite, chacun dans sa partie.",
     presentationTitle: "Présentation",
     presentation: [
-      "Le concours de recherche de Cardano Learning & Research for Real Use Cases in Goma, DR Congo invite les étudiants, les entrepreneurs et les acteurs humanitaires à étudier des défis réels en République démocratique du Congo et à évaluer dans quelle mesure la blockchain, en particulier Cardano, pourrait y contribuer.",
-      "L'objectif est d'encourager l'esprit critique, la recherche fondée sur des preuves et le débat sur la pertinence de la blockchain dans ce contexte.",
+      "Dans Cardano Learning & Research for Real Use Cases in Goma, DR Congo, le concours de recherche invite étudiants, entrepreneurs et acteurs humanitaires à étudier des défis concrets en République démocratique du Congo et à évaluer dans quelle mesure la blockchain, en particulier Cardano, pourrait y contribuer.",
+      "L'objectif est d'encourager l'esprit critique, la recherche fondée sur des preuves et un débat sérieux sur la pertinence de la blockchain dans ce contexte.",
     ],
     notHackathon:
-      "Ce n'est pas un hackathon. Il n'est pas demandé de développer une application, un prototype ou un smart contract. Le travail porte sur la compréhension des problèmes réels, l'étude des solutions existantes et l'évaluation honnête de la pertinence de Cardano.",
+      "Ce n'est pas un hackathon : aucune application, prototype ou smart contract n'est demandé. Le travail porte sur la compréhension des problèmes, l'étude des solutions existantes et une évaluation honnête de la pertinence de Cardano.",
     independence:
-      "Le concours est soutenu par l'Impact Pot de Cardano. Les équipes restent libres de leurs conclusions. Une conclusion négative, bien argumentée, vaut autant qu'une conclusion favorable.",
+      "Soutenu par l'Impact Pot de Cardano, le concours laisse chaque équipe libre de ses conclusions. Une conclusion négative, bien argumentée, vaut autant qu'une conclusion favorable.",
     whoTitle: "Qui peut participer",
     who: [
-      "Le concours de Cardano Learning & Research for Real Use Cases in Goma, DR Congo est ouvert aux étudiants et aux jeunes diplômés, aux entrepreneurs et aux innovateurs, aux chercheurs, aux acteurs humanitaires, aux membres de la société civile, et à toute personne intéressée par la blockchain et les défis réels de la République démocratique du Congo.",
-      "Aucune expérience préalable en blockchain ou en programmation n'est exigée.",
-      "Chaque personne ne peut faire partie que d'une seule équipe.",
-      "Les membres du jury et les membres de l'équipe organisatrice ne peuvent pas participer.",
+      "Le concours est ouvert aux étudiants et jeunes diplômés, entrepreneurs et innovateurs, chercheurs, acteurs humanitaires, membres de la société civile, et à toute personne intéressée par la blockchain et les défis réels de la République démocratique du Congo. Aucune expérience préalable en blockchain ou en programmation n'est exigée.",
+      "Chaque personne ne peut faire partie que d'une seule équipe. Les membres du jury et de l'équipe organisatrice ne peuvent pas participer.",
     ],
     researchTitle: "Exigences de recherche",
     researchIntro:
-      "Chaque équipe identifie un problème concret et mène une recherche structurée autour de six questions. Les recherches s'appuient sur des sources crédibles, des observations, des entretiens ou d'autres preuves. Il est recommandé de distinguer les faits vérifiés, les témoignages et les hypothèses.",
+      "Chaque équipe identifie un problème concret et structure sa recherche autour de six questions, en s'appuyant sur des sources crédibles, des observations, des entretiens ou d'autres preuves, et en distinguant faits vérifiés, témoignages et hypothèses.",
     questions: [
       {
         title: "Identification du problème",
@@ -434,7 +452,7 @@ export const fr = {
       },
       {
         title: "Situation actuelle",
-        body: "Comment est-il pris en charge aujourd'hui ? Quelles solutions existent déjà ?",
+        body: "Comment est-il pris en charge aujourd'hui, et quelles solutions existent déjà ?",
       },
       {
         title: "Difficultés rencontrées",
@@ -442,11 +460,11 @@ export const fr = {
       },
       {
         title: "Pertinence de la blockchain",
-        body: "La blockchain pourrait-elle aider ? Comment, et par rapport à quelles alternatives non blockchain, comme une base de données classique ou le mobile money ?",
+        body: "La blockchain pourrait-elle aider, comment, et par rapport à quelles alternatives non blockchain, comme une base de données classique ou le mobile money ?",
       },
       {
         title: "Pertinence de Cardano",
-        body: "Cardano est-il adapté à ce contexte ? Pourquoi, au regard des coûts, de la connectivité, de l'énergie, de la réglementation, de l'adoption et des compétences locales ?",
+        body: "Cardano est-il adapté à ce contexte, au regard des coûts, de la connectivité, de l'énergie, de la réglementation, de l'adoption et des compétences locales ?",
       },
       {
         title: "Conclusion",
@@ -454,52 +472,65 @@ export const fr = {
       },
     ],
     researchClose:
-      "Les équipes ne sont pas obligées de conclure que Cardano convient. Démontrer, avec une analyse rigoureuse et documentée, que la blockchain ou Cardano n'est pas une réponse appropriée est un résultat valable.",
+      "Les équipes ne sont pas tenues de conclure que Cardano convient. Montrer, avec une analyse rigoureuse et documentée, que la blockchain ou Cardano n'est pas une réponse appropriée reste un résultat valable.",
     deliverableTitle: "Article et publication",
     deliverable: [
-      "Chaque équipe produit un article de recherche original : le problème et son contexte, les preuves et les références, l'évaluation de la pertinence de la blockchain et de Cardano, puis une conclusion et des recommandations.",
-      "La langue imposée, le nombre de mots, la longueur du résumé et le format imposé des références ne sont pas publiés.",
-      "L'article est publié par l'équipe sur Cardano Forum, à l'adresse https://forum.cardano.org/, entre le 6 et le 15 décembre 2026.",
-      "Les membres participent aux discussions sous leur publication.",
-      "Les auteurs conservent la propriété de leur article. En le publiant, ils acceptent qu'il soit lu, discuté et cité, avec leur signature.",
-      "Le canal précis pour transmettre le lien aux organisateurs n'est pas publié. Le courriel et le groupe WhatsApp déjà affichés restent les canaux de contact.",
+      "Chaque équipe produit un article de recherche original : le problème et son contexte, les preuves et références, l'évaluation de la pertinence de la blockchain et de Cardano, puis une conclusion et des recommandations.",
+      "La langue imposée, le nombre de mots, la longueur du résumé et le format des références ne sont pas encore publiés.",
+      "L'équipe publie l'article sur Cardano Forum (https://forum.cardano.org/) entre le 6 et le 15 décembre 2026, et participe aux discussions sous sa publication.",
+      "Les auteurs conservent la propriété de leur article ; en le publiant, ils acceptent qu'il soit lu, discuté et cité avec leur signature.",
+      "Le canal précis pour transmettre le lien aux organisateurs n'est pas publié ; le courriel et le groupe WhatsApp déjà affichés restent les contacts utiles.",
     ],
     ethicsTitle: "Principes et éthique",
-    ethicsIntro: "Tous les participants s'engagent à respecter les principes suivants.",
+    ethicsIntro: "Tous les participants s'engagent à respecter ces principes.",
     ethics: [
-      "Produire une recherche originale et honnête.",
-      "Utiliser des sources crédibles et citer les références.",
-      "Ne pas présenter une supposition comme un fait vérifié.",
-      "Respecter les opinions et les perspectives différentes.",
+      "Produire une recherche originale et honnête, s'appuyer sur des sources crédibles et citer les références.",
+      "Ne pas présenter une supposition comme un fait vérifié, et respecter les opinions différentes.",
       "Collaborer de manière constructive dans l'équipe et sur le forum.",
       "Obtenir un consentement éclairé avant un entretien, permettre l'anonymat sur demande, et ne publier aucune donnée personnelle sensible sans accord.",
-      "Éviter le travail de terrain dans une zone à risque et privilégier un lieu sûr ou un entretien à distance.",
+      "Éviter le travail de terrain dans une zone à risque ; privilégier un lieu sûr ou un entretien à distance.",
       "Déclarer tout lien d'intérêt avec un projet, une entreprise ou une organisation évoquée, y compris Cardano.",
-      "Mentionner en une phrase l'usage éventuel d'un outil d'intelligence artificielle pour la traduction, la relecture ou l'aide à la rédaction. L'analyse, les sources et les conclusions restent le travail de l'équipe. Toute référence citée doit avoir été vérifiée.",
+      "Mentionner en une phrase l'usage éventuel d'un outil d'intelligence artificielle pour la traduction, la relecture ou l'aide à la rédaction. L'analyse, les sources et les conclusions restent le travail de l'équipe ; toute référence citée doit avoir été vérifiée.",
     ],
     ethicsClose:
       "Le plagiat, la fabrication de preuves et la présentation trompeuse des résultats entraînent la disqualification de l'équipe.",
     workshopTitle: "Atelier final",
     workshop: [
-      "L'atelier a lieu le vendredi 18 décembre 2026, à Bakanja, à Goma.",
-      "Les équipes sélectionnées présentent le problème étudié, les principaux résultats, les solutions existantes et leurs limites, la pertinence ou les limites de la blockchain et de Cardano, puis les conclusions et les recommandations.",
+      "L'atelier a lieu le vendredi 18 décembre 2026 à Bakanja, à Goma. Les équipes sélectionnées y présentent le problème étudié, les principaux résultats, les solutions existantes et leurs limites, la pertinence ou les limites de la blockchain et de Cardano, puis leurs conclusions et recommandations.",
       "L'heure de début, la durée de chaque présentation et l'appui pour les personnes qui ne résident pas à Goma ne sont pas publiés.",
     ],
     rewardsTitle: "Récompenses",
     rewards: [
-      "Trois équipes gagnantes sont désignées après la saisie du jury.",
-      "Des récompenses en ADA sont prévues. Les montants, le mode de versement et le délai ne sont pas publiés. Ce site ne connecte pas de portefeuille.",
-      "Chaque équipe dont l'article valide est publié reçoit des articles promotionnels Cardano. Leur détail n'est pas publié.",
+      "Trois équipes gagnantes sont désignées après la saisie du jury. Des récompenses en ADA sont prévues ; les montants, le mode de versement et le délai ne sont pas publiés, et ce site ne connecte pas de portefeuille.",
+      "Chaque équipe dont l'article valide est publié reçoit des articles promotionnels Cardano ; leur détail n'est pas publié.",
     ],
   },
   participatingTeams: {
     title: "Équipes participantes",
-    lede: "Les équipes enregistrées pour le concours de Cardano Learning & Research for Real Use Cases in Goma, DR Congo. Aucun courriel n'est affiché.",
-    brief: [
-      "Une équipe compte de 3 à 5 personnes. Chacun n'appartient qu'à une seule équipe. Elle a un team leader, et au plus un adjoint.",
-      "Les participants forment leur équipe, ou demandent aux organisateurs de l'aide pour trouver des coéquipiers. La formation des équipes a lieu du 1er au 5 décembre 2026. Le concours est maintenu à partir de cinq équipes.",
-      "Chaque fiche montre le nom, les membres, puis le titre du sujet et le lien de l'article lorsqu'ils sont publiés. Le nom d'utilisateur et le lien du profil Cardano Forum restent chez les organisateurs.",
+    lede: "Équipes enregistrées pour ce concours",
+    intro: "Les équipes participantes sont présentées ici. Aucun courriel n'est affiché publiquement.",
+    conditionsTitle: "Conditions de participation",
+    conditions: [
+      "3 à 5 membres par équipe.",
+      "Un Team Leader obligatoire.",
+      "Un adjoint au maximum.",
+      "Chaque participant appartient à une seule équipe.",
     ],
+    formationTitle: "Formation des équipes",
+    formation: [
+      "Formation du 1er au 5 décembre 2026.",
+      "Possibilité de constituer sa propre équipe.",
+      "Accompagnement des organisateurs pour trouver des coéquipiers.",
+      "Concours maintenu à partir de cinq équipes.",
+    ],
+    displayedTitle: "Informations affichées",
+    displayed: [
+      "Nom de l'équipe et membres.",
+      "Titre du sujet de recherche, dès sa soumission.",
+      "Lien vers l'article Cardano Forum, dès sa publication.",
+    ],
+    forumPrivacyNote:
+      "Les noms d'utilisateur et liens des profils Cardano Forum restent réservés aux organisateurs.",
     empty: "Aucune équipe n'est encore enregistrée.",
     loading: "Chargement des équipes.",
     error: "Les équipes n'ont pas pu être affichées.",
@@ -531,17 +562,17 @@ export const fr = {
   competition: {
     title: "Concours",
     onForum:
-      "Le concours de recherche de Cardano Learning & Research for Real Use Cases in Goma, DR Congo a lieu sur Cardano Forum, à l'adresse https://forum.cardano.org/. C'est la plateforme officielle où les articles de recherche sont publiés et discutés.",
+      "Le concours de recherche a lieu sur Cardano Forum (https://forum.cardano.org/), plateforme officielle de publication et de discussion des articles.",
     distinct:
-      "L'inscription sur ce site ne crée pas de compte Cardano Forum. Chaque personne qui participe au concours crée son propre compte sur le forum. Ce site ne demande jamais le mot de passe du forum.",
+      "L'inscription sur ce site ne crée pas de compte Cardano Forum : chaque participant crée le sien, et ce site ne demande jamais le mot de passe du forum.",
     invitation:
-      "Indiquez votre nom d'utilisateur Cardano Forum et l'adresse publique de votre profil. Vous pouvez le faire dans cette inscription. Une modification ultérieure nécessitera une vérification de votre adresse courriel.",
+      "Indiquez votre nom d'utilisateur Cardano Forum et l'adresse publique de votre profil dès l'inscription. Une modification ultérieure exige une vérification de votre courriel.",
     period:
-      "Recherche et soumission des travaux de Cardano Learning & Research for Real Use Cases in Goma, DR Congo, du 6 au 15 décembre 2026, sur Cardano Forum, à l'adresse https://forum.cardano.org/. Les équipes y mènent leurs recherches et y publient leurs articles.",
+      "Recherche et soumission des travaux du 6 au 15 décembre 2026 sur Cardano Forum (https://forum.cardano.org/), où les équipes mènent leurs recherches et publient leurs articles.",
     condition:
-      "Le compte Cardano Forum est obligatoire pour participer au concours. Il ne l'est pas pour les sessions de formation en ligne ni pour l'atelier de clôture en présentiel.",
+      "Le compte Cardano Forum est obligatoire pour le concours, pas pour les sessions de formation en ligne ni pour l'atelier de clôture en présentiel.",
     introduction:
-      "Une présentation personnelle sur Cardano Forum est encouragée. Elle n'est pas exigée pour participer au concours.",
+      "Une présentation personnelle sur Cardano Forum est encouragée, sans être exigée pour participer.",
     teamsTitle: "Équipes",
     teams: [
       "Chaque équipe compte de 3 à 5 membres.",
@@ -768,6 +799,9 @@ export const fr = {
     title: "Annonces",
     lede: "Annonces de Cardano Learning & Research for Real Use Cases in Goma, DR Congo, publiées sur CIPot-DR Congo.",
     empty: "Aucune annonce publiée pour le moment.",
+    badge: "Annonce",
+    read: "Lire l'annonce",
+    seeMore: "Voir plus",
   },
   results: {
     title: "Résultats",
@@ -787,6 +821,11 @@ export const fr = {
     lede: "Canaux de l'équipe de Cardano Learning & Research for Real Use Cases in Goma, DR Congo.",
     empty: "Les coordonnées publiques n'ont pas encore été publiées.",
     whatsappPending: "Le lien d'invitation WhatsApp n'a pas encore été publié.",
+    channelsTitle: "Nous joindre",
+    channelsLede: "Courriel, WhatsApp et X : les canaux publics de l'équipe.",
+    emailLabel: "Courriel",
+    whatsappLabel: "WhatsApp",
+    xLabel: "X",
   },
   activities: {
     title: "Activités",
@@ -806,6 +845,8 @@ export const fr = {
     highlights: "Points marquants",
     resources: "Ressources",
     biographyMissing: "La biographie n'est pas publiée dans cette langue.",
+    read: "Voir l'activité",
+    seeMore: "Voir plus",
     enlarge: "Agrandir l'image",
     closeImage: "Fermer l'image",
     previousImage: "Image précédente",
@@ -930,6 +971,7 @@ export const fr = {
     empty: "Aucun album n'est encore publié.",
     loading: "Chargement de la galerie.",
     error: "La galerie n'a pas pu être affichée.",
+    hoverHint: "La description apparaît au survol.",
   },
   adminUi: {
     loginTitle: "Administration",

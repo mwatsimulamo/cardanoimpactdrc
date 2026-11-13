@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { blockTitle, casePanel, justifiedText, sectionTitle, textLink } from "@/components/classes";
+import { blockTitle, casePanel, justifiedText, secondaryLink, sectionTitle } from "@/components/classes";
 import type { Dictionary } from "@/content/types";
 import { localePath, type Locale } from "@/lib/locales";
 import { readSubmittedPublicTeams } from "@/lib/participating-teams";
@@ -40,17 +40,17 @@ export function HomeParticipationStats({
   const teamsHref = localePath(locale, "equipes");
 
   return (
-    <section className="mt-16 border-t border-line pt-12 md:mt-24 md:pt-16" aria-labelledby="home-participation">
-      <h2 id="home-participation" className={sectionTitle}>
+    <section className="mt-16 md:mt-24" aria-labelledby="home-participation">
+      <h2 id="home-participation" className={`${sectionTitle} text-center`}>
         {dictionary.home.statsTitle}
       </h2>
       {hasCounts ? (
         <dl className="mt-8 grid gap-4 md:grid-cols-2">
-          <div className="border border-line bg-canvas px-5 py-6">
+          <div className="border border-line bg-canvas px-5 py-6 text-center">
             <dt className={justifiedText}>{dictionary.home.statsTeams}</dt>
             <dd className={`mt-2 tabular-nums ${blockTitle}`}>{teamCount}</dd>
           </div>
-          <div className="border border-line bg-canvas px-5 py-6">
+          <div className="border border-line bg-canvas px-5 py-6 text-center">
             <dt className={justifiedText}>{dictionary.home.statsParticipants}</dt>
             <dd className={`mt-2 tabular-nums ${blockTitle}`}>{participantCount}</dd>
           </div>
@@ -58,11 +58,11 @@ export function HomeParticipationStats({
       ) : (
         <p className={`mt-6 ${casePanel} ${justifiedText}`}>{dictionary.home.statsEmpty}</p>
       )}
-      <p className="mt-6">
-        <Link className={textLink} href={teamsHref}>
+      <div className="mt-8 flex justify-center">
+        <Link className={secondaryLink} href={teamsHref}>
           {dictionary.home.statsLink}
         </Link>
-      </p>
+      </div>
     </section>
   );
 }

@@ -31,7 +31,7 @@ Palette dérivée (A-15). Elle existe pour le texte, les bordures, les états de
 | `action-pressed` | `#002688` | Bouton principal enfoncé |
 | `canvas` | `rgb(10 22 52 / 86%)` | Case, en-tête, menu |
 | `surface` | `rgb(18 36 74 / 92%)` | Champ, survol de case, message neutre |
-| `line` | `rgb(176 204 242 / 42%)` | Bordures et séparateurs |
+| `line` | `rgb(90 130 190 / 28%)` | Bordures et séparateurs (discret, sans barre blanche) |
 | `danger` / `danger-surface` | `#FFC1CB` / `rgb(72 18 32 / 90%)` | Erreur de formulaire |
 | `success` / `success-surface` | `#B6ECD4` / `rgb(10 48 34 / 90%)` | Confirmation d'envoi |
 | `warning` / `warning-surface` | `#F6D48A` / `rgb(58 38 8 / 90%)` | Information à vérifier |
@@ -52,7 +52,7 @@ Déclaration prévue, uniquement lors de la construction, dans le `@theme` déj�
   --color-action-pressed: #002688;
   --color-canvas: rgb(10 22 52 / 86%);
   --color-surface: rgb(18 36 74 / 92%);
-  --color-line: rgb(176 204 242 / 42%);
+  --color-line: rgb(90 130 190 / 28%);
   --color-danger: #ffc1cb;
   --color-danger-surface: rgb(72 18 32 / 90%);
   --color-success: #b6ecd4;

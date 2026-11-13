@@ -66,7 +66,7 @@ export async function saveAnnouncementAction(
     return finishPublication(saved.publicPath, formData, cleanText(String(formData.get("title") ?? ""), 180));
   }
 
-  return { status: saved.status };
+  return { status: saved.status, detail: saved.detail };
 }
 
 export async function removeAnnouncementAction(
@@ -97,6 +97,13 @@ export async function saveResultAction(
   if (workbook === "invalid") {
     return { status: "invalid", detail: "Le classeur doit être un fichier .xls ou .xlsx de 3,5 Mo au plus." };
   }
+  const workbookUrl = parseWorkbookUrl(String(formData.get("workbookUrl") ?? ""));
+  if (workbookUrl === "invalid") {
+    return {
+      status: "invalid",
+      detail: "Le lien doit être une adresse https Google Sheets (docs.google.com/spreadsheets).",
+    };
+  }
 
   const place1 = String(formData.get("place1") ?? "");
   const place2 = String(formData.get("place2") ?? "");
@@ -115,6 +122,7 @@ export async function saveResultAction(
     place3,
     publish: formData.get("intent") === "publish",
     workbook,
+    workbookUrl,
     teamPlaces,
   });
   if (saved.status === "ok") {
@@ -149,15 +157,12 @@ export async function saveActivityAction(
     publish,
     image,
   });
-  if (saved.status === "invalid" && publish && /^\d{4}-\d{2}-\d{2}$/.test(occurredOn) && occurredOn > todayInGoma()) {
-    return { status: saved.status, detail: "Pour publier, indiquez une date déjà passée. Une activité prévue n'est pas présentée comme tenue." };
-  }
   if (saved.status === "ok") {
     refreshPublic();
     return finishPublication(saved.publicPath, formData, cleanText(String(formData.get("title") ?? ""), 180));
   }
 
-  return { status: saved.status };
+  return { status: saved.status, detail: saved.detail };
 }
 
 export async function removeActivityAction(
@@ -282,6 +287,31 @@ function readExtraPlaces(formData: FormData): { teamId: string; place: number }[
   return places;
 }
 
+function parseWorkbookUrl(value: string): string | "invalid" {
+  const text = value.trim();
+  if (text.length === 0) {
+    return "";
+  }
+
+  try {
+    const url = new URL(text);
+    if (url.protocol !== "https:") {
+      return "invalid";
+    }
+    const host = url.hostname.toLowerCase();
+    const path = url.pathname.toLowerCase();
+    if (host === "docs.google.com" && path.includes("/spreadsheets/")) {
+      return url.toString();
+    }
+    if (host === "sheets.google.com") {
+      return url.toString();
+    }
+    return "invalid";
+  } catch {
+    return "invalid";
+  }
+}
+
 async function readUploadedWorkbook(
   value: FormDataEntryValue | null,
 ): Promise<{ name: string; type: string; bytes: Uint8Array } | null | "invalid"> {
@@ -356,15 +386,6 @@ function imageTypeOf(bytes: Uint8Array): string | null {
   return null;
 }
 
-function todayInGoma(): string {
-  return new Intl.DateTimeFormat("en-CA", {
-    timeZone: "Africa/Lubumbashi",
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  }).format(new Date());
-}
-
 function publicationSubject(publicPath: string, title: string): string {
   const label = publicPath.includes("/activites")
     ? "Une nouvelle activité est publiée"
@@ -382,6 +403,12 @@ function publicationSubject(publicPath: string, title: string): string {
 function refreshPublic() {
   revalidatePath("/fr", "layout");
   revalidatePath("/en", "layout");
+  revalidatePath("/fr");
+  revalidatePath("/en");
+  revalidatePath("/fr/calendrier");
+  revalidatePath("/en/calendrier");
+  revalidatePath("/fr/feuille-de-route");
+  revalidatePath("/en/feuille-de-route");
 }
 
 async function finishPublication(publicPath: string | null, formData: FormData, title: string): Promise<AdminActionState> {

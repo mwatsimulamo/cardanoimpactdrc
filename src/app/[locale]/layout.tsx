@@ -163,7 +163,6 @@ function programMenu(locale: Locale, dictionary: ReturnType<typeof getDictionary
     { href: `${page}#program-what`, label: dictionary.nav.programWhat },
     { href: `${page}#program-how`, label: dictionary.nav.programHow },
     { href: `${page}#program-next`, label: dictionary.nav.schedule },
-    { href: localePath(locale, "feuille-de-route"), label: dictionary.nav.roadmap },
-    { href: `${page}#organizer-contact`, label: dictionary.reach.title },
+    { href: `${page}#program-contact`, label: dictionary.nav.contact },
   ];
 }

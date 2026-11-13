@@ -1,4 +1,4 @@
-import { justifiedText } from "@/components/classes";
+import { justifiedText, supportText } from "@/components/classes";
 import { OriginalImage } from "@/components/OriginalImage";
 import { StatusMessage } from "@/components/StatusMessage";
 import type { Dictionary } from "@/content/types";
@@ -41,13 +41,26 @@ export function PublicGallery({
   }
 
   return (
-    <ul className="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-      {items.map((item) => (
-        <li key={item.id} className="border border-line bg-canvas">
-          <OriginalImage src={item.src} alt={item.description} className="aspect-[4/3] w-full object-cover" />
-          <p className={`px-4 py-3 ${justifiedText}`}>{item.description}</p>
-        </li>
-      ))}
-    </ul>
+    <div className="mt-8">
+      <p className={`mb-4 ${supportText}`}>{copy.hoverHint}</p>
+      <ul className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+        {items.map((item) => (
+          <li key={item.id}>
+            <figure className="group relative overflow-hidden">
+              <OriginalImage
+                src={item.src}
+                alt={item.description}
+                className="aspect-[4/3] w-full object-cover"
+              />
+              {item.description.trim() ? (
+                <figcaption className="pointer-events-none absolute inset-x-0 bottom-0 bg-brand-pressed/85 px-4 py-3 text-[0.9375rem] leading-[1.5] text-ink opacity-0 transition-opacity duration-150 group-hover:opacity-100 group-focus-within:opacity-100">
+                  {item.description}
+                </figcaption>
+              ) : null}
+            </figure>
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 }

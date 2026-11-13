@@ -1,13 +1,14 @@
 "use client";
 
 import { useActionState } from "react";
-import { primaryLink, supportText } from "@/components/classes";
+import { fieldControl, fieldLabel, primaryLink, supportText } from "@/components/classes";
 import { subscribeNewsletterAction, type NewsletterState } from "@/lib/newsletter-actions";
 import type { Locale } from "@/lib/locales";
 
 export function NewsletterForm({
   locale,
   copy,
+  tone = "footer",
 }: {
   locale: Locale;
   copy: {
@@ -22,8 +23,36 @@ export function NewsletterForm({
     missing: string;
     error: string;
   };
+  tone?: "footer" | "page";
 }) {
   const [state, action, pending] = useActionState(subscribeNewsletterAction, null);
+
+  if (tone === "page") {
+    return (
+      <form action={action} className="space-y-4">
+        <input name="locale" type="hidden" value={locale} />
+        <label className={fieldLabel}>
+          {copy.email}
+          <input
+            name="email"
+            type="email"
+            required
+            autoComplete="email"
+            placeholder={copy.email}
+            className={fieldControl}
+          />
+        </label>
+        <label className="flex items-start gap-2 text-[0.875rem] leading-[1.45] text-muted">
+          <input name="consent" type="checkbox" value="yes" required className="mt-1" />
+          <span>{copy.consent}</span>
+        </label>
+        <button type="submit" className={primaryLink} disabled={pending}>
+          {copy.submit}
+        </button>
+        <Notice state={state} copy={copy} light={false} />
+      </form>
+    );
+  }
 
   return (
     <form action={action} className="border border-white/30 bg-[#071433]/92 px-4 py-4">
@@ -52,12 +81,20 @@ export function NewsletterForm({
         <input name="consent" type="checkbox" value="yes" required className="mt-0.5" />
         <span>{copy.consent}</span>
       </label>
-      <Notice state={state} copy={copy} />
+      <Notice state={state} copy={copy} light />
     </form>
   );
 }
 
-function Notice({ state, copy }: { state: NewsletterState; copy: { saved: string; already: string; invalid: string; missing: string; error: string } }) {
+function Notice({
+  state,
+  copy,
+  light,
+}: {
+  state: NewsletterState;
+  copy: { saved: string; already: string; invalid: string; missing: string; error: string };
+  light: boolean;
+}) {
   if (!state) {
     return null;
   }
@@ -73,5 +110,5 @@ function Notice({ state, copy }: { state: NewsletterState; copy: { saved: string
             ? copy.missing
             : copy.error;
 
-  return <p className={`mt-4 ${supportText} text-white`}>{message}</p>;
+  return <p className={`mt-4 ${supportText} ${light ? "text-white" : ""}`}>{message}</p>;
 }

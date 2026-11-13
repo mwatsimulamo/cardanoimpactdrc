@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Suspense } from "react";
 import { ArticleBody } from "@/components/ArticleBody";
-import { blockTitle, justifiedText, primaryLink, secondaryLink, sectionTitle, supportText, textLink } from "@/components/classes";
+import { justifiedText, primaryLink, secondaryLink, sectionTitle, supportText, textLink } from "@/components/classes";
 import { MenuBook, SectionHeading } from "@/components/MenuBook";
 import { guideSectionLinks, ParticipantGuide } from "@/components/ParticipantGuide";
 import { ForumArticleButton, placeAppearance, PublicTeamsBoard, ResultsWorkbookButton, type PublicTeamRank } from "@/components/PublicTeamsBoard";
@@ -68,11 +68,6 @@ export function CompetitionBook({ locale }: { locale: Locale }) {
     >
       <section aria-labelledby="guide-overview">
         <ParticipantGuide locale={locale} dictionary={dictionary} />
-        <p className="mt-10">
-          <Link className={textLink} href={localePath(locale, "inscription")}>
-            {dictionary.nav.register}
-          </Link>
-        </p>
       </section>
 
       <section className={nextSection} aria-labelledby="section-evaluations">
@@ -91,27 +86,41 @@ export function CompetitionBook({ locale }: { locale: Locale }) {
           <h2 id="criteria" className={sectionTitle}>
             {dictionary.evaluation.criteriaTitle}
           </h2>
-          <ol className="mt-8 space-y-8">
-            {dictionary.evaluation.criteria.map((criterion) => (
-              <li key={criterion.title}>
-                <div className="flex items-baseline justify-between gap-4">
-                  <h3 className={blockTitle}>{criterion.title}</h3>
-                  <p className="shrink-0 font-semibold text-[#0033ad] tabular-nums">
-                    <span className="sr-only">{dictionary.evaluation.pointsLabel} </span>
-                    {criterion.points}
-                  </p>
-                </div>
-                <p className={`mt-2 ${justifiedText}`}>{criterion.looksAt}</p>
-              </li>
-            ))}
-          </ol>
-          <p className={`mt-8 ${supportText}`}>{dictionary.evaluation.total}</p>
+          <div className="mt-6 overflow-x-auto">
+            <table className="w-full min-w-[36rem] border-collapse text-left">
+              <caption className="sr-only">{dictionary.evaluation.criteriaTitle}</caption>
+              <thead>
+                <tr className="border-b-2 border-[#0033ad]">
+                  <th scope="col" className="py-3 pr-4 text-[0.9375rem] font-semibold text-[#1b2430]">
+                    {locale === "fr" ? "Critère" : "Criterion"}
+                  </th>
+                  <th scope="col" className="w-24 py-3 pr-4 text-[0.9375rem] font-semibold text-[#0033ad]">
+                    {dictionary.evaluation.pointsLabel}
+                  </th>
+                  <th scope="col" className="py-3 text-[0.9375rem] font-semibold text-[#1b2430]">
+                    {locale === "fr" ? "Ce que le jury regarde" : "What the jury looks at"}
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {dictionary.evaluation.criteria.map((criterion) => (
+                  <tr key={criterion.title} className="border-b border-[#d5dce6] align-top">
+                    <td className="py-4 pr-4 font-semibold text-[#1b2430]">{criterion.title}</td>
+                    <td className="py-4 pr-4 font-semibold tabular-nums text-[#0033ad]">{criterion.points}</td>
+                    <td className={`py-4 ${justifiedText}`}>{criterion.looksAt}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <p className={`mt-6 ${supportText}`}>{dictionary.evaluation.total}</p>
           <p className={`mt-4 ${justifiedText}`}>{dictionary.evaluation.tieBreak}</p>
         </section>
-        <ul className="mt-10 space-y-4">
+        <ul className="mt-10">
           {dictionary.evaluation.selection.map((item) => (
-            <li key={item} className={`border border-line bg-surface px-4 py-3 ${justifiedText}`}>
-              {item}
+            <li key={item} className="border-t border-[#d5dce6] py-4 first:border-t-0 first:pt-0">
+              <span aria-hidden="true" className="mb-3 block h-0.5 w-10 bg-[#0033ad]" />
+              <p className={justifiedText}>{item}</p>
             </li>
           ))}
         </ul>
@@ -126,14 +135,42 @@ export function CompetitionBook({ locale }: { locale: Locale }) {
       </section>
 
       <section className={nextSection} aria-labelledby="section-equipes">
-        <SectionHeading id="section-equipes" href={teamsHref} title={copy.title} lede={copy.lede} />
-        <div className="mt-8 space-y-4">
-          {copy.brief.map((paragraph) => (
-            <p key={paragraph} className={justifiedText}>
-              {paragraph}
-            </p>
-          ))}
-        </div>
+        <SectionHeading id="section-equipes" href={teamsHref} title={copy.title} />
+        <aside className="mt-8 w-full border border-[#d5dce6] bg-[#f7f9fc] px-5 py-5">
+          <h3 className="text-[1.0625rem] font-semibold leading-snug text-[#1b2430]">{copy.lede}</h3>
+          <p className="mt-2 text-[0.9375rem] leading-[1.55] text-[#4a5568]">{copy.intro}</p>
+          <section className="mt-5 border-t border-[#d5dce6] pt-4" aria-labelledby="teams-conditions">
+            <h4 id="teams-conditions" className="text-[0.9375rem] font-semibold text-[#1b2430]">
+              {copy.conditionsTitle}
+            </h4>
+            <ul className="mt-2 list-disc space-y-1 pl-5 text-[0.9375rem] leading-[1.5] text-[#4a5568]">
+              {copy.conditions.map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
+          </section>
+          <section className="mt-4 border-t border-[#d5dce6] pt-4" aria-labelledby="teams-formation">
+            <h4 id="teams-formation" className="text-[0.9375rem] font-semibold text-[#1b2430]">
+              {copy.formationTitle}
+            </h4>
+            <ul className="mt-2 list-disc space-y-1 pl-5 text-[0.9375rem] leading-[1.5] text-[#4a5568]">
+              {copy.formation.map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
+          </section>
+          <section className="mt-4 border-t border-[#d5dce6] pt-4" aria-labelledby="teams-displayed">
+            <h4 id="teams-displayed" className="text-[0.9375rem] font-semibold text-[#1b2430]">
+              {copy.displayedTitle}
+            </h4>
+            <ul className="mt-2 list-disc space-y-1 pl-5 text-[0.9375rem] leading-[1.5] text-[#4a5568]">
+              {copy.displayed.map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
+            <p className="mt-3 text-[0.875rem] leading-[1.5] text-[#4a5568]">{copy.forumPrivacyNote}</p>
+          </section>
+        </aside>
         <Suspense
           fallback={
             <PublicTeamsBoard
@@ -223,7 +260,13 @@ async function PublishedResults({
               })}
             </ol>
             <ArticleBody text={result.statement[locale]} />
-            {result.hasWorkbook ? <ResultsWorkbookButton label={dictionary.results.fullResults} /> : null}
+            {result.hasWorkbook ? (
+              <ResultsWorkbookButton
+                label={dictionary.results.fullResults}
+                href={result.workbookUrl}
+                newTabLabel={dictionary.links.opensNewTab}
+              />
+            ) : null}
             <p>
               <Link className={textLink} href={localePath(locale, "annonces")}>
                 {dictionary.nav.announcements}

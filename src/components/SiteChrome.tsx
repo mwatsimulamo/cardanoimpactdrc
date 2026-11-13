@@ -361,7 +361,10 @@ export function SiteFooter(props: ChromeProps) {
 
   const participatePaths = ["concours", "resultats"];
   const footerProgram = props.programMenu.filter(
-    (item) => !item.href.includes("feuille-de-route") && !item.href.includes("#organizer-contact"),
+    (item) =>
+      !item.href.includes("feuille-de-route") &&
+      !item.href.includes("#organizer-contact") &&
+      !item.href.includes("#program-contact"),
   );
 
   return (
@@ -601,7 +604,7 @@ function LanguageSwitch({
     <div ref={rootRef} className={`relative ${className}`}>
       <button
         type="button"
-        className="inline-flex h-11 items-center gap-2 rounded-full bg-white px-4 text-base font-semibold text-action transition-colors duration-150 hover:bg-[#e7eef8] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+        className="inline-flex h-11 items-center gap-2 rounded-[2px] bg-white px-4 text-base font-semibold text-action transition-colors duration-150 hover:bg-[#e7eef8] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
         aria-expanded={open}
         aria-controls={menuId}
         aria-label={label}

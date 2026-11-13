@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArticleBody } from "@/components/ArticleBody";
-import { supportText, textLink } from "@/components/classes";
-import { PageFrame, PageHeader } from "@/components/PageHeader";
+import { pageTitle, supportText, textLink } from "@/components/classes";
+import { PageFrame } from "@/components/PageHeader";
 import { getDictionary } from "@/content/get-dictionary";
 import { isLocale, localePath, locales, type Locale } from "@/lib/locales";
 import { pageMetadata, privateMetadata } from "@/lib/metadata";
@@ -62,20 +62,26 @@ export default async function AnnouncementPage({
 
   return (
     <PageFrame>
-      <PageHeader title={announcement.title[locale]} />
-      <p className={`mt-4 ${supportText}`}>
-        <time dateTime={announcement.publishedAt}>
-          {formatDate(announcement.publishedAt, locale)}
-        </time>
-      </p>
-      <div className="mt-8">
-        <ArticleBody text={announcement.body[locale]} />
-      </div>
-      <p className="mt-8">
-        <Link className={textLink} href={localePath(locale, "annonces")}>
-          {dictionary.actions.backToAnnouncements}
-        </Link>
-      </p>
+      <article className="w-full">
+        <header>
+          <p className={supportText}>
+            <span className="font-semibold uppercase tracking-[0.04em] text-brand">{dictionary.announcements.badge}</span>
+            <span className="mx-2 text-line" aria-hidden="true">
+              ·
+            </span>
+            <time dateTime={announcement.publishedAt}>{formatDate(announcement.publishedAt, locale)}</time>
+          </p>
+          <h1 className={`mt-4 max-w-none ${pageTitle}`}>{announcement.title[locale]}</h1>
+        </header>
+        <div className="mt-8 w-full md:mt-10">
+          <ArticleBody text={announcement.body[locale]} />
+        </div>
+        <p className="mt-12">
+          <Link className={textLink} href={localePath(locale, "annonces")}>
+            {dictionary.actions.backToAnnouncements}
+          </Link>
+        </p>
+      </article>
     </PageFrame>
   );
 }

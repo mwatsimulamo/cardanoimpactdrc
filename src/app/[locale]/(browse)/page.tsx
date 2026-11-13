@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { Suspense } from "react";
-import { blockTitle, justifiedText, primaryLink, sectionTitle } from "@/components/classes";
+import { blockTitle, primaryLink, sectionTitle } from "@/components/classes";
+import { HomeAims } from "@/components/HomeAims";
 import { HomeLatest } from "@/components/HomeLatest";
 import {
   HomeParticipationStats,
@@ -72,34 +73,22 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
         </div>
       </div>
       <PageFrame>
-        <section aria-labelledby="home-aims">
-          <h2 id="home-aims" className={sectionTitle}>
-            {dictionary.home.aimsTitle}
-          </h2>
-          <ol className="mt-8 grid gap-4 md:grid-cols-3">
-            {dictionary.home.aims.map((aim) => (
-              <li key={aim.title} className="border border-line bg-canvas px-5 py-5 md:px-6">
-                <h3 className={blockTitle}>{aim.title}</h3>
-                <p className={`mt-2 ${justifiedText}`}>{aim.body}</p>
-              </li>
-            ))}
-          </ol>
-        </section>
+        <HomeAims locale={locale} dictionary={dictionary} />
         <Suspense
           fallback={
             <section className="mt-16 md:mt-24" aria-labelledby="home-phases">
-              <h2 id="home-phases" className={`${sectionTitle} scroll-mt-28`}>
-                {dictionary.home.phasesTitle}
+              <h2 id="home-phases" className={`${sectionTitle} scroll-mt-28 text-center`}>
+                {dictionary.home.phasesRange}
               </h2>
             </section>
           }
         >
-          <PhaseTimeline locale={locale} dictionary={dictionary} heading={dictionary.home.phasesTitle} />
+          <PhaseTimeline locale={locale} dictionary={dictionary} />
         </Suspense>
         <Suspense
           fallback={
-            <section className="mt-16 border-t border-line pt-12 md:mt-24 md:pt-16" aria-labelledby="home-latest">
-              <h2 id="home-latest" className={sectionTitle}>
+            <section className="mt-16 md:mt-24" aria-labelledby="home-latest">
+              <h2 id="home-latest" className={`${sectionTitle} text-center`}>
                 {dictionary.home.latestAnnouncements}
               </h2>
             </section>
@@ -126,11 +115,11 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
           channels={false}
           featureCards
         />
-        <section className="mt-16 border-t border-line pt-12 md:mt-24 md:pt-16" aria-labelledby="home-ways-prompt">
-          <h2 id="home-ways-prompt" className={sectionTitle}>
+        <section className="mt-16 md:mt-24" aria-labelledby="home-ways-prompt">
+          <h2 id="home-ways-prompt" className={`${sectionTitle} text-center`}>
             {dictionary.home.waysPrompt}
           </h2>
-          <h3 id="home-ways" className={`mt-6 ${blockTitle}`}>
+          <h3 id="home-ways" className={`mt-6 text-center ${blockTitle}`}>
             {dictionary.home.waysTitle}
           </h3>
           <ul className="mt-6 grid gap-4 md:grid-cols-3">
@@ -146,15 +135,15 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
             ))}
           </ul>
         </section>
-        <section className="mt-16 md:mt-24" aria-labelledby="home-questions">
+        <section className="mt-16 text-center md:mt-24" aria-labelledby="home-questions">
           <h2 id="home-questions" className={sectionTitle}>
             {dictionary.home.questionsTitle}
           </h2>
-          <p className="mt-6">
+          <div className="mt-6 flex justify-center">
             <Link className={primaryLink} href={localePath(locale, "contact")}>
               {dictionary.home.questionsCta}
             </Link>
-          </p>
+          </div>
         </section>
       </PageFrame>
     </div>

@@ -1,13 +1,14 @@
-import Link from "next/link";
 import { Suspense } from "react";
-import { justifiedText, supportText, textLink } from "@/components/classes";
-import { ContactChannels } from "@/components/ContactChannels";
+import { EditorialCard, EditorialEmptyCard } from "@/components/EditorialCard";
+import { ShowMoreGrid } from "@/components/ShowMoreGrid";
+import { justifiedText } from "@/components/classes";
+import { ContactBoard } from "@/components/ContactBoard";
 import { MenuSectionScroll } from "@/components/MenuSectionScroll";
 import { PageFrame, PageHeader } from "@/components/PageHeader";
 import { getDictionary } from "@/content/get-dictionary";
 import { localePath, type Locale } from "@/lib/locales";
-import { getWhatsappInvitationUrl, organizerEmail, organizerXUrl } from "@/lib/public-contact";
 import { readPublishedAnnouncements } from "@/lib/published-records";
+import { firstRichImage } from "@/lib/rich-text";
 
 const sectionBreak = "mt-20 md:mt-28";
 
@@ -19,7 +20,6 @@ export function InformationDocument({
   current: "annonces" | "contact";
 }) {
   const dictionary = getDictionary(locale);
-  const whatsappInvitationUrl = getWhatsappInvitationUrl();
   const focusId = `section-${current}`;
 
   return (
@@ -44,21 +44,7 @@ export function InformationDocument({
           title={dictionary.contact.title}
           lede={dictionary.contact.lede}
         />
-        <div className="mt-8">
-          <ContactChannels
-            tone="page"
-            email={organizerEmail}
-            emailHref={`mailto:${organizerEmail}`}
-            xLabel={dictionary.chrome.followX}
-            xHref={organizerXUrl}
-            whatsappLabel={dictionary.chrome.joinWhatsApp}
-            whatsappHref={whatsappInvitationUrl}
-            newTabLabel={dictionary.links.opensNewTab}
-          />
-        </div>
-        {whatsappInvitationUrl ? null : (
-          <p className={`mt-6 ${justifiedText}`}>{dictionary.contact.whatsappPending}</p>
-        )}
+        <ContactBoard locale={locale} dictionary={dictionary} />
       </section>
     </PageFrame>
   );
@@ -76,33 +62,32 @@ async function PublishedAnnouncements({
   );
 
   if (announcements.length === 0) {
-    return <p className={`mt-8 ${justifiedText}`}>{dictionary.announcements.empty}</p>;
+    return (
+      <ul className="mt-8 grid auto-rows-fr gap-4 md:grid-cols-2 xl:grid-cols-3">
+        <li className="h-full">
+          <EditorialEmptyCard
+            badge={dictionary.home.emptyCardBadge}
+            title={dictionary.home.emptyCardTitle}
+            body={dictionary.announcements.empty}
+          />
+        </li>
+      </ul>
+    );
   }
 
   return (
-    <ul className="mt-8 border border-line">
+    <ShowMoreGrid moreLabel={dictionary.announcements.seeMore}>
       {announcements.map((item) => (
-        <li key={item.slug} className="border-b border-line px-5 py-5 last:border-b-0 md:px-8">
-          <p className={supportText}>
-            <time dateTime={item.publishedAt}>{formatDate(item.publishedAt, locale)}</time>
-          </p>
-          <Link
-            className={`mt-2 inline-block text-[1.25rem] font-semibold leading-[1.35] md:text-[1.5rem] ${textLink}`}
+        <li key={item.slug} className="h-full">
+          <EditorialCard
             href={localePath(locale, `annonces/${item.slug}`)}
-          >
-            {item.title[locale]}
-          </Link>
+            title={item.title[locale]}
+            badge={dictionary.announcements.badge}
+            imageSrc={firstRichImage(item.body[locale])}
+            imageAlt=""
+          />
         </li>
       ))}
-    </ul>
+    </ShowMoreGrid>
   );
-}
-
-function formatDate(value: string, locale: Locale): string {
-  return new Intl.DateTimeFormat(locale, {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-    timeZone: "Africa/Lubumbashi",
-  }).format(new Date(value));
 }

@@ -15,7 +15,6 @@ export type OrganizerPortrait = {
   /** Fichier dans `public/equipe`. Le site l'affiche seulement si le fichier est présent. */
   imageSrc: string | null;
   xUrl: string | null;
-  linkedInUrl: string | null;
 };
 
 /**
@@ -28,7 +27,8 @@ export const organizerTeam: readonly OrganizerProfile[] = [];
 /**
  * Noms et rôles fournis pour l'accueil. Chaque photographie porte le nom
  * du fichier indiqué. Elle se dépose dans `public/equipe`.
- * L'administration ne saisit pas ces fiches.
+ * L'administration ne saisit pas ces fiches. Seuls les profils X fournis
+ * sont liés ; aucun LinkedIn n'est inventé.
  */
 export const organizerPortraits: readonly OrganizerPortrait[] = [
   {
@@ -36,8 +36,7 @@ export const organizerPortraits: readonly OrganizerPortrait[] = [
     name: "Martin Musagara",
     role: { fr: "Programmes", en: "Programs" },
     imageSrc: "/equipe/martin-musagara.png",
-    xUrl: null,
-    linkedInUrl: null,
+    xUrl: "https://x.com/martin_musagara",
   },
   {
     id: "olivier-mwatsimulamo",
@@ -45,23 +44,20 @@ export const organizerPortraits: readonly OrganizerPortrait[] = [
     role: { fr: "Tech Lead", en: "Tech Lead" },
     imageSrc: "/equipe/olivier-mwatsimulamo.jpg",
     xUrl: "https://x.com/OlivierMWATSIM1",
-    linkedInUrl: null,
   },
   {
     id: "meschak",
-    name: "Meschak 8pro",
+    name: "8pro",
     role: { fr: "Formateur & jury", en: "Trainer & jury" },
     imageSrc: "/equipe/meschak.png",
-    xUrl: null,
-    linkedInUrl: null,
+    xUrl: "https://x.com/MakasiMechack",
   },
   {
     id: "boaz",
     name: "Boaz",
     role: { fr: "Formateur & jury", en: "Trainer & jury" },
     imageSrc: "/equipe/boaz.jpg",
-    xUrl: null,
-    linkedInUrl: null,
+    xUrl: "https://x.com/BoazB318",
   },
   {
     id: "paul",
@@ -69,15 +65,13 @@ export const organizerPortraits: readonly OrganizerPortrait[] = [
     role: { fr: "Formateur & jury", en: "Trainer & jury" },
     imageSrc: "/equipe/paul.jpg",
     xUrl: null,
-    linkedInUrl: null,
   },
   {
     id: "rishi",
     name: "Rishi",
     role: { fr: "Logistique", en: "Logistics" },
     imageSrc: "/equipe/rishi.png",
-    xUrl: null,
-    linkedInUrl: null,
+    xUrl: "https://x.com/ORishimatabaro",
   },
 ];
 

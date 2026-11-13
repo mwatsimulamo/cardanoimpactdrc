@@ -247,10 +247,23 @@ function CampaignForm() {
         <label className={fieldLabel}>
           Sujet
           <input name="subject" required maxLength={180} value={subject} onChange={(event) => setSubject(event.target.value)} className={fieldControl} />
+          <span className={`mt-1 block ${supportText}`}>{subject.length} / 180</span>
         </label>
         <label className={fieldLabel}>
           Message
-          <textarea name="body" required rows={6} maxLength={8000} value={body} onChange={(event) => setBody(event.target.value)} className={fieldControl} />
+          <textarea
+            name="body"
+            required
+            rows={8}
+            maxLength={7800}
+            value={body}
+            onChange={(event) => setBody(event.target.value)}
+            className={fieldControl}
+          />
+          <span className={`mt-1 block ${body.length >= 7800 ? "font-semibold text-warning" : supportText}`}>
+            {body.length.toLocaleString("fr-FR")} / 7&nbsp;800
+            {body.length >= 7800 ? " — limite atteinte" : ""}
+          </span>
         </label>
         <label className={fieldLabel}>
           Langue du message
@@ -316,12 +329,25 @@ function MailNotice({ state }: { state: MailActionState }) {
   }
 
   if (state.status === "forbidden") {
-    return <p className={`mt-3 ${supportText}`}>Accès refusé.</p>;
+    return <p className={`mt-3 font-semibold text-warning`}>Accès refusé. Votre message est conservé.</p>;
   }
 
   if (state.status === "invalid") {
-    return <p className={`mt-3 ${supportText}`}>Indiquez un sujet, un message, au moins un groupe et la confirmation. Le bouton exige un lien /fr ou /en.</p>;
+    return (
+      <p className={`mt-3 font-semibold text-warning`}>
+        {state.detail ??
+          "Vérifiez le sujet, le message, les destinataires et la confirmation. Le bouton exige un lien /fr ou /en. Votre saisie est conservée."}
+      </p>
+    );
   }
 
-  return <p className={`mt-3 ${bodyText}`}>{state.detail ?? "L'envoi n'a pas abouti."}</p>;
+  if (state.status === "sent") {
+    return <p className={`mt-3 ${bodyText}`}>{state.detail ?? "Envoi terminé."}</p>;
+  }
+
+  return (
+    <p className={`mt-3 font-semibold text-warning`}>
+      {state.detail ?? "L'envoi n'a pas abouti. Votre message est conservé."}
+    </p>
+  );
 }

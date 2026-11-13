@@ -201,10 +201,10 @@ Après publication, elle affiche seulement :
 
 1. trois fiches vertes, avec le rang en numéro, le nom de l'équipe et le bouton vers son article lorsqu'un lien du forum existe ;
 2. le texte du résultat final, saisi en français et repris tel quel ;
-3. le bouton « Consultez les résultats totaux des équipes », seulement si un classeur .xls ou .xlsx a été déposé ;
+3. le bouton « Consultez les résultats totaux des équipes », seulement si un lien Google Sheet a été indiqué ou si un classeur .xls ou .xlsx a été déposé ;
 4. le lien vers les annonces.
 
-Aucune note chiffrée n'est affichée. Le classeur est l'original déposé. Le site ne le lit pas.
+Aucune note chiffrée n'est affichée. Le lien Google Sheet s'ouvre tel quel. Le classeur est l'original déposé. Le site n'importe ni l'un ni l'autre.
 
 ### PUB-07 Annonces
 
@@ -359,7 +359,7 @@ Affiche cinq décomptes réels : équipes `submitted`, équipes dont la complét
 - Un texte bilingue accompagne le résultat final. Les deux langues sont requises pour publier, comme pour une annonce.
 - `published` enregistre l'organisateur et l'instant. Avant cela, la page publique ne montre aucune place.
 - Les liens d'articles affichés avec le résultat sont ceux déjà marqués `verified` et rendus publics.
-- Les notes chiffrées ne sont pas affichées (D-38). L'écran ne saisit pas de note et n'importe pas le classeur. Après consolidation hors site, l'organisateur saisit les trois places et peut joindre un fichier .xls ou .xlsx. L'original est conservé. Sans nouveau fichier, le classeur déjà déposé reste en place. Le bouton public n'apparaît qu'après publication, et seulement si un fichier est présent.
+- Les notes chiffrées ne sont pas affichées (D-38). L'écran ne saisit pas de note et n'importe pas le classeur. Après consolidation hors site, l'organisateur saisit les trois places et peut indiquer un lien Google Sheet ou joindre un fichier .xls ou .xlsx. L'original du fichier est conservé. Sans nouveau fichier, le classeur déjà déposé reste en place. Si les deux sont fournis, le bouton public ouvre le lien. Le bouton n'apparaît qu'après publication, et seulement si un lien ou un fichier est présent.
 
 ### ADM-10 Activités, intervenants et médias
 

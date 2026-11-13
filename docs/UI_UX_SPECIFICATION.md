@@ -340,7 +340,7 @@ Interactions : notice absente → bouton inactif ; courriel déjà lié → mess
 
 But : montrer les équipes soumises, sans courriel.
 
-Hiérarchie : titre, règles en bref, fiches de même équilibre (nom, effectif, membres, titre du sujet, courte description, bouton bleu vers l'article), état vide « Aucune équipe n'est encore enregistrée. ». Après publication, les trois équipes placées sont vertes et montrent leur rang en numéro. Les notes n'y figurent pas.
+Hiérarchie : titre, une petite carte sobre (conditions, formation, informations affichées, puces simples), fiches de même équilibre (nom, effectif, membres, titre du sujet, courte description, bouton bleu vers l'article), état vide « Aucune équipe n'est encore enregistrée. ». Après publication, les trois équipes placées sont vertes et montrent leur rang en numéro. Les notes n'y figurent pas.
 
 ### Accueil — statistique d'équipes
 
@@ -387,7 +387,7 @@ Après publication, dans cet ordre :
 
 1. Trois fiches vertes : rang en numéro, nom de l'équipe, bouton « Lire l'article complet sur Cardano Forum » lorsque le lien existe.
 2. Texte du résultat final dans la langue de la page.
-3. Bouton « Consultez les résultats totaux des équipes », seulement si le classeur original a été déposé. Il télécharge le fichier. Le site ne l'interprète pas.
+3. Bouton « Consultez les résultats totaux des équipes », seulement si un lien Google Sheet a été indiqué ou si le classeur original a été déposé. Il ouvre le lien ou télécharge le fichier. Le site n'importe ni l'un ni l'autre.
 4. Lien vers les annonces.
 
 Les notes, les commentaires du jury et les intérêts cochés n'apparaissent pas sur la page.
@@ -502,7 +502,7 @@ Interactions : corriger ; ajouter ou retirer dans 3–5 ; transférer le leader 
 
 ### Évaluation du jury
 
-Hors du site pour la première édition (D-38). L'écran Résultats ne saisit pas de notes. Il publie les trois places après consolidation hors site et peut recevoir le classeur original.
+Hors du site pour la première édition (D-38). L'écran Résultats ne saisit pas de notes. Il publie les trois places après consolidation hors site et peut recevoir un lien Google Sheet ou le classeur original.
 
 ### Résultats finaux
 

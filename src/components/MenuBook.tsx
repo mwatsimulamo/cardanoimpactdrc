@@ -107,7 +107,7 @@ export function MenuBook({
 
   return (
     <div className="reading min-h-[calc(100svh-5rem)] bg-white text-[#1b2430]">
-      <div className="mx-auto grid w-full max-w-[76rem] gap-10 px-5 py-12 md:px-8 md:py-16 lg:grid-cols-[16rem_minmax(0,1fr)] lg:items-start lg:gap-14 xl:py-20">
+      <div className="mx-auto grid w-full gap-10 px-5 py-12 md:px-8 md:py-16 lg:grid-cols-[16rem_minmax(0,1fr)] lg:items-start lg:gap-12 xl:py-20">
         <nav
           aria-label={label}
           className="max-h-72 overflow-y-auto overscroll-contain lg:sticky lg:top-28 lg:max-h-[calc(100svh-8rem)]"

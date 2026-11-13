@@ -632,7 +632,7 @@ Le courriel, le profil X et l'URL WhatsApp de D-32 restent dans le contenu versi
 | `leader_access_challenges` | Code d'accès du team leader (D-24). `secret_hash` sert à l'ouverture. `access_code` conserve le code pour les organisateurs. La table n'est pas lisible par le public. Réutilisable tant que `used_at` est nul et que `expires_at` n'est pas passé. |
 | `team_activity_logs` | Journal des modifications et des transferts de responsabilité. Pas de mot de passe, pas de secret. |
 | `public_teams` | Vue : identifiant, nom, nombre de membres des équipes `submitted`. Seule lecture publique des équipes. |
-| `competition_results` | Résultat officiel saisi après consolidation hors site (D-38). `workbook_name`, `workbook_type` et `workbook_data` conservent le classeur original .xls ou .xlsx. `team_places` conserve les places à partir de 4, saisies par les organisateurs. Le site ne lit pas le classeur et n'invente pas de place. |
+| `competition_results` | Résultat officiel saisi après consolidation hors site (D-38). `workbook_url` conserve le lien Google Sheet optionnel. `workbook_name`, `workbook_type` et `workbook_data` conservent le classeur original .xls ou .xlsx. `team_places` conserve les places à partir de 4, saisies par les organisateurs. Le site n'importe ni le classeur ni le tableur, et n'invente pas de place. |
 | `team_rankings` | Places publiques 1, 2 et 3, après D-26. |
 | `announcements` | Communication bilingue. Le texte est brut (D-07). |
 | `activities` | Séance opérationnelle des présences. `starts_at` nul tant que l'heure n'est pas fixée (A-09). |

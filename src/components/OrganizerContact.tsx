@@ -1,6 +1,5 @@
 import { existsSync } from "node:fs";
 import path from "node:path";
-import type { ReactNode } from "react";
 import { blockTitle, justifiedText, sectionTitle, supportText, textLink } from "@/components/classes";
 import { OriginalImage } from "@/components/OriginalImage";
 import { ContactChannels } from "@/components/ContactChannels";
@@ -61,10 +60,10 @@ function OrganizerContactLive({
 
   return (
     <section className="mt-16 md:mt-24" aria-labelledby="organizer-contact">
-      <h2 id="organizer-contact" className={`${sectionTitle} scroll-mt-28`}>
+      <h2 id="organizer-contact" className={`${sectionTitle} scroll-mt-28 text-center`}>
         {dictionary.reach.title}
       </h2>
-      {intro ? <p className={`mt-4 ${justifiedText}`}>{intro}</p> : null}
+      {intro ? <p className={`mx-auto mt-4 max-w-3xl text-center ${justifiedText}`}>{intro}</p> : null}
       {people.length > 0 ? (
         <p className={`mt-4 ${justifiedText}`}>{dictionary.reach.lede}</p>
       ) : portraits.length === 0 ? (
@@ -77,7 +76,7 @@ function OrganizerContactLive({
             const emailHref = organizerEmailHref(person.email);
             const profileHref = organizerProfileUrl(person.xUrl);
             return (
-              <li key={person.id} className="border border-line bg-canvas px-5 py-6 md:px-6">
+              <li key={person.id} className="bg-canvas px-5 py-6 md:px-6">
                 <h3 className={blockTitle}>{person.name}</h3>
                 <p className={`mt-3 ${justifiedText}`}>
                   {biography ?? dictionary.activities.biographyMissing}
@@ -161,78 +160,38 @@ function PortraitPhoto({
   dictionary: Dictionary;
 }) {
   const xHref = organizerProfileUrl(person.xUrl);
-  const linkedInHref = organizerProfileUrl(person.linkedInUrl);
 
   return (
-    <div className="group relative aspect-square overflow-hidden rounded-[8px] bg-surface">
+    <div className="group relative aspect-square overflow-hidden bg-surface">
       {person.imageSrc ? (
         <OriginalImage src={person.imageSrc} alt="" className="h-full w-full object-contain" />
       ) : null}
-      {person.imageSrc ? (
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 flex items-center justify-center gap-3 bg-brand-pressed/80 py-2 opacity-0 transition-opacity duration-150 group-hover:opacity-100 group-focus-within:opacity-100">
-          <ProfileIcon href={xHref} label="X" name={person.name} newTab={dictionary.links.opensNewTab}>
+      {person.imageSrc && xHref ? (
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 flex items-center justify-center gap-2 bg-brand-pressed/80 px-3 py-2 opacity-0 transition-opacity duration-150 group-hover:opacity-100 group-focus-within:opacity-100">
+          <a
+            className="pointer-events-auto inline-flex items-center gap-2 text-[0.875rem] font-semibold text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+            href={xHref}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <span>{dictionary.reach.contactOn}</span>
             <XIcon />
-          </ProfileIcon>
-          <ProfileIcon href={linkedInHref} label="LinkedIn" name={person.name} newTab={dictionary.links.opensNewTab}>
-            <LinkedInIcon />
-          </ProfileIcon>
+            <span className="sr-only">
+              X {person.name} ({dictionary.links.opensNewTab})
+            </span>
+          </a>
         </div>
       ) : null}
     </div>
   );
 }
 
-function ProfileIcon({
-  href,
-  label,
-  name,
-  newTab,
-  children,
-}: {
-  href: string | null;
-  label: string;
-  name: string;
-  newTab: string;
-  children: ReactNode;
-}) {
-  const className =
-    "pointer-events-auto inline-flex size-10 items-center justify-center text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white";
-
-  if (!href) {
-    return (
-      <span className={className} aria-hidden="true">
-        {children}
-      </span>
-    );
-  }
-
-  return (
-    <a className={className} href={href} target="_blank" rel="noopener noreferrer">
-      {children}
-      <span className="sr-only">
-        {label} {name} ({newTab})
-      </span>
-    </a>
-  );
-}
-
 function XIcon() {
   return (
-    <svg viewBox="0 0 24 24" aria-hidden="true" className="size-6">
+    <svg viewBox="0 0 24 24" aria-hidden="true" className="size-5">
       <path
         fill="currentColor"
         d="M14.7 3h3.1l-6.8 7.8L19 21h-5.2l-4.1-6-4.7 6H1.9l7.3-8.3L1.4 3h5.3l3.7 5.5L14.7 3Zm-1.1 16.2h1.7L6.5 4.7H4.7l8.9 14.5Z"
-      />
-    </svg>
-  );
-}
-
-function LinkedInIcon() {
-  return (
-    <svg viewBox="0 0 24 24" aria-hidden="true" className="size-6">
-      <path
-        fill="currentColor"
-        d="M4.7 3.2A1.8 1.8 0 1 0 4.7 6.8 1.8 1.8 0 0 0 4.7 3.2ZM3.2 8.4h3V20.8h-3V8.4Zm5.1 0h2.9v1.7h.1c.4-.8 1.4-1.6 2.9-1.6 3.1 0 3.7 2 3.7 4.7v7.6h-3v-6.7c0-1.6 0-3.6-2.2-3.6s-2.5 1.7-2.5 3.5v6.8h-3V8.4Z"
       />
     </svg>
   );

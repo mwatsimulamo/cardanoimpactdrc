@@ -18,6 +18,7 @@ export type PublishedResult = {
   places: readonly PublishedPlace[];
   statement: Record<Locale, string>;
   hasWorkbook: boolean;
+  workbookUrl: string | null;
 };
 
 export type FaqItem = {

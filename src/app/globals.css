@@ -11,7 +11,8 @@
   --color-surface: rgb(18 36 74 / 92%);
   --color-ink: #e8eef8;
   --color-muted: #c5d0e2;
-  --color-line: rgb(176 204 242 / 42%);
+  /* Liseré discret : évite l’effet de barre blanche autour des images et cases. */
+  --color-line: rgb(90 130 190 / 28%);
   --color-danger: #ffc1cb;
   --color-danger-surface: rgb(72 18 32 / 90%);
   --color-success: #b6ecd4;
@@ -124,6 +125,26 @@ body {
   animation: path-in 0.55s ease both;
 }
 
+.path-card {
+  transform-origin: center bottom;
+  transition:
+    transform 0.35s cubic-bezier(0.34, 1.75, 0.64, 1),
+    filter 0.2s ease,
+    box-shadow 0.3s ease;
+}
+
+.path-card:hover,
+.path-card:focus-within {
+  transform: translateY(-0.45rem) scale(1.01);
+  filter: brightness(1.06);
+  box-shadow: 0 0.85rem 1.5rem rgb(0 20 80 / 28%);
+}
+
+.path-card:active {
+  transform: translateY(-0.1rem) scale(0.995);
+  transition-duration: 0.12s;
+}
+
 @keyframes roadmap-fill {
   from {
     transform: scaleY(0);
@@ -135,26 +156,36 @@ body {
 }
 
 @keyframes roadmap-stage-in-left {
-  from {
+  0% {
     opacity: 0;
-    transform: translate3d(-1.25rem, 0.35rem, 0);
+    transform: translate3d(-2rem, 0.75rem, 0) scale(0.97);
   }
 
-  to {
+  68% {
     opacity: 1;
-    transform: none;
+    transform: translate3d(0.35rem, -0.25rem, 0) scale(1.015);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
   }
 }
 
 @keyframes roadmap-stage-in-right {
-  from {
+  0% {
     opacity: 0;
-    transform: translate3d(1.25rem, 0.35rem, 0);
+    transform: translate3d(2rem, 0.75rem, 0) scale(0.97);
   }
 
-  to {
+  68% {
     opacity: 1;
-    transform: none;
+    transform: translate3d(-0.35rem, -0.25rem, 0) scale(1.015);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
   }
 }
 
@@ -163,14 +194,131 @@ body {
   animation: roadmap-fill 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
+@keyframes roadmap-fill-x {
+  from {
+    transform: scaleX(0);
+  }
+
+  to {
+    transform: scaleX(1);
+  }
+}
+
+.roadmap-progress-x {
+  transform-origin: left center;
+  animation: roadmap-fill-x 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.home-aims-slide {
+  opacity: 0;
+  z-index: 0;
+  transform: translate3d(0, 1.1rem, 0) scale(1.04);
+  filter: blur(2px);
+  transition:
+    opacity 1s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 1.15s cubic-bezier(0.22, 1, 0.36, 1),
+    filter 1s ease;
+  will-change: opacity, transform, filter;
+}
+
+.home-aims-slide.is-active {
+  opacity: 1;
+  z-index: 1;
+  transform: translate3d(0, 0, 0) scale(1);
+  filter: blur(0);
+  animation: home-aims-float 5s ease-in-out both;
+}
+
+.home-aims-slide.is-static {
+  filter: none !important;
+  animation: none !important;
+  transition: opacity 0.2s ease !important;
+  transform: none !important;
+}
+
+@keyframes home-aims-float {
+  0% {
+    transform: translate3d(0, 0.85rem, 0) scale(1.03);
+  }
+
+  18% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+
+  82% {
+    transform: translate3d(0, -0.2rem, 0) scale(1.01);
+  }
+
+  100% {
+    transform: translate3d(0, -0.55rem, 0) scale(1.02);
+  }
+}
+
 .roadmap-stage-left {
-  animation: roadmap-stage-in-left 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: roadmap-stage-in-left 0.75s cubic-bezier(0.22, 1.2, 0.36, 1) both;
   animation-delay: var(--admin-delay, 0ms);
 }
 
 .roadmap-stage-right {
-  animation: roadmap-stage-in-right 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: roadmap-stage-in-right 0.75s cubic-bezier(0.22, 1.2, 0.36, 1) both;
   animation-delay: var(--admin-delay, 0ms);
+}
+
+.roadmap-card {
+  cursor: pointer;
+  isolation: isolate;
+  overflow: hidden;
+  transform-origin: center bottom;
+  transition:
+    transform 0.4s cubic-bezier(0.34, 1.75, 0.64, 1),
+    border-color 0.2s ease,
+    box-shadow 0.35s ease;
+  will-change: transform;
+}
+
+.roadmap-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: color-mix(in srgb, var(--phase-accent, #b7cdff) 0%, transparent);
+  transition: background 0.25s ease;
+}
+
+.roadmap-card-cta {
+  color: var(--phase-accent, #b7cdff);
+  opacity: 0.85;
+  transition:
+    color 0.2s ease,
+    opacity 0.2s ease,
+    transform 0.35s cubic-bezier(0.34, 1.75, 0.64, 1);
+}
+
+.roadmap-card:hover,
+.roadmap-card:focus-visible {
+  transform: translateY(-0.65rem) scale(1.025);
+  border-color: color-mix(in srgb, var(--phase-accent, #b7cdff) 100%, white 18%) !important;
+  box-shadow:
+    0 0 0 2px color-mix(in srgb, var(--phase-accent, #b7cdff) 70%, transparent),
+    0 0.9rem 1.6rem color-mix(in srgb, var(--phase-accent, #b7cdff) 35%, transparent);
+}
+
+.roadmap-card:hover::before,
+.roadmap-card:focus-visible::before {
+  background: color-mix(in srgb, var(--phase-accent, #b7cdff) 34%, transparent);
+}
+
+.roadmap-card:hover .roadmap-card-cta,
+.roadmap-card:focus-visible .roadmap-card-cta {
+  color: #ffffff;
+  opacity: 1;
+  transform: translateX(0.2rem);
+}
+
+.roadmap-card:active {
+  transform: translateY(-0.15rem) scale(0.98);
+  transition-duration: 0.12s;
 }
 
 @keyframes admin-from-left {
@@ -289,9 +437,46 @@ body {
   .admin-in-up,
   .admin-stagger > *,
   .roadmap-progress,
+  .roadmap-progress-x,
   .roadmap-stage-left,
   .roadmap-stage-right {
     animation: none !important;
+  }
+
+  .roadmap-card,
+  .roadmap-card:hover,
+  .roadmap-card:active,
+  .roadmap-card:focus-visible,
+  .path-card,
+  .path-card:hover,
+  .path-card:active,
+  .path-card:focus-within {
+    animation: none !important;
+    transform: none !important;
+    box-shadow: none !important;
+    filter: none !important;
+    transition: border-color 0.15s ease, background 0.15s ease !important;
+  }
+
+  .roadmap-card:hover::before,
+  .roadmap-card:focus-visible::before {
+    background: color-mix(in srgb, var(--phase-accent, #b7cdff) 22%, transparent);
+  }
+
+  .home-aims-slide,
+  .home-aims-slide.is-active {
+    animation: none !important;
+    filter: none !important;
+    transition: opacity 0.2s ease !important;
+    transform: none !important;
+  }
+
+  .home-aims-slide:not(.is-active) {
+    opacity: 0 !important;
+  }
+
+  .home-aims-slide.is-active {
+    opacity: 1 !important;
   }
 }
 
@@ -300,11 +485,25 @@ body {
   color: #c5d0e2;
 }
 
+.article-body {
+  width: 100%;
+  font-size: 1.0625rem;
+  line-height: 1.75;
+  color: #e8eef8;
+}
+
+.article-body h1,
 .article-body h2,
 .article-body h3 {
-  margin: 1.25rem 0 0.5rem;
+  margin: 1.75rem 0 0.65rem;
   font-weight: 600;
   line-height: 1.3;
+  color: #e8eef8;
+  text-wrap: pretty;
+}
+
+.article-body h1 {
+  font-size: 1.75rem;
 }
 
 .article-body h2 {
@@ -315,16 +514,31 @@ body {
   font-size: 1.25rem;
 }
 
+@media (min-width: 768px) {
+  .article-body {
+    font-size: 1.125rem;
+    line-height: 1.8;
+  }
+
+  .article-body h1 {
+    font-size: 2rem;
+  }
+
+  .article-body h2 {
+    font-size: 1.625rem;
+  }
+}
+
 .article-body p,
 .article-body ul,
 .article-body ol,
 .article-body blockquote {
-  margin: 0.75rem 0;
+  margin: 1.15rem 0;
 }
 
 .article-body ul,
 .article-body ol {
-  padding-left: 1.25rem;
+  padding-left: 1.35rem;
 }
 
 .article-body ul {
@@ -335,12 +549,46 @@ body {
   list-style: decimal;
 }
 
+.article-body li + li {
+  margin-top: 0.35rem;
+}
+
 .article-body a {
+  color: #b7cdff;
   text-decoration: underline;
   text-underline-offset: 2px;
 }
 
+.article-body a:hover {
+  color: #e4edff;
+}
+
 .article-body blockquote {
-  border-left: 3px solid #0033ad;
-  padding-left: 0.9rem;
+  border-left: 3px solid #b7cdff;
+  padding-left: 1rem;
+  color: #c5d0e2;
+}
+
+.article-body strong {
+  font-weight: 600;
+  color: #e8eef8;
+}
+
+.article-body u {
+  text-underline-offset: 2px;
+}
+
+.article-body hr {
+  margin: 2rem 0;
+  border: 0;
+  border-top: 1px solid rgb(176 204 242 / 42%);
+}
+
+.article-body img {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  margin: 1.75rem 0;
+  background: rgb(18 36 74 / 92%);
 }

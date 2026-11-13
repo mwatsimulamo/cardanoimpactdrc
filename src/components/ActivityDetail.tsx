@@ -2,9 +2,9 @@ import Link from "next/link";
 import { ArticleBody } from "@/components/ArticleBody";
 import { ActivityGallery } from "@/components/ActivityGallery";
 import { ActivitySpeakers } from "@/components/ActivitySpeakers";
-import { justifiedText, sectionTitle, supportText, textLink } from "@/components/classes";
+import { OriginalImage } from "@/components/OriginalImage";
+import { justifiedText, pageTitle, sectionTitle, supportText, textLink } from "@/components/classes";
 import { ExternalLink } from "@/components/ExternalLink";
-import { PageHeader } from "@/components/PageHeader";
 import type { Dictionary } from "@/content/types";
 import {
   formatCivilDate,
@@ -23,6 +23,8 @@ export function ActivityDetail({
   dictionary: Dictionary;
 }) {
   const copy = dictionary.activities;
+  const hero = activity.images[0];
+  const galleryImages = hero ? activity.images.slice(1) : activity.images;
   const dateLabel = activity.occurredUntil
     ? `${formatCivilDate(activity.occurredOn, locale)} – ${formatCivilDate(activity.occurredUntil, locale)}`
     : formatCivilDate(activity.occurredOn, locale);
@@ -35,21 +37,35 @@ export function ActivityDetail({
   ].filter((item): item is string => Boolean(item));
 
   return (
-    <>
-      <PageHeader title={activity.title} />
-      <p className={`mt-4 ${supportText}`}>{facts.join(" · ")}</p>
-      {activity.summary ? <p className={`mt-8 ${justifiedText}`}>{activity.summary}</p> : null}
+    <article className="w-full">
+      {hero ? (
+        <figure className="overflow-hidden bg-canvas">
+          <OriginalImage src={hero.src} alt={hero.alt} className="aspect-[21/9] w-full object-cover md:aspect-[2.4/1]" />
+          {hero.caption ? <figcaption className={`px-5 py-3 ${supportText}`}>{hero.caption}</figcaption> : null}
+        </figure>
+      ) : null}
+
+      <header className={hero ? "mt-8 md:mt-10" : undefined}>
+        <p className={supportText}>{facts.join(" · ")}</p>
+        <h1 className={`mt-3 max-w-none ${pageTitle}`}>{activity.title}</h1>
+        {activity.summary ? (
+          <p className={`mt-6 text-[1.125rem] leading-[1.65] text-ink md:text-[1.25rem] md:leading-[1.7]`}>{activity.summary}</p>
+        ) : null}
+      </header>
+
       {activity.description ? (
-        <div className="mt-6">
+        <div className="mt-8 w-full md:mt-10">
           <ArticleBody text={activity.description} />
         </div>
       ) : null}
+
       {activity.highlights ? (
-        <section className="mt-12">
+        <section className="mt-12 w-full">
           <h2 className={sectionTitle}>{copy.highlights}</h2>
           <div className={`mt-4 whitespace-pre-wrap ${justifiedText}`}>{activity.highlights}</div>
         </section>
       ) : null}
+
       <ActivitySpeakers
         title={copy.speakers}
         speakers={activity.speakers}
@@ -57,14 +73,16 @@ export function ActivityDetail({
         biographyMissing={copy.biographyMissing}
         newTabLabel={dictionary.links.opensNewTab}
       />
+
       <ActivityGallery
         title={copy.gallery}
-        images={activity.images}
+        images={galleryImages}
         enlargeLabel={copy.enlarge}
         closeLabel={copy.closeImage}
         previousLabel={copy.previousImage}
         nextLabel={copy.nextImage}
       />
+
       {activity.resources.length > 0 ? (
         <section className="mt-12">
           <h2 className={sectionTitle}>{copy.resources}</h2>
@@ -79,11 +97,12 @@ export function ActivityDetail({
           </ul>
         </section>
       ) : null}
-      <p className="mt-10">
+
+      <p className="mt-12">
         <Link className={textLink} href={localePath(locale, "activites")}>
           {dictionary.actions.backToActivities}
         </Link>
       </p>
-    </>
+    </article>
   );
 }

@@ -81,8 +81,16 @@ export type Dictionary = {
     heroLede: string;
     summary: string;
     phasesTitle: string;
+    phasesRange: string;
+    phasesBarHint: string;
+    phasesLegendTitle: string;
+    phasesProgressLabel: string;
+    phasesCardCta: string;
+    phaseDay: string;
+    phaseDays: string;
     teamLead: string;
     aimsTitle: string;
+    aimsMediaAlt: string;
     aims: readonly { title: string; body: string }[];
     waysPrompt: string;
     waysTitle: string;
@@ -96,8 +104,14 @@ export type Dictionary = {
     latestAnnouncements: string;
     latestAnnouncementsLede: string;
     announcementRead: string;
+    activityRead: string;
+    seeMoreAnnouncements: string;
+    seeMoreActivities: string;
     latestActivities: string;
+    latestActivitiesLede: string;
     latestEmpty: string;
+    emptyCardBadge: string;
+    emptyCardTitle: string;
     roadmapLink: string;
     ways: readonly { id: "programme-training" | "programme-competition" | "programme-workshop"; title: string }[];
     domainsTitle: string;
@@ -108,6 +122,7 @@ export type Dictionary = {
     title: string;
     lede: string;
     unpublished: string;
+    contactOn: string;
   };
   initiative: {
     title: string;
@@ -139,7 +154,7 @@ export type Dictionary = {
   program: {
     title: string;
     lede: string;
-    organizationBody: string;
+    whatMediaAlt: string;
     story: {
       whatTitle: string;
       overview: readonly string[];
@@ -149,17 +164,20 @@ export type Dictionary = {
       whoRules: string;
       howTitle: string;
       howLead: string;
+      howLeadDetail: string;
       training: {
         title: string;
         when: string;
         intro: string;
-        sessions: readonly { title: string; lead: string; points: readonly string[] }[];
+        sessions: readonly { label: string; title: string; when: string; points: readonly string[] }[];
         note: string;
         cta: string;
       };
       competition: {
         title: string;
         when: string;
+        intro: string;
+        lead: string;
         points: readonly string[];
         note: string;
         primary: string;
@@ -180,6 +198,9 @@ export type Dictionary = {
       nextTitle: string;
       nextBody: string;
       nextCta: string;
+      helpTitle: string;
+      helpBody: string;
+      helpCta: string;
     };
     trainingNoForum: string;
     teamsNote: string;
@@ -252,7 +273,14 @@ export type Dictionary = {
   participatingTeams: {
     title: string;
     lede: string;
-    brief: readonly string[];
+    intro: string;
+    conditionsTitle: string;
+    conditions: readonly string[];
+    formationTitle: string;
+    formation: readonly string[];
+    displayedTitle: string;
+    displayed: readonly string[];
+    forumPrivacyNote: string;
     empty: string;
     loading: string;
     error: string;
@@ -437,6 +465,9 @@ export type Dictionary = {
     title: string;
     lede: string;
     empty: string;
+    badge: string;
+    read: string;
+    seeMore: string;
   };
   results: {
     title: string;
@@ -454,6 +485,11 @@ export type Dictionary = {
     lede: string;
     empty: string;
     whatsappPending: string;
+    channelsTitle: string;
+    channelsLede: string;
+    emailLabel: string;
+    whatsappLabel: string;
+    xLabel: string;
   };
   activities: {
     title: string;
@@ -473,6 +509,8 @@ export type Dictionary = {
     highlights: string;
     resources: string;
     biographyMissing: string;
+    read: string;
+    seeMore: string;
     enlarge: string;
     closeImage: string;
     previousImage: string;
@@ -588,6 +626,7 @@ export type Dictionary = {
     empty: string;
     loading: string;
     error: string;
+    hoverHint: string;
   };
   adminUi: {
     loginTitle: string;

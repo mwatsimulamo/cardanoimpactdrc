@@ -7,6 +7,10 @@ import { renderMail, type MailBody } from "@/lib/email/template";
 
 const origin = canonicalOrigin;
 
+function greeting(locale: Locale): string {
+  return locale === "en" ? "Hello," : "Salut,";
+}
+
 export function leaderRegistrationMail(input: {
   locale: Locale;
   teamName: string;
@@ -16,29 +20,31 @@ export function leaderRegistrationMail(input: {
   if (input.locale === "en") {
     return renderMail({
       locale: "en",
-      preheader: `Your team ${input.teamName} is registered. Keep the access code.`,
-      heading: "Your team is officially registered",
+      preheader: `Your team ${input.teamName} is registered. Keep your access code.`,
+      heading: greeting("en"),
       paragraphs: [
-        `Your team ${input.teamName} is officially registered for Cardano Learning & Research for Real Use Cases in Goma, DR Congo.`,
-        "Welcome. We look forward to the ideas, research and perspectives your team will bring.",
+        `Your team ${input.teamName} is now registered for the research competition.`,
+        "Welcome — we look forward to the ideas and research your team will bring.",
+        "Below is the team leader access code. Keep it carefully: it opens your team space and will not be shown again on a public page.",
       ],
       details: [{ label: "Team leader access code", value: input.accessCode }],
-      notes: ["Keep this code. It opens the team leader space and is not shown again on a public page."],
-      action: { label: "Access your team space", href: space },
+      action: { label: "Open your team space", href: space },
+      closing: "See you soon,",
     });
   }
 
   return renderMail({
     locale: "fr",
     preheader: `L'équipe ${input.teamName} est enregistrée. Conservez le code d'accès.`,
-    heading: "Votre équipe est officiellement enregistrée",
+    heading: greeting("fr"),
     paragraphs: [
-      `L'équipe ${input.teamName} est officiellement enregistrée pour Cardano Learning & Research for Real Use Cases in Goma, DR Congo.`,
-      "Bienvenue. Nous serons attentifs aux idées, aux recherches et aux regards que votre équipe apportera.",
+      `L'équipe ${input.teamName} est maintenant enregistrée pour le concours de recherche.`,
+      "Bienvenue — nous avons hâte de découvrir les idées et les travaux que votre équipe apportera.",
+      "Voici le code d'accès du responsable. Conservez-le précieusement : il ouvre l'espace de votre équipe et n'est pas réaffiché sur une page publique.",
     ],
     details: [{ label: "Code d'accès du responsable", value: input.accessCode }],
-    notes: ["Conservez ce code. Il ouvre l'espace du responsable et n'est pas réaffiché sur une page publique."],
-    action: { label: "Accéder à mon espace équipe", href: space },
+    action: { label: "Ouvrir mon espace équipe", href: space },
+    closing: "À bientôt,",
   });
 }
 
@@ -52,66 +58,61 @@ export function memberRegistrationMail(input: {
     return renderMail({
       locale: "en",
       preheader: `You are registered with the team ${input.teamName}.`,
-      heading: "You are part of the journey",
+      heading: greeting("en"),
       paragraphs: [
-        `We are pleased to confirm that you are registered as a member of the team ${input.teamName}.`,
-        `Team leader: ${input.leaderName}. The access code stays with the team leader.`,
+        `You are confirmed as a member of the team ${input.teamName}.`,
+        `Your team leader is ${input.leaderName}. The access code stays with the team leader.`,
+        "You can follow the program and the next steps on the website.",
       ],
       action: { label: "Explore the program", href: program },
+      closing: "See you soon,",
     });
   }
 
   return renderMail({
     locale: "fr",
-      preheader: `Votre place dans l'équipe ${input.teamName} est confirmée.`,
-    heading: "Vous faites partie du parcours",
+    preheader: `Votre place dans l'équipe ${input.teamName} est confirmée.`,
+    heading: greeting("fr"),
     paragraphs: [
-      `Nous avons le plaisir de confirmer votre inscription comme membre de l'équipe ${input.teamName}.`,
-      `Responsable : ${input.leaderName}. Le code d'accès reste auprès du responsable.`,
+      `Votre inscription comme membre de l'équipe ${input.teamName} est confirmée.`,
+      `Le responsable de l'équipe est ${input.leaderName}. Le code d'accès reste auprès du responsable.`,
+      "Vous pouvez suivre le programme et les prochaines étapes sur le site.",
     ],
     action: { label: "Découvrir le programme", href: program },
+    closing: "À bientôt,",
   });
 }
 
 export function newsletterConfirmMail(input: { locale: Locale; unsubscribeUrl: string }): MailBody {
   const home = `${origin}/${input.locale}`;
-  const letter = {
-    serif: true,
-    headerLogo: false,
-    signatureBeside: true,
-    organization: input.locale === "en" ? "Cardano Impact Pot – DR Congo" : "Cardano Impact Pot – RD Congo",
-    unsubscribeUrl: input.unsubscribeUrl,
-  };
   if (input.locale === "en") {
     return renderMail({
-      ...letter,
       locale: "en",
-      preheader: "Your subscription to the CIPot-DR Congo community is recorded.",
-      heading: "Hello,",
+      serif: true,
+      unsubscribeUrl: input.unsubscribeUrl,
+      preheader: "Your subscription is confirmed. You will receive news about the program.",
+      heading: greeting("en"),
       paragraphs: [
-        "We are glad to welcome you to the CIPot-DR Congo community.",
-        "Your subscription is recorded. You will now receive news about the program, including its progress, activities, research and the results that come from participants' contributions.",
-        "CIPot-DR Congo encourages learning, collaborative research and practical responses to challenges in our environment. We hope that each idea, each exchange and each contribution can take part in this effort.",
-        "We invite you to explore the program and follow it on our website:",
+        "Thank you for subscribing. You will now receive updates on the program: progress, activities, research and published results.",
+        "We look forward to keeping you informed along the way.",
       ],
-      action: { label: "Explore CIPot-DR Congo", href: home },
-      closing: "Thank you for your interest and your trust.",
+      action: { label: "Visit the website", href: home },
+      closing: "Thank you for your interest,",
     });
   }
 
   return renderMail({
-    ...letter,
     locale: "fr",
-    preheader: "Votre inscription à la communauté CIPot-DR Congo est enregistrée.",
-    heading: "Bonjour,",
+    serif: true,
+    unsubscribeUrl: input.unsubscribeUrl,
+    preheader: "Votre inscription est confirmée. Vous recevrez les nouvelles du programme.",
+    heading: greeting("fr"),
     paragraphs: [
-      "Nous sommes heureux de vous accueillir dans la communauté CIPot-DR Congo.",
-      "Votre inscription est bien enregistrée. Vous recevrez désormais des nouvelles de notre programme, notamment les avancées, les activités, les travaux de recherche et les résultats issus des contributions des participants.",
-      "CIPot-DR Congo est une initiative qui encourage l'apprentissage, la recherche collaborative et le développement de solutions concrètes aux défis de notre environnement. Nous souhaitons que chaque idée, chaque échange et chaque contribution puisse participer à cette dynamique.",
-      "Nous vous invitons à découvrir le programme et à suivre son évolution sur notre site :",
+      "Merci pour votre inscription. Vous recevrez désormais des nouvelles du programme : avancées, activités, recherches et résultats publiés.",
+      "Nous serons heureux de vous tenir informé au fil du parcours.",
     ],
-    action: { label: "Découvrir CIPot-DR Congo", href: home },
-    closing: "Merci de votre intérêt et de votre confiance.",
+    action: { label: "Visiter le site", href: home },
+    closing: "Merci de votre intérêt,",
   });
 }
 
@@ -125,20 +126,25 @@ export function campaignMail(input: {
   const parsed = splitCta(input.body);
   const action = actionFor(input.locale, input.publicPath, parsed.label);
   const sibling = siblingLink(input.locale, input.publicPath);
-  const paragraphs = parsed.message.split(/\n{2,}/).map((part) => part.trim()).filter((part) => part.length > 0);
-  const lead = input.kind === "publication" ? publicationLead(input.locale, input.publicPath) : null;
-  if (lead) {
-    paragraphs.unshift(lead);
+  const paragraphs = parsed.message
+    .split(/\n{2,}/)
+    .map((part) => part.trim())
+    .filter((part) => part.length > 0);
+  if (input.kind === "publication") {
+    const lead = publicationLead(input.locale, input.publicPath);
+    if (lead) {
+      paragraphs.unshift(lead);
+    }
   }
 
   return renderMail({
     locale: input.locale,
     preheader: input.subject,
-    heading: input.subject,
+    heading: greeting(input.locale),
     paragraphs,
     action,
     extraLinks: sibling ? [sibling] : [],
-    unsubscribeUrl: undefined,
+    closing: input.locale === "en" ? "Best regards," : "Cordialement,",
   });
 }
 
@@ -147,7 +153,7 @@ export function registrationSubject(locale: Locale, teamName: string): string {
 }
 
 export function newsletterSubject(locale: Locale): string {
-  return locale === "en" ? "Welcome to the CIPot-DR Congo community" : "Bienvenue dans la communauté CIPot-DR Congo";
+  return locale === "en" ? "Your subscription is confirmed" : "Votre inscription est confirmée";
 }
 
 export function audienceOf(person: MailRecipient): MailRecipient["audience"] {
@@ -158,23 +164,23 @@ function publicationLead(locale: Locale, publicPath: string | null): string {
   const english = locale === "en";
   if (publicPath?.includes("/activites")) {
     return english
-      ? "A new activity is now available on the CIPot-DR Congo website. You are invited to explore it and follow the program."
-      : "Une nouvelle activité est disponible sur le site de CIPot-DR Congo. Nous vous invitons à la découvrir et à suivre le programme.";
+      ? "A new activity has just been published. You are invited to discover it and follow the next steps of the program."
+      : "Une nouvelle activité vient d'être publiée. Nous vous invitons à la découvrir et à suivre la suite du programme.";
   }
   if (publicPath?.includes("/resultats")) {
     return english
-      ? "The competition result is now available on the CIPot-DR Congo website. You are invited to view it."
-      : "Le résultat du concours est disponible sur le site de CIPot-DR Congo. Nous vous invitons à le consulter.";
+      ? "The competition results are now available. You can view the published ranking and the full details on the website."
+      : "Les résultats du concours sont maintenant disponibles. Vous pouvez consulter le classement publié et le détail sur le site.";
   }
   if (publicPath?.includes("/annonces")) {
     return english
-      ? "A new announcement is now available on the CIPot-DR Congo website. You are invited to read it and follow the program."
-      : "Une nouvelle annonce est disponible sur le site de CIPot-DR Congo. Nous vous invitons à la lire et à suivre le programme.";
+      ? "A new announcement has just been published. Here is what you need to know."
+      : "Une nouvelle annonce vient d'être publiée. Voici ce qu'il faut retenir.";
   }
 
   return english
-    ? "A new publication is available on the CIPot-DR Congo website. You are invited to read it and follow the program."
-    : "Une publication est disponible sur le site de CIPot-DR Congo. Nous vous invitons à la lire et à suivre le programme.";
+    ? "A new update is available on the website. You are invited to read it."
+    : "Une nouvelle information est disponible sur le site. Nous vous invitons à en prendre connaissance.";
 }
 
 function actionFor(
@@ -194,7 +200,7 @@ function actionFor(
     return { label: locale === "en" ? "Read the announcement" : "Lire l'annonce", href };
   }
   if (publicPath.includes("/activites")) {
-    return { label: locale === "en" ? "Explore the activity" : "Découvrir l'activité", href };
+    return { label: locale === "en" ? "Discover the activity" : "Découvrir l'activité", href };
   }
   if (publicPath.includes("/resultats")) {
     return { label: locale === "en" ? "View the results" : "Consulter les résultats", href };

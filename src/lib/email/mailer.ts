@@ -2,7 +2,7 @@ import "server-only";
 
 import { cleanText } from "@/lib/email/rules";
 
-const FROM = "CIPot-DR Congo <annonces@cardanoimpactdrc.org>";
+const FROM = "Cardano Impact DR Congo <annonces@cardanoimpactdrc.org>";
 const ENDPOINT = "https://api.resend.com/emails";
 
 export type MailDispatch =

@@ -23,18 +23,14 @@ export type MailContent = {
   unsubscribeUrl?: string;
   closing?: string;
   serif?: boolean;
+  /** Affiche le logo en tête seulement si true. Par défaut : non. */
   headerLogo?: boolean;
-  signatureBeside?: boolean;
   organization?: string;
   unsubscribeLead?: string;
 };
 
-const LOGO_WIDTH = 80;
-const LOGO_HEIGHT = 98;
-const SIGNATURE_WIDTH = 48;
-const SIGNATURE_HEIGHT = 59;
-const BESIDE_WIDTH = 72;
-const BESIDE_HEIGHT = 88;
+const SIGNATURE_WIDTH = 56;
+const SIGNATURE_HEIGHT = 69;
 const SANS = "Arial,Helvetica,sans-serif";
 const SERIF = "Times New Roman,Times,serif";
 
@@ -49,14 +45,14 @@ export function renderMail(content: MailContent): MailBody {
 }
 
 const frenchVoice = {
-  team: "L'équipe Cardano Impact DRC",
+  team: "Cardano Impact DR Congo Team",
   fallback: "Si le bouton ne s'affiche pas, ouvrez cette adresse :",
   unsubscribeLead: "Vous pouvez vous désinscrire à tout moment à partir de ce lien :",
   unsubscribeLabel: "Se désinscrire",
 };
 
 const englishVoice = {
-  team: "Cardano Impact DRC Team",
+  team: "Cardano Impact DR Congo Team",
   fallback: "If the button does not appear, open this address:",
   unsubscribeLead: "You can unsubscribe at any time from this link:",
   unsubscribeLabel: "Unsubscribe",
@@ -155,23 +151,22 @@ function htmlDocument(
   const unsubscribeBlock = unsubscribeUrl
     ? `<tr><td style="padding:20px 24px 0;"><p style="margin:0;font-family:${font};font-size:14px;line-height:1.5;color:#3d4a5c;">${escapeHtml(unsubscribeLead)} <a href="${escapeHtml(unsubscribeUrl)}" style="color:#0033AD;font-weight:bold;">${escapeHtml(voice.unsubscribeLabel)}</a></p></td></tr>`
     : "";
-  const headerLogo = content.headerLogo === false
-    ? ""
-    : `<tr><td style="padding:28px 24px 8px;">
-<img src="${mailLogoUrl}" width="${LOGO_WIDTH}" height="${LOGO_HEIGHT}" alt="CIPot-DR Congo" style="display:block;border:0;outline:none;text-decoration:none;width:${LOGO_WIDTH}px;height:${LOGO_HEIGHT}px;">
-<p style="margin:12px 0 0;font-family:${font};font-size:14px;line-height:1.4;font-weight:bold;color:#0033AD;">CIPot-DR Congo</p>
-</td></tr>`;
-  const signature = content.signatureBeside
-    ? `<table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr>
-<td valign="middle" style="padding:0 16px 0 0;"><img src="${mailLogoUrl}" width="${BESIDE_WIDTH}" height="${BESIDE_HEIGHT}" alt="" style="display:block;border:0;outline:none;text-decoration:none;width:${BESIDE_WIDTH}px;height:${BESIDE_HEIGHT}px;"></td>
+  const headerLogo =
+    content.headerLogo === true
+      ? `<tr><td style="padding:28px 24px 8px;">
+<img src="${mailLogoUrl}" width="80" height="98" alt="Cardano Impact DR Congo" style="display:block;border:0;outline:none;text-decoration:none;width:80px;height:98px;">
+</td></tr>`
+      : "";
+  const organization = content.organization
+    ? `<p style="margin:4px 0 0;font-family:${font};font-size:14px;line-height:1.4;color:#3d4a5c;">${escapeHtml(content.organization)}</p>`
+    : "";
+  const signature = `<table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr>
+<td valign="middle" style="padding:0 14px 0 0;"><img src="${mailLogoUrl}" width="${SIGNATURE_WIDTH}" height="${SIGNATURE_HEIGHT}" alt="" style="display:block;border:0;outline:none;text-decoration:none;width:${SIGNATURE_WIDTH}px;height:${SIGNATURE_HEIGHT}px;"></td>
 <td valign="middle">
-<p style="margin:0;font-family:${font};font-size:16px;line-height:1.4;font-weight:bold;color:#0b1b3a;">${escapeHtml(voice.team)}</p>
-${content.organization ? `<p style="margin:4px 0 0;font-family:${font};font-size:15px;line-height:1.4;color:#1b2430;">${escapeHtml(content.organization)}</p>` : ""}
-<p style="margin:4px 0 0;font-family:${font};font-size:15px;line-height:1.5;"><a href="${canonicalOrigin}" style="color:#0033AD;text-decoration:underline;">${canonicalOrigin}</a></p>
-</td></tr></table>`
-    : `<img src="${mailLogoUrl}" width="${SIGNATURE_WIDTH}" height="${SIGNATURE_HEIGHT}" alt="" style="display:block;border:0;outline:none;text-decoration:none;width:${SIGNATURE_WIDTH}px;height:${SIGNATURE_HEIGHT}px;">
-<p style="margin:12px 0 0;font-family:${font};font-size:15px;line-height:1.4;font-weight:bold;color:#0b1b3a;">${escapeHtml(voice.team)}</p>
-<p style="margin:6px 0 0;font-family:${font};font-size:14px;line-height:1.5;"><a href="${canonicalOrigin}" style="color:#0033AD;text-decoration:underline;">${canonicalOrigin.replace("https://", "")}</a></p>`;
+<p style="margin:0;font-family:${font};font-size:15px;line-height:1.4;font-weight:bold;color:#0b1b3a;">${escapeHtml(voice.team)}</p>
+${organization}
+<p style="margin:4px 0 0;font-family:${font};font-size:14px;line-height:1.5;"><a href="${canonicalOrigin}" style="color:#0033AD;text-decoration:underline;">${canonicalOrigin.replace(/^https:\/\//, "")}</a></p>
+</td></tr></table>`;
 
   return `<!DOCTYPE html>
 <html lang="${content.locale}">
@@ -196,7 +191,7 @@ ${content.organization ? `<p style="margin:4px 0 0;font-family:${font};font-size
 </td></tr>
 ${headerLogo}
 <tr><td style="padding:28px 24px 0;">
-<h1 style="margin:0 0 16px;font-family:${font};font-size:24px;line-height:1.3;font-weight:bold;color:#0b1b3a;">${escapeHtml(content.heading)}</h1>
+<h1 style="margin:0 0 16px;font-family:${font};font-size:22px;line-height:1.35;font-weight:bold;color:#0b1b3a;">${escapeHtml(content.heading)}</h1>
 ${paragraphs}
 </td></tr>
 ${detailBlock}

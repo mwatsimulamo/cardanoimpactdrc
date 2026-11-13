@@ -106,7 +106,7 @@ Le choix de langue est un bouton avec un globe, le code courant et un chevron. I
 
 La page courante porte `aria-current="page"` et une petite case blanche sous le libellé.
 
-Ouvrir Programme, Concours ou Informations n'affiche que les liens de ce menu. Activités est un lien direct. Échap ou un clic à l'extérieur ferme la liste. Programme, Calendrier, Activités et FAQ sont des pages distinctes. Annonces et Contact se suivent dans le même défilement. Dans le guide Concours, le sommaire à gauche place les explications sous Concours, et Évaluations, Équipes participantes et Résultats au même niveau. On passe de l'une à l'autre en défilant.
+Ouvrir Programme, Concours, Activités ou Informations n'affiche que les liens de ce menu. Échap ou un clic à l'extérieur ferme la liste. Programme, Calendrier et FAQ sont des pages distinctes. Annonces et Contact se suivent dans le même défilement. Activités et Galerie se suivent dans le même défilement. Dans le guide Concours, le sommaire à gauche place les explications sous Concours, et Évaluations, Équipes participantes et Résultats au même niveau. On passe de l'une à l'autre en défilant.
 
 Sous 1120 pixels, les liens passent dans un panneau ouvert par le bouton « Menu », refermé par « Fermer ». Ce panneau défile à l'intérieur de l'écran : Accueil, Programme, Concours, Activités et Informations restent accessibles sans revenir en haut. L'action Inscription reste visible à côté de ce bouton.
 

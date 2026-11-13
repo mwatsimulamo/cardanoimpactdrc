@@ -420,7 +420,7 @@ async function finishPublication(publicPath: string | null, formData: FormData, 
   try {
     const batch = await sendAdminCampaign({
       subject: publicationSubject(publicPath, title),
-      body: cleanText(String(formData.get("mailNote") ?? ""), 4000) || title || "CIPot-DR Congo",
+      body: cleanText(String(formData.get("mailNote") ?? ""), 4000),
       publicPath,
       audiences,
       locale: "fr",

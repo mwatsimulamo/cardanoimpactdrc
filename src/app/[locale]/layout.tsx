@@ -73,6 +73,8 @@ export default async function LocaleLayout({
     navigationLabel: dictionary.chrome.navigation,
     nav: navigation(locale, dictionary),
     programMenu: programMenu(locale, dictionary),
+    activitiesMenu: activitiesMenu(locale, dictionary),
+    informationMenu: informationMenu(locale, dictionary),
     register: {
       href: localePath(locale, "inscription"),
       label: dictionary.nav.register,
@@ -164,5 +166,23 @@ function programMenu(locale: Locale, dictionary: ReturnType<typeof getDictionary
     { href: `${page}#program-how`, label: dictionary.nav.programHow },
     { href: `${page}#program-next`, label: dictionary.nav.schedule },
     { href: `${page}#program-contact`, label: dictionary.nav.contact },
+  ];
+}
+
+function activitiesMenu(locale: Locale, dictionary: ReturnType<typeof getDictionary>) {
+  const page = localePath(locale, "activites");
+
+  return [
+    { href: `${page}#section-activites`, label: dictionary.nav.activities },
+    { href: `${page}#section-galerie`, label: dictionary.nav.gallery },
+  ];
+}
+
+function informationMenu(locale: Locale, dictionary: ReturnType<typeof getDictionary>) {
+  const page = localePath(locale, "annonces");
+
+  return [
+    { href: `${page}#section-annonces`, label: dictionary.nav.announcements },
+    { href: `${page}#section-contact`, label: dictionary.nav.contact },
   ];
 }

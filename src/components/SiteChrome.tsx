@@ -24,6 +24,8 @@ type ChromeProps = {
   navigationLabel: string;
   nav: readonly ChromeLink[];
   programMenu: readonly ChromeLink[];
+  activitiesMenu: readonly ChromeLink[];
+  informationMenu: readonly ChromeLink[];
   register: ChromeLink;
   footerProgram: string;
   footerRights: string;
@@ -81,7 +83,36 @@ function itemIsCurrent(pathname: string, href: string, homeHref: string, hash: s
     return isCurrent(pathname, href, homeHref);
   }
 
+  if (fragment === "section-galerie" && /(^|\/)galerie(\/|$)/.test(pathname)) {
+    return hash === "" || hash === `#${fragment}`;
+  }
+  if (fragment === "section-contact" && /(^|\/)contact(\/|$)/.test(pathname)) {
+    return hash === "" || hash === `#${fragment}`;
+  }
+  if (fragment === "section-annonces" && /(^|\/)annonces(\/|$)/.test(pathname) && (hash === "" || hash === `#${fragment}`)) {
+    return true;
+  }
+  if (fragment === "section-activites" && /(^|\/)activites(\/|$)/.test(pathname) && (hash === "" || hash === `#${fragment}`)) {
+    return true;
+  }
+
   return isCurrent(pathname, linkPath(href), homeHref) && hash === `#${fragment}`;
+}
+
+function groupIsCurrent(
+  pathname: string,
+  homeHref: string,
+  items: readonly ChromeLink[],
+  aliases: readonly string[],
+): boolean {
+  if (items.some((item) => isCurrent(pathname, linkPath(item.href), homeHref))) {
+    return true;
+  }
+
+  return aliases.some((alias) => {
+    const full = homeHref.endsWith("/") ? `${homeHref}${alias}` : `${homeHref}/${alias}`;
+    return pathname === full || pathname.startsWith(`${full}/`);
+  });
 }
 
 const barLink =
@@ -108,24 +139,28 @@ export function SiteHeader(props: ChromeProps) {
       id: "program",
       title: props.footerProgram,
       items: props.programMenu,
+      aliases: [] as readonly string[],
       direct: false,
     },
     {
       id: "competition",
       title: pickLinks(props.nav, props.homeHref, ["concours"])[0]?.label ?? "",
       items: pickLinks(props.nav, props.homeHref, ["concours", "evaluations", "equipes", "resultats"]),
+      aliases: [] as readonly string[],
       direct: false,
     },
     {
       id: "activities",
       title: activities?.label ?? "",
-      items: pickLinks(props.nav, props.homeHref, ["activites", "galerie"]),
+      items: props.activitiesMenu,
+      aliases: ["activites", "galerie"],
       direct: false,
     },
     {
       id: "information",
       title: props.footerInformation,
-      items: pickLinks(props.nav, props.homeHref, ["annonces", "contact"]),
+      items: props.informationMenu,
+      aliases: ["annonces", "contact"],
       direct: false,
     },
   ];
@@ -203,7 +238,7 @@ export function SiteHeader(props: ChromeProps) {
                   );
                 }
 
-                const groupCurrent = group.items.some((item) => isCurrent(pathname, linkPath(item.href), props.homeHref));
+                const groupCurrent = groupIsCurrent(pathname, props.homeHref, group.items, group.aliases);
                 return (
                 <li key={group.id} className="relative flex items-center self-stretch">
                   <button

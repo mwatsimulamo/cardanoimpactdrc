@@ -15,12 +15,15 @@ export function MenuSectionScroll({ focusId }: { focusId: string }) {
   }, [focusId]);
 
   useEffect(() => {
-    scrollToTarget(focusId);
-    const frame = requestAnimationFrame(() => scrollToTarget(focusId));
-    const later = window.setTimeout(() => scrollToTarget(focusId), 50);
+    const run = () => scrollToTarget(focusId);
+    run();
+    const frame = requestAnimationFrame(run);
+    const later = window.setTimeout(run, 50);
+    window.addEventListener("hashchange", run);
     return () => {
       cancelAnimationFrame(frame);
       window.clearTimeout(later);
+      window.removeEventListener("hashchange", run);
     };
   }, [focusId]);
 

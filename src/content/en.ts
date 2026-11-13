@@ -591,9 +591,14 @@ export const en = {
   },
   registration: {
     title: "Register",
-    period:
-      "Team formation and competition launch, December 1–5, 2026. The form opens only when the organizers set that stage to Open.",
+    period: "Planned period: December 1–5, 2026.",
+    periodOpen: "Registration is open from December 1–5, 2026.",
     closed: "Team registration is not open at the moment.",
+    closedHintBefore: "Subscribe to the ",
+    closedNewsletter: "newsletter",
+    closedHintMiddle: " or ",
+    closedContact: "contact the team",
+    closedHintAfter: " to find out when registration opens.",
     teamsUpcoming: "Registration upcoming.",
     teamsOpen: "Registration open.",
     teamsClosed: "Registration closed.",
@@ -603,10 +608,8 @@ export const en = {
     workshopUpcoming: "Registration upcoming.",
     workshopOpen: "Registration open.",
     workshopClosed: "Registration closed.",
-    outsideWindow:
-      "Submission is possible only when the organizers open the “Team formation and competition launch” stage.",
-    review:
-      "The request creates neither an account on this site nor a Cardano Forum account. The organizers will review it.",
+    outsideWindow: "Submission is possible only when the organizers open this stage.",
+    review: "This request creates neither an account on this site nor a Cardano Forum account.",
     interestLegend: "Initial interest",
     interestNote:
       "These choices show initial interest. They do not confirm participation or attendance.",
@@ -616,7 +619,7 @@ export const en = {
     forumPair:
       "These two fields are optional at this stage. They must be filled in together, or not at all.",
     laterUpdate:
-      "After registration, the team leader's access code is shown on this page. Cardano Forum profiles and the article link are completed in that space, not on this form.",
+      "After submission, the leader's access code appears here. Cardano Forum profiles and the article link are completed later in the leader space.",
     teamForm: {
       teamInfo: "Team information",
       teamName: "Team name",
@@ -737,7 +740,7 @@ export const en = {
       combineClose: "The choice belongs to the participant, within the conditions of each activity.",
       formTitle: "Competition registration",
       formIntro:
-        "The team leader records the whole team in one operation. This form does not replace Luma registration for the sessions or the workshop.",
+        "The team leader registers the whole team in one go. Sessions and the workshop stay on Luma.",
       pathsIntro: [
         "You can take part in Cardano Learning & Research for Real Use Cases in Goma, DR Congo: the online sessions, the in-person workshop in Goma, and the research competition.",
         "The sessions and the workshop are registered on Luma. The competition is requested on this site, below.",

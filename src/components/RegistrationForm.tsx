@@ -74,7 +74,6 @@ export function RegistrationForm({
   const registrationOpen = availability.teamsOpen;
   const sessionsState = publicRegistrationState(availability.sessionsStatus);
   const workshopState = publicRegistrationState(availability.workshopStatus);
-  const teamsState = publicRegistrationState(availability.teamsStatus);
   const describedBy = registrationOpen ? "registration-window" : "registration-closed registration-window";
   const teamsHref = localePath(locale, "equipes");
   const leaderHref = localePath(locale, "equipe");
@@ -190,24 +189,38 @@ export function RegistrationForm({
         <h2 id="registration-form" className={`${sectionTitle} scroll-mt-28`}>
           {journey.formTitle}
         </h2>
-        <p className={`mt-4 ${justifiedText}`}>{journey.formIntro}</p>
-        <div className="mt-6 space-y-4">
-          <StatusMessage id="registration-closed" tone={registrationOpen ? "success" : "warning"}>
-            {teamsState === "open"
-              ? dictionary.registration.teamsOpen
-              : teamsState === "closed"
-                ? dictionary.registration.teamsClosed
-                : dictionary.registration.teamsUpcoming}
-          </StatusMessage>
-          {!registrationOpen ? (
-            <StatusMessage tone="warning">{dictionary.registration.closed}</StatusMessage>
-          ) : null}
-          <p id="registration-window" className={justifiedText}>
-            {dictionary.registration.period}
-            {registrationOpen ? null : ` ${dictionary.registration.outsideWindow}`}
-          </p>
-          <p className={justifiedText}>{dictionary.registration.review}</p>
-          <p className={justifiedText}>{dictionary.registration.laterUpdate}</p>
+        <p className={`mt-3 ${justifiedText}`}>{journey.formIntro}</p>
+        <div className="mt-6 space-y-3">
+          {registrationOpen ? (
+            <>
+              <StatusMessage id="registration-closed" tone="success">
+                {dictionary.registration.teamsOpen}
+              </StatusMessage>
+              <p id="registration-window" className={justifiedText}>
+                {dictionary.registration.periodOpen}
+              </p>
+              <p className={`text-[0.9375rem] leading-[1.55] text-muted`}>{dictionary.registration.review}</p>
+              <p className={`text-[0.9375rem] leading-[1.55] text-muted`}>{dictionary.registration.laterUpdate}</p>
+            </>
+          ) : (
+            <>
+              <StatusMessage id="registration-closed" tone="danger">
+                <span className="font-semibold">{dictionary.registration.closed}</span>{" "}
+                {dictionary.registration.closedHintBefore}
+                <Link className={textLink} href={`${localePath(locale)}#newsletter`}>
+                  {dictionary.registration.closedNewsletter}
+                </Link>
+                {dictionary.registration.closedHintMiddle}
+                <Link className={textLink} href={localePath(locale, "contact")}>
+                  {dictionary.registration.closedContact}
+                </Link>
+                {dictionary.registration.closedHintAfter}
+              </StatusMessage>
+              <p id="registration-window" className={`text-[0.9375rem] leading-[1.55] text-muted`}>
+                {dictionary.registration.period}
+              </p>
+            </>
+          )}
         </div>
 
         <form

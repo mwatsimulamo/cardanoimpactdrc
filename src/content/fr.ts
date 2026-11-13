@@ -592,10 +592,14 @@ export const fr = {
   },
   registration: {
     title: "Inscription",
-    period:
-      "Formation des équipes et lancement du concours, du 1er au 5 décembre 2026. Le formulaire s'ouvre seulement lorsque les organisateurs placent cette étape sur Ouvert.",
-    closed:
-      "Les inscriptions d'équipes ne sont pas ouvertes pour le moment.",
+    period: "Période prévue : du 1er au 5 décembre 2026.",
+    periodOpen: "Inscriptions ouvertes du 1er au 5 décembre 2026.",
+    closed: "Les inscriptions d'équipes ne sont pas ouvertes pour le moment.",
+    closedHintBefore: "Abonnez-vous à la ",
+    closedNewsletter: "lettre d'information",
+    closedHintMiddle: " ou ",
+    closedContact: "contactez l'équipe",
+    closedHintAfter: " pour savoir quand elles ouvrent.",
     teamsUpcoming: "Inscriptions à venir.",
     teamsOpen: "Inscriptions ouvertes.",
     teamsClosed: "Inscriptions clôturées.",
@@ -606,9 +610,9 @@ export const fr = {
     workshopOpen: "Inscriptions ouvertes.",
     workshopClosed: "Inscriptions clôturées.",
     outsideWindow:
-      "L'envoi n'est possible que lorsque l'étape « Formation des équipes et lancement du concours » est ouverte par les organisateurs.",
+      "L'envoi n'est possible que lorsque les organisateurs ouvrent cette étape.",
     review:
-      "La demande ne crée ni compte sur ce site, ni compte Cardano Forum. Elle sera examinée par les organisateurs.",
+      "Cette demande ne crée ni compte sur ce site, ni compte Cardano Forum.",
     interestLegend: "Intérêt initial",
     interestNote:
       "Ces choix indiquent un intérêt initial. Ils ne confirment ni la participation ni la présence.",
@@ -618,7 +622,7 @@ export const fr = {
     forumPair:
       "Ces deux champs sont facultatifs à cette étape. Ils doivent être remplis ensemble, ou pas du tout.",
     laterUpdate:
-      "Après l'enregistrement, le code d'accès du team leader s'affiche sur cette page. Les profils Cardano Forum et le lien de l'article se complètent dans cet espace, pas sur ce formulaire.",
+      "Après l'envoi, le code d'accès du responsable s'affiche ici. Les profils Cardano Forum et le lien de l'article se complètent ensuite dans son espace.",
     teamForm: {
       teamInfo: "Informations de l'équipe",
       teamName: "Nom de l'équipe",
@@ -742,7 +746,7 @@ export const fr = {
         "Le choix appartient au participant, sous réserve des conditions propres à chaque activité.",
       formTitle: "Inscription au concours",
       formIntro:
-        "Le team leader enregistre toute l'équipe en une seule opération. Ce formulaire ne remplace pas l'inscription Luma aux sessions ou à l'atelier.",
+        "Le responsable enregistre toute l'équipe en une seule fois. Les sessions et l'atelier restent sur Luma.",
       pathsIntro: [
         "Vous pouvez participer à Cardano Learning & Research for Real Use Cases in Goma, DR Congo : sessions en ligne, atelier en présentiel à Goma et concours de recherche.",
         "Les sessions et l'atelier s'inscrivent sur Luma. Le concours se demande sur ce site, plus bas.",

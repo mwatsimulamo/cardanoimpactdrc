@@ -322,7 +322,13 @@ export type Dictionary = {
   registration: {
     title: string;
     period: string;
+    periodOpen: string;
     closed: string;
+    closedHintBefore: string;
+    closedNewsletter: string;
+    closedHintMiddle: string;
+    closedContact: string;
+    closedHintAfter: string;
     teamsUpcoming: string;
     teamsOpen: string;
     teamsClosed: string;

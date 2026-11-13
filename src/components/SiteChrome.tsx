@@ -406,7 +406,7 @@ export function SiteFooter(props: ChromeProps) {
     <footer className="mt-auto text-white">
       <div className="relative">
         <div className="absolute inset-x-0 top-1/2 bottom-0 bg-action" aria-hidden="true" />
-        <div className="relative mx-auto max-w-[46rem] px-5 py-5">
+        <div id="newsletter" className="relative mx-auto max-w-[46rem] scroll-mt-28 px-5 py-5">
           <NewsletterForm locale={props.locale} copy={props.newsletter} />
         </div>
       </div>
